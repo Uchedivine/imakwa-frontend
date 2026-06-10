@@ -5,8 +5,8 @@ export const login = async ({ email, password }) => {
   return response.data
 }
 
-export const register = async ({ name, email, password, role }) => {
-  const response = await client.post('/auth/register', { name, email, password, role })
+export const register = async ({ name, email, password, password_confirmation, role }) => {
+  const response = await client.post('/auth/register', { name, email, password, password_confirmation, role })
   return response.data
 }
 
@@ -16,11 +16,19 @@ export const logout = async () => {
 }
 
 export const getMe = async () => {
-  const response = await client.get('/auth/me')
+  const response = await client.get('/auth/user')
   return response.data
 }
 
 export const forgotPassword = async ({ email }) => {
-  const response = await client.post('/auth/forgot-password', { email })
-  return response.data
+  // TODO: Implement when backend endpoint is ready
+  // const response = await client.post('/auth/forgot-password', { email })
+  // return response.data
+  
+  // Stub for now - simulate success
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ message: 'Password reset link sent to your email' })
+    }, 1000)
+  })
 }

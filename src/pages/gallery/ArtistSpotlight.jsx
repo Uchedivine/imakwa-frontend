@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 const artworks = [
   {
     id: 1,
@@ -51,9 +53,12 @@ export default function ArtistSpotlight() {
               The <span className="italic text-[#C25E36]">Spotlight</span>
             </h2>
           </div>
-          <button className="hidden md:flex items-center gap-2 px-6 py-2.5 border border-[#1A1A1A]/20 rounded-full text-[13px] font-medium text-[#1A1A1A] hover:bg-white transition-all">
+          <Link
+            to="/artists"
+            className="hidden md:flex items-center gap-2 px-6 py-2.5 border border-[#1A1A1A]/20 rounded-full text-[13px] font-medium text-[#1A1A1A] hover:bg-white transition-all"
+          >
             See All Artists →
-          </button>
+          </Link>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-start">
@@ -105,9 +110,12 @@ export default function ArtistSpotlight() {
                 A graduate of the Yaba College of Technology and a 2024 Dak'Art Grand Prize winner, Kola has exhibited across Lagos, London, and São Paulo. His practice asks: what does it mean to carry the past into an unwritten future?
               </p>
             </div>
-            <button className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-[#C25E36] text-white text-[13px] font-medium rounded-full hover:bg-[#A84F2D] transition-colors shadow-sm mb-14">
+            <Link
+              to="/artists/1"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-[#C25E36] text-white text-[13px] font-medium rounded-full hover:bg-[#A84F2D] transition-colors shadow-sm mb-14"
+            >
               View Full Portfolio →
-            </button>
+            </Link>
             <div className="max-w-[600px]">
               <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400 mb-5">
                 LATEST LISTED WORKS

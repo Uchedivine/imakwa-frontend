@@ -7,6 +7,11 @@ import ProtectedRoute from './components/auth/ProtectedRoute'
 import GalleryHome from './pages/gallery/GalleryHome'
 import GalleryBrowse from './pages/gallery/GalleryBrowse'
 import ArtworkDetail from './pages/gallery/ArtworkDetail'
+import Artists from './pages/gallery/Artists'
+import ArtistDetail from './pages/gallery/ArtistDetail'
+import Collections from './pages/gallery/Collections'
+import CollectionDetail from './pages/gallery/CollectionDetail'
+import Account from './pages/gallery/Account'
 import Checkout from './pages/gallery/Checkout'
 import CheckoutSuccess from './pages/gallery/CheckoutSuccess'
 import Orders from './pages/gallery/Orders'
@@ -36,11 +41,16 @@ function App() {
             <Route path="/" element={<GalleryHome />} />
             <Route path="/browse" element={<GalleryBrowse />} />
             <Route path="/artwork/:id" element={<ArtworkDetail />} />
+            <Route path="/artists" element={<Artists />} />
+            <Route path="/artists/:id" element={<ArtistDetail />} />
+            <Route path="/collections" element={<Collections />} />
+            <Route path="/collections/:id" element={<CollectionDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
 
             {/* Protected routes */}
+            <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
             <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
             <Route path="/checkout/success" element={<ProtectedRoute><CheckoutSuccess /></ProtectedRoute>} />
             <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
