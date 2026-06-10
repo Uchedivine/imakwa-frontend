@@ -44,6 +44,23 @@ export const useCartStore = create(
       clearCartLocal: () => {
         set({ items: [], totalAmount: 0, totalCount: 0 })
       },
+
+      // Computed getters
+      get total() {
+        return get().totalAmount
+      },
+
+      // Aliases for easier use
+      addItem: (item) => get().addItemLocal(item),
+      removeItem: (itemId) => get().removeItemLocal(itemId),
+      updateQuantity: (itemId, quantity) => {
+        const items = get().items.map(item =>
+          item.id === itemId ? { ...item, quantity } : item
+        )
+        set({ items })
+        get().recalculate()
+      },
+      clearCart: () => get().clearCartLocal(),
     }),
     {
       name: 'imakwa-cart', // localStorage key
