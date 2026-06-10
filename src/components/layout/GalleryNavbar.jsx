@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useCartStore } from '../../store/cartStore';
+import { useAuthStore } from '../../store/authStore';
+import { useSearch } from '../../hooks/useSearch';
 
 const dropdownCategories = [
   { name: 'Paintings & Canvas', icon: '🖼️', to: '/categories/paintings' },
@@ -12,6 +15,10 @@ const dropdownCategories = [
 export default function GalleryNavbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const { totalCount } = useCartStore();
+  const { isAuthenticated } = useAuthStore();
+  const { query, setQuery } = useSearch();
 
   return (
     <nav className="bg-[#FCFBF8] border-b border-[#1c1a17]/5 sticky top-0 z-50">
@@ -44,6 +51,8 @@ export default function GalleryNavbar() {
             </svg>
             <input
               type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Search artworks, artists, regions..."
               className="w-full pl-11 pr-4 py-2.5 rounded-full bg-[#F4F0EA] text-[14px] text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-300 transition-shadow"
             />
@@ -115,17 +124,22 @@ export default function GalleryNavbar() {
             </svg>
           </button>
 
-          <button className="text-gray-800 hover:text-[#C25E36] transition-colors">
+          <Link to="/cart" className="relative text-gray-800 hover:text-[#C25E36] transition-colors">
             <svg className="w-[20px] h-[20px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
             </svg>
-          </button>
+            {totalCount > 0 && (
+              <span className="absolute -top-2 -right-2 w-4 h-4 bg-[#C25E36] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                {totalCount > 9 ? '9+' : totalCount}
+              </span>
+            )}
+          </Link>
 
-          <button className="hidden sm:block text-gray-800 hover:text-[#C25E36] transition-colors">
+          <Link to={isAuthenticated ? '/profile' : '/login'} className="hidden sm:block text-gray-800 hover:text-[#C25E36] transition-colors">
             <svg className="w-[20px] h-[20px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
             </svg>
-          </button>
+          </Link>
 
           <button 
             className="lg:hidden text-gray-800 ml-2"

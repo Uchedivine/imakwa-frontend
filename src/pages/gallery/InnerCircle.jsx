@@ -1,12 +1,21 @@
 import { useState } from 'react';
+import { subscribeNewsletter } from '../../api/newsletter';
 
 export default function InnerCircle() {
   const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle email submission
-    console.log('Email submitted:', email);
+    if (status === 'loading') return;
+    setStatus('loading');
+    try {
+      await subscribeNewsletter(email);
+      setStatus('success');
+      setEmail('');
+    } catch {
+      setStatus('error');
+    }
   };
 
   return (
@@ -34,22 +43,37 @@ export default function InnerCircle() {
         </p>
 
         {/* Email form */}
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-[480px] mx-auto mb-6">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Your email address"
-            required
-            className="flex-1 px-6 py-3.5 rounded-full bg-white/5 border border-white/10 text-white placeholder:text-gray-500 text-[13px] focus:outline-none focus:border-[#D4A373]/50 transition-colors"
-          />
-          <button
-            type="submit"
-            className="px-8 py-3.5 bg-[#C25E36] text-white text-[13px] font-medium rounded-full hover:bg-[#A84F2D] transition-colors shadow-sm whitespace-nowrap"
-          >
-            Join Now
-          </button>
-        </form>
+        {status === 'success' ? (
+          <p className="text-[14px] text-[#D4A373] font-medium mb-6">
+            ✓ You're on the list. Welcome to the Inner Circle.
+          </p>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-[480px] mx-auto mb-6">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Your email address"
+              required
+              disabled={status === 'loading'}
+              className="flex-1 px-6 py-3.5 rounded-full bg-white/5 border border-white/10 text-white placeholder:text-gray-500 text-[13px] focus:outline-none focus:border-[#D4A373]/50 transition-colors disabled:opacity-60"
+            />
+            <button
+              type="submit"
+              disabled={status === 'loading'}
+              className="px-8 py-3.5 bg-[#C25E36] text-white text-[13px] font-medium rounded-full hover:bg-[#A84F2D] transition-colors shadow-sm whitespace-nowrap disabled:opacity-70"
+            >
+              {status === 'loading' ? 'Joining...' : 'Join Now'}
+            </button>
+          </form>
+        )}
+
+        {status === 'error' && (
+          <p className="text-[11px] text-red-400 mb-4">
+            Something went wrong. Please try again.
+          </p>
+        )}
+
 
         {/* Disclaimer */}
         <p className="text-[11px] text-gray-500 leading-relaxed">
