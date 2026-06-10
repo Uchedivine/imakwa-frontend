@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import ArtworkCard from '../../components/artwork/ArtworkCard'
 import { useArtworks } from '../../hooks/useArtworks'
 import { SkeletonGrid } from '../../components/ui/SkeletonCard'
@@ -41,9 +42,9 @@ export default function FeaturedMasterworks() {
               Featured <span className="italic text-[#C25E36]">Masterworks</span>
             </h2>
           </div>
-          <button className="inline-flex items-center justify-center px-6 py-2.5 bg-[#C25E36] text-white text-[14px] font-medium rounded-full hover:bg-[#a64e2c] transition-colors">
-            View All 2,400+ Works &rarr;
-          </button>
+          <Link to="/browse" className="inline-flex items-center justify-center px-6 py-2.5 bg-[#C25E36] text-white text-[14px] font-medium rounded-full hover:bg-[#a64e2c] transition-colors">
+            View All Works &rarr;
+          </Link>
         </div>
 
         {/* Categories */}
