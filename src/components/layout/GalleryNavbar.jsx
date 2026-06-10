@@ -122,6 +122,13 @@ export default function GalleryNavbar() {
             >
               Curated Collections
             </Link>
+            <Link
+              to="/worldcup"
+              className="text-[14.5px] text-gold hover:text-gold-light transition-colors font-semibold whitespace-nowrap flex items-center gap-1.5"
+            >
+              <span>⚽</span>
+              World Cup 2026
+            </Link>
           </div>
 
           {/* --- RIGHT SECTION: Icons --- */}
