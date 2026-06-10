@@ -104,15 +104,24 @@ export default function GalleryNavbar() {
               </div>
             </div>
 
-            {['By Region', 'Artists', 'Curated Collections'].map((link) => (
-              <Link
-                key={link}
-                to="#"
-                className="text-[14.5px] text-gray-800 hover:text-[#C25E36] transition-colors font-medium whitespace-nowrap"
-              >
-                {link}
-              </Link>
-            ))}
+            <Link
+              to="/browse?region=all"
+              className="text-[14.5px] text-gray-800 hover:text-[#C25E36] transition-colors font-medium whitespace-nowrap"
+            >
+              By Region
+            </Link>
+            <Link
+              to="/artists"
+              className="text-[14.5px] text-gray-800 hover:text-[#C25E36] transition-colors font-medium whitespace-nowrap"
+            >
+              Artists
+            </Link>
+            <Link
+              to="/collections"
+              className="text-[14.5px] text-gray-800 hover:text-[#C25E36] transition-colors font-medium whitespace-nowrap"
+            >
+              Curated Collections
+            </Link>
           </div>
 
           {/* --- RIGHT SECTION: Icons --- */}
@@ -170,6 +179,13 @@ export default function GalleryNavbar() {
                         <p className="text-sm font-medium text-charcoal truncate">{user?.name}</p>
                         <p className="text-xs text-charcoal-soft truncate">{user?.email}</p>
                       </div>
+                      <Link
+                        to="/account"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="block px-4 py-2 text-sm text-charcoal hover:bg-charcoal/5 transition-colors"
+                      >
+                        My Account
+                      </Link>
                       <Link
                         to="/orders"
                         onClick={() => setUserMenuOpen(false)}
