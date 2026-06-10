@@ -1,9 +1,6 @@
 import { Link } from 'react-router-dom'
-import { useCartStore } from '../../store/cartStore'
 
 export default function WorldCupNavbar() {
-    const { items } = useCartStore()
-    const cartCount = items.reduce((sum, item) => sum + item.quantity, 0)
 
     return (
         <nav className="w-full flex flex-col z-50 sticky top-0 select-none">
@@ -31,14 +28,13 @@ export default function WorldCupNavbar() {
                     </a>
                 </div>
 
-                {/* Cart Button */}
-                <button className="h-[40px] px-6 bg-[#C25E36] hover:bg-[#a64e2c] transition-colors text-white rounded-full text-[13px] font-semibold flex items-center gap-2">
-                    {/* Shopping Bag Icon */}
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
-                    </svg>
-                    Cart ( {cartCount} )
-                </button>
+                {/* Shop Collection Button */}
+                <a
+                  href="#products"
+                  className="h-[40px] px-6 bg-[#C25E36] hover:bg-[#a64e2c] transition-colors text-white rounded-full text-[13px] font-semibold flex items-center gap-2"
+                >
+                  Shop Collection
+                </a>
             </div>
 
             {/* 2. Live Match Ticker (Bottom) */}

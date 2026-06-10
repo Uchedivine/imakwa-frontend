@@ -16,6 +16,10 @@ import Checkout from './pages/gallery/Checkout'
 import CheckoutSuccess from './pages/gallery/CheckoutSuccess'
 import Orders from './pages/gallery/Orders'
 import WorldCupHome from './pages/worldcup/WorldCupHome'
+import WorldCupPayment from './pages/worldcup/WorldCupPayment'
+import WorldCupSuccess from './pages/worldcup/WorldCupSuccess'
+import WorldCupDownload from './pages/worldcup/WorldCupDownload'
+import WorldCupOrderLookup from './pages/worldcup/WorldCupOrderLookup'
 import Login from './pages/shared/Login'
 import Register from './pages/shared/Register'
 import ForgotPassword from './pages/shared/ForgotPassword'
@@ -57,6 +61,10 @@ function App() {
 
             {/* World Cup */}
             <Route path="/worldcup" element={<WorldCupHome />} />
+            <Route path="/worldcup/payment/:orderId" element={<WorldCupPayment />} />
+            <Route path="/worldcup/success" element={<WorldCupSuccess />} />
+            <Route path="/worldcup/download/:token" element={<WorldCupDownload />} />
+            <Route path="/worldcup/lookup" element={<WorldCupOrderLookup />} />
           </Routes>
         </ErrorBoundary>
       </BrowserRouter>

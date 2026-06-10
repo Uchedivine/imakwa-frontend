@@ -1,14 +1,13 @@
 import { useCountdown } from '../../hooks/useCountdown'
 
 export default function CountdownBanner() {
-  const { timeLeft, licensesRemaining } = useCountdown()
+  const { timeLeft, worldCupStarted, worldCupEnded } = useCountdown()
 
   // Fallbacks if data is still loading
   const days = timeLeft?.days ?? 39
   const hours = timeLeft?.hours ?? 0
   const minutes = timeLeft?.minutes ?? 32
   const seconds = timeLeft?.seconds ?? 10
-  const remaining = licensesRemaining ?? 1207
 
   const timeUnits = [
     { value: days, label: 'DAYS' },
@@ -46,7 +45,11 @@ export default function CountdownBanner() {
 
       {/* Right Text */}
       <p className="text-[13px] md:text-[15px] font-semibold tracking-wide">
-        <span className="text-white bg-black/10 px-2 py-0.5 rounded font-bold mr-1">{remaining.toLocaleString()}</span> digital licenses remaining
+        {worldCupEnded
+          ? 'The store is now closed.'
+          : worldCupStarted
+          ? 'The tournament is live. Collection closes at the final whistle.'
+          : 'Store closes at the final whistle — July 19, 2026.'}
       </p>
 
     </div>
