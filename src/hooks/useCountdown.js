@@ -14,9 +14,9 @@ export function useCountdown() {
   const [timeLeft, setTimeLeft] = useState(null)
 
   useEffect(() => {
-    if (!data?.endsAt) return
+    if (!data?.final_date) return
 
-    const target = new Date(data.endsAt).getTime()
+    const target = new Date(data.final_date).getTime()
 
     const tick = () => {
       const now = Date.now()
@@ -38,7 +38,12 @@ export function useCountdown() {
     tick()
     const interval = setInterval(tick, 1000)
     return () => clearInterval(interval)
-  }, [data?.endsAt])
+  }, [data?.final_date])
 
-  return { timeLeft, licensesRemaining: data?.licensesRemaining, ...rest }
+  return {
+    timeLeft,
+    worldCupStarted: data?.world_cup_started ?? false,
+    worldCupEnded:   data?.world_cup_ended   ?? false,
+    ...rest,
+  }
 }

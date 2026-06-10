@@ -176,8 +176,11 @@ export default function ProductTierCard({ tier, onPurchase }) {
       {/* Button Section */}
       <div className="p-6 md:p-8 pt-0 mt-6">
         <button
-          onClick={() => onPurchase(tier)}
-          className={`w-full py-3.5 px-6 rounded-xl font-bold uppercase tracking-wider text-[11px] transition-all duration-300 shadow-md hover:shadow-lg ${btnStyle}`}
+          onClick={() => !tier.isSoldOut && onPurchase(tier)}
+          disabled={tier.isSoldOut}
+          className={`w-full py-3.5 px-6 rounded-xl font-bold uppercase tracking-wider text-[11px] transition-all duration-300 shadow-md hover:shadow-lg ${btnStyle} ${
+            tier.isSoldOut ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
         >
           {btnText || `DOWNLOAD NOW — $${price}`}
         </button>

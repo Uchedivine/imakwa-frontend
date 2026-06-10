@@ -9,6 +9,89 @@ import ProductTierCard from '../../components/worldcup/ProductTierCard'
 import CheckoutModal from '../../components/worldcup/CheckoutModal'
 import { useWorldCupProducts } from '../../hooks/useWorldCupProducts'
 
+// Display-only properties keyed by tier number (1–4)
+const TIER_DISPLAY = {
+  1: {
+    tierBadge:   'TIER I',
+    btnStyle:    'bg-[#111111] text-white hover:bg-black',
+    highlight:   false,
+    previewType: 'smart-device',
+    pricePeriod: 'one-time',
+    features: [
+      '32 x 4K Wallpapers (3840×2180px)',
+      '240 custom app icons (iOS & Android)',
+      '12 Samsung Galaxy Watch faces',
+      '12 Apple Watch complications',
+      'Personal use license, lifetime access'
+    ],
+  },
+  2: {
+    tierBadge:   'TIER II',
+    btnStyle:    'bg-[#111111] text-white hover:bg-black',
+    highlight:   false,
+    previewType: 'hosting-kit',
+    pricePeriod: 'one-time',
+    features: [
+      '18 viewing party invitation templates',
+      '8 luxury digital menu designs (Canva)',
+      '40 social media post & story templates',
+      'Fully customizable in free Canva account',
+      'Personal + small event commercial use'
+    ],
+  },
+  3: {
+    tierBadge:   'TIER III · MOST POPULAR',
+    btnStyle:    'bg-[#C5A665] text-[#0A2215] hover:bg-[#D4B77A]',
+    highlight:   true,
+    previewType: 'ambient-vault',
+    pricePeriod: 'one-time',
+    features: [
+      '24 × 8K files (7680×4320px, 16:9)',
+      'Samsung Frame TV optimized (.MATTE format)',
+      '12 × 4K portrait files (residential display)',
+      'TIFF + JPEG source files included',
+      'Residential unlimited display license',
+      'All 32 World Cup match artworks'
+    ],
+  },
+  4: {
+    tierBadge:   'TIER IV · B2B',
+    btnStyle:    'bg-[#0B2217] text-white hover:bg-black',
+    highlight:   false,
+    previewType: 'b2b-license',
+    pricePeriod: 'per venue / season',
+    features: [
+      'Commercial display license (1 venue)',
+      'Full 8K resolution commercial files',
+      'Streaming rights for public projection',
+      'Custom co-branding option available',
+      'Dedicated licensing certificate + PDF',
+      'Priority account contact (48h response)'
+    ],
+  },
+}
+
+// Map real API shape → ProductTierCard props
+const mapApiTiers = (products) =>
+  products.flatMap((product) =>
+    product.tiers.map((tier) => ({
+      tierId:      tier.id,                  // integer — passed to checkout
+      id:          tier.id,
+      name:        tier.label,
+      description: tier.description,
+      price:       tier.price,
+      currency:    tier.currency,
+      statusBadge: tier.is_sold_out
+        ? '✦ Sold Out'
+        : '✦ Instant Download on Checkout',
+      btnText: tier.is_sold_out
+        ? 'SOLD OUT'
+        : `DOWNLOAD NOW — $${tier.price.toLocaleString()}`,
+      isSoldOut: tier.is_sold_out,
+      ...TIER_DISPLAY[tier.tier],
+    }))
+  )
+
 export default function WorldCupHome() {
   const [selectedTier, setSelectedTier] = useState(null)
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false)
@@ -25,9 +108,10 @@ export default function WorldCupHome() {
   }
 
   // Mock product data (will be replaced when API is ready)
-  const productTiers = products?.data || [
+  const mockTiers = [
     {
       id: 'smart-device',
+      tierId: 1,
       name: 'Smart Device Theme Collection',
       price: 45,
       pricePeriod: 'one-time',
@@ -48,6 +132,7 @@ export default function WorldCupHome() {
     },
     {
       id: 'match-day-kit',
+      tierId: 2,
       name: 'Premium Match-Day Hosting Kit',
       price: 125,
       pricePeriod: 'one-time',
@@ -68,6 +153,7 @@ export default function WorldCupHome() {
     },
     {
       id: '8k-vault',
+      tierId: 3,
       name: '8K Ambient Display Vault',
       price: 295,
       pricePeriod: 'one-time',
@@ -89,6 +175,7 @@ export default function WorldCupHome() {
     },
     {
       id: 'b2b-license',
+      tierId: 4,
       name: 'B2B Venue Digital License',
       price: 1950,
       pricePeriod: 'per venue / season',
@@ -109,6 +196,10 @@ export default function WorldCupHome() {
       previewType: 'b2b-license'
     }
   ]
+
+  const productTiers = Array.isArray(products) && products.length > 0
+    ? mapApiTiers(products)
+    : mockTiers
 
   return (
     <div className="min-h-screen bg-pitch">
