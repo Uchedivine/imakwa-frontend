@@ -6,6 +6,6 @@ export function useArtwork(id) {
     queryKey: ['artwork', id],
     queryFn: () => getArtwork(id),
     enabled: !!id,
-    staleTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 5, // 5 minutes
   })
 }

@@ -4,6 +4,8 @@ import ErrorBoundary from './components/ui/ErrorBoundary'
 
 // Pages
 import GalleryHome from './pages/gallery/GalleryHome'
+import GalleryBrowse from './pages/gallery/GalleryBrowse'
+import ArtworkDetail from './pages/gallery/ArtworkDetail'
 import WorldCupHome from './pages/worldcup/WorldCupHome'
 import Login from './pages/shared/Login'
 import Register from './pages/shared/Register'
@@ -28,6 +30,8 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<GalleryHome />} />
+            <Route path="/browse" element={<GalleryBrowse />} />
+            <Route path="/artwork/:id" element={<ArtworkDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
