@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import GalleryNavbar from '../../components/layout/GalleryNavbar'
 import GalleryFooter from '../../components/layout/GalleryFooter'
 import { useArtwork } from '../../hooks/useArtwork'
+import { useCartStore } from '../../store/cartStore'
 import Spinner from '../../components/ui/Spinner'
 import ErrorMessage from '../../components/ui/ErrorMessage'
 
@@ -10,6 +11,7 @@ export default function ArtworkDetail() {
     const { id } = useParams()
     const navigate = useNavigate()
     const { data: artwork, isLoading, isError, error, refetch } = useArtwork(id)
+    const { addItem } = useCartStore()
 
     const [selectedImage, setSelectedImage] = useState(0)
     const [isWishlisted, setIsWishlisted] = useState(false)
@@ -18,10 +20,23 @@ export default function ArtworkDetail() {
     const handleAddToCart = () => {
         if (cartState !== 'idle') return
         setCartState('loading')
+
         setTimeout(() => {
             setCartState('added')
             setTimeout(() => setCartState('idle'), 2500)
         }, 800)
+    }
+
+    // Helper to get art data after it's defined
+    const addToCartWithData = (artData) => {
+        addItem({
+            id: artData.id,
+            title: artData.title,
+            artist: artData.artist.name,
+            price: artData.price,
+            image: artData.images[0],
+            quantity: 1
+        })
     }
 
     if (isLoading) {
@@ -160,13 +175,16 @@ export default function ArtworkDetail() {
                         {/* CTA Buttons */}
                         <div className="flex gap-3 mb-8">
                             <button
-                                onClick={handleAddToCart}
+                                onClick={() => {
+                                    addToCartWithData(art)
+                                    handleAddToCart()
+                                }}
                                 disabled={cartState !== 'idle' || art.stock === 0}
                                 className={`flex-1 py-4 rounded-full text-sm font-medium transition-all ${cartState === 'added'
-                                        ? 'bg-green-700 text-white'
-                                        : art.stock === 0
-                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                            : 'bg-terracotta text-white hover:bg-terra-light'
+                                    ? 'bg-green-700 text-white'
+                                    : art.stock === 0
+                                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                        : 'bg-terracotta text-white hover:bg-terra-light'
                                     }`}
                             >
                                 {art.stock === 0 ? 'Sold Out' : cartState === 'idle' ? 'Add to Cart' : cartState === 'loading' ? 'Adding...' : '✓ Added'}

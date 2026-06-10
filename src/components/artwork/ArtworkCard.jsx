@@ -1,15 +1,27 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useCartStore } from '../../store/cartStore'
 
 export default function ArtworkCard({ artwork }) {
     const [isWishlisted, setIsWishlisted] = useState(false)
-    // Replaced isAdding with the 3-phase cart state
     const [cartState, setCartState] = useState('idle') // 'idle' | 'loading' | 'added'
+    const { addItem } = useCartStore()
 
-    const handleAddToCart = () => {
+    const handleAddToCart = (e) => {
+        e.preventDefault()
         if (cartState !== 'idle') return;
 
         setCartState('loading');
+
+        // Add to cart store
+        addItem({
+            id: artwork.id,
+            title: artwork.title,
+            artist: artwork.artist,
+            price: artwork.price,
+            image: artwork.image,
+            quantity: 1
+        })
 
         setTimeout(() => {
             setCartState('added');
