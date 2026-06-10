@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import ArtworkCard from '../../components/artwork/ArtworkCard'
 import { useArtworks } from '../../hooks/useArtworks'
+import { SkeletonGrid } from '../../components/ui/SkeletonCard'
+import ErrorMessage from '../../components/ui/ErrorMessage'
 
 const categories = [
   'All Works', 'Paintings', 'Sculpture', 'Digital Art', 'Textiles', 'Photography'
@@ -22,7 +24,7 @@ export default function FeaturedMasterworks() {
   const [activeCategory, setActiveCategory] = useState('All Works')
 
   const categoryParam = activeCategory === 'All Works' ? {} : { category: activeCategory }
-  const { data, isLoading } = useArtworks(categoryParam)
+  const { data, isLoading, isError, refetch } = useArtworks(categoryParam)
 
   // Use live data if available, fall back to static placeholder data
   const artworks = data?.data ?? FALLBACK_ARTWORKS
@@ -58,16 +60,20 @@ export default function FeaturedMasterworks() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {isLoading
-            ? FALLBACK_ARTWORKS.map(artwork => (
-                <ArtworkCard key={artwork.id} artwork={artwork} />
-              ))
-            : artworks.map(artwork => (
-                <ArtworkCard key={artwork.id} artwork={artwork} />
-              ))
-          }
-        </div>
+        {isLoading ? (
+          <SkeletonGrid count={8} />
+        ) : isError ? (
+          <ErrorMessage
+            message="We couldn't load the artworks. Please try again."
+            onRetry={refetch}
+          />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {artworks.map(artwork => (
+              <ArtworkCard key={artwork.id} artwork={artwork} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )

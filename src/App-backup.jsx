@@ -1,0 +1,49 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import ErrorBoundary from './components/ui/ErrorBoundary'
+import ProtectedRoute from './components/auth/ProtectedRoute'
+
+// Pages
+import GalleryHome from './pages/gallery/GalleryHome'
+import WorldCupHome from './pages/worldcup/WorldCupHome'
+import Login from './pages/shared/Login'
+import Register from './pages/shared/Register'
+import ForgotPassword from './pages/shared/ForgotPassword'
+
+// Create QueryClient instance
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+            retry: 1,
+            staleTime: 5 * 60 * 1000, // 5 minutes
+        },
+    },
+})
+
+function App() {
+    return (
+        <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+                <ErrorBoundary>
+                    <Routes>
+                        {/* Public routes */}
+                        <Route path="/" element={<GalleryHome />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/forgot-password" element={<ForgotPassword />} />
+
+                        {/* World Cup */}
+                        <Route path="/worldcup" element={<WorldCupHome />} />
+
+                        {/* Protected routes (examples - to be implemented) */}
+                        {/* <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} /> */}
+                        {/* <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} /> */}
+                    </Routes>
+                </ErrorBoundary>
+            </BrowserRouter>
+        </QueryClientProvider>
+    )
+}
+
+export default App
