@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import eldersGaze from '../../assets/eldersGaze.jpeg';
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import eldersGaze from '../../assets/eldersGaze.jpeg'
 
 const stats = [
   { value: '2,400+', label: 'Original Artworks' },
@@ -96,7 +96,7 @@ export default function GalleryHero() {
 
         {/* --- CENTER/RIGHT COLUMN: Artwork Showcase Container --- */}
         <div className="relative lg:absolute right-0 top-0 bottom-0 w-full lg:w-[53%] h-[55vh] min-h-[450px] lg:h-full z-10 overflow-hidden bg-[#1c1a17]">
-          
+
           <img
             src={eldersGaze}
             alt="The Elder's Gaze Artwork"
@@ -116,7 +116,7 @@ export default function GalleryHero() {
           </div>
 
           {/* Just Listed Interactive Card Overlay - Raised Up for Spacing Below */}
-          <div 
+          <div
             onClick={(e) => {
               if (!window.matchMedia("(hover: hover)").matches) {
                 e.stopPropagation();
@@ -148,11 +148,10 @@ export default function GalleryHero() {
               <button
                 onClick={handleAddToCart}
                 disabled={cartState !== 'idle'}
-                className={`flex items-center justify-center w-[100px] sm:w-[120px] h-[34px] sm:h-[40px] text-[11px] sm:text-[13px] font-medium rounded-full transition-all duration-300 ${
-                  cartState === 'added'
-                    ? 'bg-green-700 text-white'
-                    : 'bg-[#C25E36] text-white hover:bg-[#a64e2c]'
-                } ${cartState === 'loading' ? 'opacity-80 cursor-not-allowed' : ''}`}
+                className={`flex items-center justify-center w-[100px] sm:w-[120px] h-[34px] sm:h-[40px] text-[11px] sm:text-[13px] font-medium rounded-full transition-all duration-300 ${cartState === 'added'
+                  ? 'bg-green-700 text-white'
+                  : 'bg-[#C25E36] text-white hover:bg-[#a64e2c]'
+                  } ${cartState === 'loading' ? 'opacity-80 cursor-not-allowed' : ''}`}
               >
                 {cartState === 'idle' && 'Add to Cart'}
 

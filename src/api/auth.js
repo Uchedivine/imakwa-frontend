@@ -19,3 +19,8 @@ export const getMe = async () => {
   const response = await client.get('/auth/me')
   return response.data
 }
+
+export const forgotPassword = async ({ email }) => {
+  const response = await client.post('/auth/forgot-password', { email })
+  return response.data
+}
