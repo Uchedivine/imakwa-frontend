@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import ArtworkCard from '../../components/artwork/ArtworkCard'
+import { useArtworks } from '../../hooks/useArtworks'
 
 const categories = [
   'All Works', 'Paintings', 'Sculpture', 'Digital Art', 'Textiles', 'Photography'
 ]
 
-// Expanded to 8 items
-const artworks = [
+// Static fallback — used while backend is not yet connected
+const FALLBACK_ARTWORKS = [
   { id: 1, title: 'Ancestral Echoes', artist: 'Adaeze Okonkwo', country: 'Nigeria', countryCode: 'NG', price: 3800, badge: 'NEW', image: 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=600&q=80&fit=crop' },
   { id: 2, title: 'The Keeper of Drums', artist: 'Kwame Asante', country: 'Ghana', countryCode: 'GH', price: 7500, badge: 'LIMITED', image: 'https://images.unsplash.com/photo-1561059488-916d69792237?w=600&q=80&fit=crop' },
   { id: 3, title: 'Neon Griot', artist: 'Amara Osei', country: 'Kenya', countryCode: 'KE', price: 1200, badge: 'DIGITAL', image: 'https://images.unsplash.com/photo-1531913764164-f85c52e6e654?w=600&q=80&fit=crop' },
@@ -14,11 +15,17 @@ const artworks = [
   { id: 5, title: 'Desert Whispers', artist: 'Musa Ibrahim', country: 'Mali', countryCode: 'ML', price: 2900, badge: 'NEW', image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&q=80&fit=crop' },
   { id: 6, title: 'Urban Rhythm', artist: 'Chioma Adeyemi', country: 'Nigeria', countryCode: 'NG', price: 4500, badge: null, image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600&q=80&fit=crop' },
   { id: 7, title: 'Oceanic Souls', artist: 'Kofi Mensah', country: 'Ghana', countryCode: 'GH', price: 3200, badge: 'LIMITED', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80&fit=crop' },
-  { id: 8, title: 'Nomad Dreams', artist: 'Layla Zahra', country: 'Morocco', countryCode: 'MA', price: 1800, badge: 'DIGITAL', image: 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?w=600&q=80&fit=crop' }
+  { id: 8, title: 'Nomad Dreams', artist: 'Layla Zahra', country: 'Morocco', countryCode: 'MA', price: 1800, badge: 'DIGITAL', image: 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?w=600&q=80&fit=crop' },
 ]
 
 export default function FeaturedMasterworks() {
   const [activeCategory, setActiveCategory] = useState('All Works')
+
+  const categoryParam = activeCategory === 'All Works' ? {} : { category: activeCategory }
+  const { data, isLoading } = useArtworks(categoryParam)
+
+  // Use live data if available, fall back to static placeholder data
+  const artworks = data?.data ?? FALLBACK_ARTWORKS
 
   return (
     <section className="py-20 bg-[#FCFBF8]">
@@ -37,7 +44,7 @@ export default function FeaturedMasterworks() {
           </button>
         </div>
 
-        {/* Categories - Mobile optimized with touch scrolling */}
+        {/* Categories */}
         <div className="flex gap-2 mb-12 overflow-x-auto pb-4 scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0">
           {categories.map(cat => (
             <button
@@ -50,11 +57,16 @@ export default function FeaturedMasterworks() {
           ))}
         </div>
 
-        {/* Grid (2 rows of 4) */}
+        {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {artworks.map(artwork => (
-            <ArtworkCard key={artwork.id} artwork={artwork} />
-          ))}
+          {isLoading
+            ? FALLBACK_ARTWORKS.map(artwork => (
+                <ArtworkCard key={artwork.id} artwork={artwork} />
+              ))
+            : artworks.map(artwork => (
+                <ArtworkCard key={artwork.id} artwork={artwork} />
+              ))
+          }
         </div>
       </div>
     </section>
