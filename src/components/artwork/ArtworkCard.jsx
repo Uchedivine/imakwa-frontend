@@ -18,7 +18,7 @@ export default function ArtworkCard({ artwork }) {
         addItem({
             id: artwork.id,
             title: artwork.title,
-            artist: artwork.artist,
+            artist: artwork.artist?.display_name || artwork.artist?.name || artwork.artist,
             price: artwork.price,
             image: artwork.image,
             quantity: 1
@@ -81,7 +81,11 @@ export default function ArtworkCard({ artwork }) {
                 </h3>
 
                 <p className="text-[12px] text-gray-500 mb-4">
-                    by {artwork.artist}
+                    by {
+                        typeof artwork.artist === 'object'
+                            ? (artwork.artist?.display_name || artwork.artist?.name || artwork.artist_name || 'Unknown Artist')
+                            : (artwork.artist || artwork.artist_name || 'Unknown Artist')
+                    }
                 </p>
 
                 <div className="flex items-center justify-between">

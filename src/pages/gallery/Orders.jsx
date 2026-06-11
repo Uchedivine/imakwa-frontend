@@ -85,7 +85,7 @@ export default function Orders() {
 
                                     {/* Order Items */}
                                     <div className="p-6 space-y-4">
-                                        {order.items.map((item) => {
+                                        {order.items?.map((item) => {
                                             const artworkId = item.itemable_id || item.id;
                                             const image = item.itemable?.primary_image?.url || item.itemable?.primaryImage?.url || item.image || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=400&q=80';
                                             const artist = item.itemable?.artist?.name || item.artist || 'Unknown Artist';

@@ -75,7 +75,7 @@ const TIER_DISPLAY = {
 // Map real API shape → ProductTierCard props
 const mapApiTiers = (products) =>
   products.flatMap((product) =>
-    product.tiers.map((tier) => ({
+    product.tiers?.map((tier) => ({
       tierId: tier.id,                  // integer — passed to checkout
       id: tier.id,
       name: tier.label,
