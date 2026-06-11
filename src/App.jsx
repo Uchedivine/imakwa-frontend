@@ -16,6 +16,9 @@ import Checkout from './pages/gallery/Checkout'
 import CheckoutSuccess from './pages/gallery/CheckoutSuccess'
 import Orders from './pages/gallery/Orders'
 import WorldCupHome from './pages/worldcup/WorldCupHome'
+import WorldCupProducts from './pages/worldcup/WorldCupProducts'
+import WorldCupProductDetail from './pages/worldcup/WorldCupProductDetail'
+import WorldCupOrderStatus from './pages/worldcup/WorldCupOrderStatus'
 import WorldCupPayment from './pages/worldcup/WorldCupPayment'
 import WorldCupSuccess from './pages/worldcup/WorldCupSuccess'
 import WorldCupDownload from './pages/worldcup/WorldCupDownload'
@@ -61,6 +64,9 @@ function App() {
 
             {/* World Cup */}
             <Route path="/worldcup" element={<WorldCupHome />} />
+            <Route path="/worldcup/products" element={<WorldCupProducts />} />
+            <Route path="/worldcup/products/:id" element={<WorldCupProductDetail />} />
+            <Route path="/worldcup/order/:id" element={<WorldCupOrderStatus />} />
             <Route path="/worldcup/payment/:orderId" element={<WorldCupPayment />} />
             <Route path="/worldcup/success" element={<WorldCupSuccess />} />
             <Route path="/worldcup/download/:token" element={<WorldCupDownload />} />
