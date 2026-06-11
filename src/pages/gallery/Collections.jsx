@@ -4,6 +4,7 @@ import GalleryFooter from '../../components/layout/GalleryFooter'
 import { useCollections } from '../../hooks/useCollections'
 import Spinner from '../../components/ui/Spinner'
 import ErrorMessage from '../../components/ui/ErrorMessage'
+import SectionReveal from '../../components/ui/SectionReveal'
 
 export default function Collections() {
     const { data: collections, isLoading, isError, error, refetch } = useCollections()
@@ -103,6 +104,7 @@ export default function Collections() {
 
             {/* Featured Collections */}
             {featuredCollections.length > 0 && (
+                <SectionReveal>
                 <section className="pb-16 px-6 md:px-8">
                     <div className="max-w-[1200px] mx-auto">
                         <div className="flex items-center gap-3 mb-8">
@@ -143,9 +145,11 @@ export default function Collections() {
                         </div>
                     </div>
                 </section>
+                </SectionReveal>
             )}
 
             {/* All Collections */}
+            <SectionReveal>
             <section className="pb-24 px-6 md:px-8">
                 <div className="max-w-[1200px] mx-auto">
                     <div className="flex items-center gap-3 mb-8">
@@ -183,6 +187,7 @@ export default function Collections() {
                     </div>
                 </div>
             </section>
+            </SectionReveal>
 
             <GalleryFooter />
         </div>

@@ -7,6 +7,7 @@ import DigitalAdvantage from '../../components/worldcup/DigitalAdvantage'
 import EarlyCollectors from '../../components/worldcup/EarlyCollectors'
 import ProductTierCard from '../../components/worldcup/ProductTierCard'
 import CheckoutModal from '../../components/worldcup/CheckoutModal'
+import SectionReveal from '../../components/ui/SectionReveal'
 import { useWorldCupProducts } from '../../hooks/useWorldCupProducts'
 
 // Display-only properties keyed by tier Roman numerals (I–IV)
@@ -212,56 +213,58 @@ export default function WorldCupHome() {
       <CountdownBanner />
 
       {/* Products Grid Section */}
-      <section id="products" className="py-24 px-6 md:px-8 bg-[#FDFBF7]">
-        <div className="max-w-[1400px] mx-auto">
+      <SectionReveal>
+        <section id="products" className="py-24 px-6 md:px-8 bg-[#FDFBF7]">
+          <div className="max-w-[1400px] mx-auto">
 
-          {/* Header Area */}
-          <div className="max-w-xl mb-16 text-left">
-            <span className="text-[10px] font-bold tracking-[0.2em] text-[#C1623F] uppercase mb-4 block">
-              THE DIGITAL COLLECTION
-            </span>
-            <h2 className="font-serif text-4xl md:text-5xl text-charcoal leading-tight mb-5">
-              Four Tiers. <br />
-              <span className="italic text-[#C1623F]">One Heritage.</span>
-            </h2>
-            <p className="text-charcoal-soft text-[13.5px] leading-relaxed">
-              Every purchase is a pure digital download — delivered to your inbox within seconds of payment, accessible from every device, in perpetuity.
-            </p>
-          </div>
-
-          {/* Product Tiers Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 items-stretch">
-            {productTiers.map((tier) => (
-              <ProductTierCard
-                key={tier.id}
-                tier={tier}
-                onPurchase={handlePurchase}
-              />
-            ))}
-          </div>
-
-          {/* Bottom Callout Bundle Banner */}
-          <div className="mt-16">
-            <div className="bg-[#F5EFE6] border border-[#C5A665]/10 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 text-left">
-              <div>
-                <h4 className="font-serif text-lg md:text-xl text-charcoal font-semibold mb-2">
-                  Building a premium venue experience?
-                </h4>
-                <p className="text-[13px] text-charcoal-soft leading-relaxed">
-                  Bundle the B2B Venue License with the 8K Vault for a complete turnkey solution at <span className="font-semibold text-charcoal">$2,100</span> — a saving of <span className="font-semibold text-charcoal">$145</span>.
-                </p>
-              </div>
-              <a
-                href="mailto:hello@imakwa.com?subject=Bundle Inquiry — Venue License + 8K Vault"
-                className="whitespace-nowrap px-8 py-3.5 bg-[#111111] text-white hover:bg-black rounded-xl font-bold uppercase tracking-wider text-[11px] transition-all shadow-md hover:shadow-lg"
-              >
-                ENQUIRE ABOUT BUNDLE
-              </a>
+            {/* Header Area */}
+            <div className="max-w-xl mb-16 text-left">
+              <span className="text-[10px] font-bold tracking-[0.2em] text-[#C1623F] uppercase mb-4 block">
+                THE DIGITAL COLLECTION
+              </span>
+              <h2 className="font-serif text-4xl md:text-5xl text-charcoal leading-tight mb-5">
+                Four Tiers. <br />
+                <span className="italic text-[#C1623F]">One Heritage.</span>
+              </h2>
+              <p className="text-charcoal-soft text-[13.5px] leading-relaxed">
+                Every purchase is a pure digital download — delivered to your inbox within seconds of payment, accessible from every device, in perpetuity.
+              </p>
             </div>
-          </div>
 
-        </div>
-      </section>
+            {/* Product Tiers Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 items-stretch">
+              {productTiers.map((tier) => (
+                <ProductTierCard
+                  key={tier.id}
+                  tier={tier}
+                  onPurchase={handlePurchase}
+                />
+              ))}
+            </div>
+
+            {/* Bottom Callout Bundle Banner */}
+            <div className="mt-16">
+              <div className="bg-[#F5EFE6] border border-[#C5A665]/10 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 text-left">
+                <div>
+                  <h4 className="font-serif text-lg md:text-xl text-charcoal font-semibold mb-2">
+                    Building a premium venue experience?
+                  </h4>
+                  <p className="text-[13px] text-charcoal-soft leading-relaxed">
+                    Bundle the B2B Venue License with the 8K Vault for a complete turnkey solution at <span className="font-semibold text-charcoal">$2,100</span> — a saving of <span className="font-semibold text-charcoal">$145</span>.
+                  </p>
+                </div>
+                <a
+                  href="mailto:hello@imakwa.com?subject=Bundle Inquiry — Venue License + 8K Vault"
+                  className="whitespace-nowrap px-8 py-3.5 bg-[#111111] text-white hover:bg-black rounded-xl font-bold uppercase tracking-wider text-[11px] transition-all shadow-md hover:shadow-lg"
+                >
+                  ENQUIRE ABOUT BUNDLE
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      </SectionReveal>
 
       {/* Digital Advantage Section */}
       <DigitalAdvantage />

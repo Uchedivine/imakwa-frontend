@@ -4,6 +4,7 @@ import GalleryFooter from '../../components/layout/GalleryFooter'
 import { useArtists } from '../../hooks/useArtists'
 import Spinner from '../../components/ui/Spinner'
 import ErrorMessage from '../../components/ui/ErrorMessage'
+import SectionReveal from '../../components/ui/SectionReveal'
 
 export default function Artists() {
     const { data: artists, isLoading, isError, error, refetch } = useArtists()
@@ -145,6 +146,7 @@ export default function Artists() {
 
             {/* Featured Artists */}
             {featuredArtists.length > 0 && (
+                <SectionReveal>
                 <section className="pb-16 px-6 md:px-8">
                     <div className="max-w-[1200px] mx-auto">
                         <div className="flex items-center gap-3 mb-8">
@@ -210,8 +212,10 @@ export default function Artists() {
                         </div>
                     </div>
                 </section>
+                </SectionReveal>
             )}
 
+            <SectionReveal>
             {/* All Artists */}
             <section className="pb-24 px-6 md:px-8">
                 <div className="max-w-[1200px] mx-auto">
@@ -264,6 +268,7 @@ export default function Artists() {
                     </div>
                 </div>
             </section>
+            </SectionReveal>
 
             <GalleryFooter />
         </div>
