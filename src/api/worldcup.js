@@ -6,8 +6,34 @@ export const getWorldCupProducts = async () => {
   return response.data
 }
 
+export const getWorldCupProduct = async (id) => {
+  const response = await client.get(`/worldcup/products/${id}`)
+  return response.data
+}
+
 export const getCountdown = async () => {
   const response = await client.get('/worldcup/countdown')
+  return response.data
+}
+
+// Live scores & fixtures
+export const getLiveScores = async () => {
+  const response = await client.get('/worldcup/live-scores')
+  return response.data
+}
+
+export const getFixtures = async () => {
+  const response = await client.get('/worldcup/fixtures')
+  return response.data
+}
+
+export const getUpcoming = async () => {
+  const response = await client.get('/worldcup/upcoming')
+  return response.data
+}
+
+export const getScoresStatus = async () => {
+  const response = await client.get('/worldcup/scores-status')
   return response.data
 }
 

@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function WorldCupHero() {
   return (
     <section
@@ -22,7 +24,7 @@ export default function WorldCupHero() {
       <div className="h-4" />
 
       <div className="relative z-10 max-w-[800px] mx-auto text-center my-auto">
-          
+
         {/* Eyebrow - Lines slightly lengthened to match design */}
         <div className="flex items-center justify-center gap-4 mb-8">
           <div className="h-[1px] w-14 bg-[#C5A665]/30" />
@@ -50,18 +52,18 @@ export default function WorldCupHero() {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-5">
-          <a
-            href="#products"
+          <Link
+            to="/worldcup/products"
             className="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-[#C5A665] text-[#092215] rounded-full text-[11px] font-bold uppercase tracking-wider hover:bg-[#D4B77A] transition-all shadow-lg hover:shadow-xl"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
             </svg>
             ACQUIRE THE COLLECTION
-          </a>
+          </Link>
 
           <a
-            href="#digital-access"
+            href="/worldcup/digital-access"
             className="inline-flex items-center justify-center gap-2 px-8 py-3.5 border border-[#5B7566]/40 text-[#A2B5AA] rounded-full text-[13px] font-medium hover:bg-white/5 hover:border-[#5B7566]/70 transition-all"
           >
             What is Digital Access? <span className="font-sans ml-1 text-[15px]">→</span>
@@ -72,7 +74,7 @@ export default function WorldCupHero() {
       {/* Stats Block (Bottom) */}
       <div className="relative z-10 w-full max-w-[1100px] mx-auto pt-8 border-t border-[#C5A665]/10 mt-12 pb-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4 md:gap-x-0 md:divide-x md:divide-[#C5A665]/15 text-center">
-          
+
           <div className="flex flex-col items-center">
             <span className="font-serif italic text-3xl md:text-4xl text-[#C5A665] leading-none">46</span>
             <span className="text-[9px] font-semibold tracking-[0.2em] text-[#8DA094] uppercase mt-2.5">

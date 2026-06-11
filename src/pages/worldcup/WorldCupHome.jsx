@@ -9,12 +9,12 @@ import ProductTierCard from '../../components/worldcup/ProductTierCard'
 import CheckoutModal from '../../components/worldcup/CheckoutModal'
 import { useWorldCupProducts } from '../../hooks/useWorldCupProducts'
 
-// Display-only properties keyed by tier number (1–4)
+// Display-only properties keyed by tier Roman numerals (I–IV)
 const TIER_DISPLAY = {
-  1: {
-    tierBadge:   'TIER I',
-    btnStyle:    'bg-[#111111] text-white hover:bg-black',
-    highlight:   false,
+  'I': {
+    tierBadge: 'TIER I',
+    btnStyle: 'bg-[#111111] text-white hover:bg-black',
+    highlight: false,
     previewType: 'smart-device',
     pricePeriod: 'one-time',
     features: [
@@ -25,10 +25,10 @@ const TIER_DISPLAY = {
       'Personal use license, lifetime access'
     ],
   },
-  2: {
-    tierBadge:   'TIER II',
-    btnStyle:    'bg-[#111111] text-white hover:bg-black',
-    highlight:   false,
+  'II': {
+    tierBadge: 'TIER II',
+    btnStyle: 'bg-[#111111] text-white hover:bg-black',
+    highlight: false,
     previewType: 'hosting-kit',
     pricePeriod: 'one-time',
     features: [
@@ -39,10 +39,10 @@ const TIER_DISPLAY = {
       'Personal + small event commercial use'
     ],
   },
-  3: {
-    tierBadge:   'TIER III · MOST POPULAR',
-    btnStyle:    'bg-[#C5A665] text-[#0A2215] hover:bg-[#D4B77A]',
-    highlight:   true,
+  'III': {
+    tierBadge: 'TIER III · MOST POPULAR',
+    btnStyle: 'bg-[#C5A665] text-[#0A2215] hover:bg-[#D4B77A]',
+    highlight: true,
     previewType: 'ambient-vault',
     pricePeriod: 'one-time',
     features: [
@@ -54,10 +54,10 @@ const TIER_DISPLAY = {
       'All 32 World Cup match artworks'
     ],
   },
-  4: {
-    tierBadge:   'TIER IV · B2B',
-    btnStyle:    'bg-[#0B2217] text-white hover:bg-black',
-    highlight:   false,
+  'IV': {
+    tierBadge: 'TIER IV · B2B',
+    btnStyle: 'bg-[#0B2217] text-white hover:bg-black',
+    highlight: false,
     previewType: 'b2b-license',
     pricePeriod: 'per venue / season',
     features: [
@@ -75,12 +75,12 @@ const TIER_DISPLAY = {
 const mapApiTiers = (products) =>
   products.flatMap((product) =>
     product.tiers.map((tier) => ({
-      tierId:      tier.id,                  // integer — passed to checkout
-      id:          tier.id,
-      name:        tier.label,
+      tierId: tier.id,                  // integer — passed to checkout
+      id: tier.id,
+      name: tier.label,
       description: tier.description,
-      price:       tier.price,
-      currency:    tier.currency,
+      price: tier.price,
+      currency: tier.currency,
       statusBadge: tier.is_sold_out
         ? '✦ Sold Out'
         : '✦ Instant Download on Checkout',
@@ -214,39 +214,19 @@ export default function WorldCupHome() {
       {/* Products Grid Section */}
       <section id="products" className="py-24 px-6 md:px-8 bg-[#FDFBF7]">
         <div className="max-w-[1400px] mx-auto">
-          
-          {/* Header Area with flex spacing layout */}
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-16 gap-8 text-left">
-            <div className="max-w-xl">
-              <span className="text-[10px] font-bold tracking-[0.2em] text-[#C1623F] uppercase mb-4 block">
-                THE DIGITAL COLLECTION
-              </span>
-              <h2 className="font-serif text-4xl md:text-5xl text-charcoal leading-tight mb-5">
-                Four Tiers. <br />
-                <span className="italic text-[#C1623F]">One Heritage.</span>
-              </h2>
-              <p className="text-charcoal-soft text-[13.5px] leading-relaxed">
-                Every purchase is a pure digital download — delivered to your inbox within seconds of payment, accessible from every device, in perpetuity.
-              </p>
-            </div>
-            
-            {/* Fulfilled Via Pill Badges */}
-            <div className="flex flex-col items-start lg:items-end gap-2.5">
-              <span className="text-[9px] font-bold tracking-[0.2em] text-charcoal/40 uppercase">
-                FULFILLED VIA
-              </span>
-              <div className="flex items-center gap-2">
-                <span className="px-4 py-1.5 border border-charcoal/10 rounded-md text-[11px] font-semibold text-charcoal/60 bg-white shadow-sm">
-                  Gumroad
-                </span>
-                <span className="px-4 py-1.5 border border-charcoal/10 rounded-md text-[11px] font-semibold text-charcoal/60 bg-white shadow-sm">
-                  SendOwl
-                </span>
-                <span className="px-4 py-1.5 border border-charcoal/10 rounded-md text-[11px] font-semibold text-charcoal/60 bg-white shadow-sm">
-                  Shopify
-                </span>
-              </div>
-            </div>
+
+          {/* Header Area */}
+          <div className="max-w-xl mb-16 text-left">
+            <span className="text-[10px] font-bold tracking-[0.2em] text-[#C1623F] uppercase mb-4 block">
+              THE DIGITAL COLLECTION
+            </span>
+            <h2 className="font-serif text-4xl md:text-5xl text-charcoal leading-tight mb-5">
+              Four Tiers. <br />
+              <span className="italic text-[#C1623F]">One Heritage.</span>
+            </h2>
+            <p className="text-charcoal-soft text-[13.5px] leading-relaxed">
+              Every purchase is a pure digital download — delivered to your inbox within seconds of payment, accessible from every device, in perpetuity.
+            </p>
           </div>
 
           {/* Product Tiers Grid */}
@@ -271,12 +251,12 @@ export default function WorldCupHome() {
                   Bundle the B2B Venue License with the 8K Vault for a complete turnkey solution at <span className="font-semibold text-charcoal">$2,100</span> — a saving of <span className="font-semibold text-charcoal">$145</span>.
                 </p>
               </div>
-              <button 
-                onClick={() => handlePurchase({ id: 'bundle', name: 'Premium Venue Bundle', price: 2100 })}
+              <a
+                href="mailto:hello@imakwa.com?subject=Bundle Inquiry — Venue License + 8K Vault"
                 className="whitespace-nowrap px-8 py-3.5 bg-[#111111] text-white hover:bg-black rounded-xl font-bold uppercase tracking-wider text-[11px] transition-all shadow-md hover:shadow-lg"
               >
-                ADD BUNDLE — $2,100
-              </button>
+                ENQUIRE ABOUT BUNDLE
+              </a>
             </div>
           </div>
 
