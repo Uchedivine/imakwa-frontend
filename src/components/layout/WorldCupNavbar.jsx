@@ -6,7 +6,7 @@ export default function WorldCupNavbar() {
         <nav className="w-full flex flex-col z-50 sticky top-0 select-none">
             {/* 1. Main Navigation Bar (Top) */}
             <div className="bg-[#12110F] border-b border-white/5 h-[64px] flex items-center justify-between px-6 lg:px-10 w-full">
-                
+
                 {/* Logo */}
                 <Link to="/worldcup" className="font-serif text-[24px] font-bold tracking-tight text-white flex items-baseline">
                     imakwa<span className="text-[#C25E36]">.</span>
@@ -17,9 +17,9 @@ export default function WorldCupNavbar() {
                     <Link to="/" className="text-[13px] font-medium text-white/70 hover:text-white transition-colors flex items-center gap-2">
                         <span>←</span> Back to Gallery
                     </Link>
-                    <a href="#products" className="text-[13px] font-medium text-white/70 hover:text-white transition-colors">
-                        Shop Collection
-                    </a>
+                    <Link to="/worldcup/products" className="text-[13px] font-medium text-white/70 hover:text-white transition-colors">
+                        Browse Collection
+                    </Link>
                     <a href="#digital-access" className="text-[13px] font-medium text-white/70 hover:text-white transition-colors">
                         Digital Access
                     </a>
@@ -29,12 +29,12 @@ export default function WorldCupNavbar() {
                 </div>
 
                 {/* Shop Collection Button */}
-                <a
-                  href="#products"
-                  className="h-[40px] px-6 bg-[#C25E36] hover:bg-[#a64e2c] transition-colors text-white rounded-full text-[13px] font-semibold flex items-center gap-2"
+                <Link
+                    to="/worldcup/products"
+                    className="h-[40px] px-6 bg-[#C25E36] hover:bg-[#a64e2c] transition-colors text-white rounded-full text-[13px] font-semibold flex items-center gap-2"
                 >
-                  Shop Collection
-                </a>
+                    Browse Collection
+                </Link>
             </div>
 
             {/* 2. Live Match Ticker (Bottom) */}
@@ -42,15 +42,15 @@ export default function WorldCupNavbar() {
 
                 <div className="animate-scroll flex items-center whitespace-nowrap relative z-10 hover:[animation-play-state:paused]">
                     <div className="flex items-center gap-10 text-[11px] font-mono tracking-widest text-[#B89B5E] font-semibold py-1">
-                        
+
                         {/* Seamless Loop container */}
                         {[...Array(3)].map((_, i) => (
                             <div key={i} className="flex items-center gap-10">
-                                
+
                                 <div className="flex items-center gap-3">
                                     <span className="opacity-80">FIFA WORLD CUP 2026</span>
                                     {/* Hexagon outline icon from the screenshot */}
-                                    <svg className="w-3.5 h-3.5 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l8.66 5v10L12 22l-8.66-5V7z"/></svg>
+                                    <svg className="w-3.5 h-3.5 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l8.66 5v10L12 22l-8.66-5V7z" /></svg>
                                 </div>
 
                                 <span className="text-[#B89B5E]/40 text-[10px]">•</span>
