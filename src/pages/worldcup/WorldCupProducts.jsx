@@ -123,77 +123,79 @@ export default function WorldCupProducts() {
             </section>
 
             {/* Main Content */}
-            <div className="max-w-[1400px] mx-auto px-6 md:px-8 py-12">
-                {/* Toolbar */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-                    {/* Left: Count + Filters */}
-                    <div className="flex items-center gap-4 flex-wrap">
-                        <p className="text-sm text-charcoal-soft">
-                            {isLoading ? 'Loading...' : `${totalCount} ${totalCount === 1 ? 'product' : 'products'}`}
-                        </p>
+            <SectionReveal>
+                <div className="max-w-[1400px] mx-auto px-6 md:px-8 py-12">
+                    {/* Toolbar */}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+                        {/* Left: Count + Filters */}
+                        <div className="flex items-center gap-4 flex-wrap">
+                            <p className="text-sm text-charcoal-soft">
+                                {isLoading ? 'Loading...' : `${totalCount} ${totalCount === 1 ? 'product' : 'products'}`}
+                            </p>
 
-                        {/* Tier Filter Pills */}
-                        <div className="flex items-center gap-2 flex-wrap">
-                            {tierFilters.map((filter) => (
-                                <button
-                                    key={filter.value}
-                                    onClick={() => updateFilter('tier', filter.value)}
-                                    className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${tierFilter === filter.value
+                            {/* Tier Filter Pills */}
+                            <div className="flex items-center gap-2 flex-wrap">
+                                {tierFilters.map((filter) => (
+                                    <button
+                                        key={filter.value}
+                                        onClick={() => updateFilter('tier', filter.value)}
+                                        className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${tierFilter === filter.value
                                             ? 'bg-[#C5A665] text-white shadow-md'
                                             : 'bg-white border border-charcoal/10 text-charcoal-soft hover:border-[#C5A665]/40'
-                                        }`}
+                                            }`}
+                                    >
+                                        {filter.label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {hasActiveFilters && (
+                                <button
+                                    onClick={clearFilters}
+                                    className="text-xs text-terracotta hover:text-terra-light font-medium"
                                 >
-                                    {filter.label}
+                                    Clear filters
                                 </button>
-                            ))}
+                            )}
                         </div>
 
-                        {hasActiveFilters && (
-                            <button
-                                onClick={clearFilters}
-                                className="text-xs text-terracotta hover:text-terra-light font-medium"
-                            >
-                                Clear filters
-                            </button>
-                        )}
+                        {/* Right: Sort Dropdown */}
+                        <select
+                            value={sortBy}
+                            onChange={(e) => updateFilter('sort', e.target.value)}
+                            className="px-4 py-2 bg-white border border-charcoal/10 rounded-full text-sm focus:outline-none focus:border-[#C5A665]"
+                        >
+                            {sortOptions.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
-                    {/* Right: Sort Dropdown */}
-                    <select
-                        value={sortBy}
-                        onChange={(e) => updateFilter('sort', e.target.value)}
-                        className="px-4 py-2 bg-white border border-charcoal/10 rounded-full text-sm focus:outline-none focus:border-[#C5A665]"
-                    >
-                        {sortOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                                {option.label}
-                            </option>
-                        ))}
-                    </select>
+                    {/* Products Grid */}
+                    {isLoading ? (
+                        <SkeletonGrid count={8} />
+                    ) : isError ? (
+                        <ErrorMessage
+                            message={error?.message || 'Failed to load products'}
+                            onRetry={refetch}
+                        />
+                    ) : sortedProducts.length === 0 ? (
+                        <EmptyState
+                            title="No products found"
+                            description="Try adjusting your tier filter"
+                            action={hasActiveFilters ? { label: 'Clear filters', onClick: clearFilters } : null}
+                        />
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            {sortedProducts.map((product) => (
+                                <WorldCupProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                    )}
                 </div>
-
-                {/* Products Grid */}
-                {isLoading ? (
-                    <SkeletonGrid count={8} />
-                ) : isError ? (
-                    <ErrorMessage
-                        message={error?.message || 'Failed to load products'}
-                        onRetry={refetch}
-                    />
-                ) : sortedProducts.length === 0 ? (
-                    <EmptyState
-                        title="No products found"
-                        description="Try adjusting your tier filter"
-                        action={hasActiveFilters ? { label: 'Clear filters', onClick: clearFilters } : null}
-                    />
-                ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {sortedProducts.map((product) => (
-                            <WorldCupProductCard key={product.id} product={product} />
-                        ))}
-                    </div>
-                )}
-            </div>
+            </SectionReveal>
 
             <WorldCupFooter />
         </div>

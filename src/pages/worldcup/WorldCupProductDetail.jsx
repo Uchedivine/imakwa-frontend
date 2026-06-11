@@ -7,6 +7,7 @@ import ProductTierCard from '../../components/worldcup/ProductTierCard'
 import CheckoutModal from '../../components/worldcup/CheckoutModal'
 import Spinner from '../../components/ui/Spinner'
 import ErrorMessage from '../../components/ui/ErrorMessage'
+import SectionReveal from '../../components/ui/SectionReveal'
 import { useWorldCupProduct } from '../../hooks/useWorldCupProduct'
 import { isProductSoldOut } from '../../utils/worldcup'
 
@@ -206,94 +207,96 @@ export default function WorldCupProductDetail() {
             </section>
 
             {/* Tiers Section */}
-            <section className="py-16 px-6 md:px-8">
-                <div className="max-w-[1400px] mx-auto">
-                    {/* Closed Collection Banner */}
-                    {isClosed && (
-                        <div className="mb-12 bg-red-50 border-l-4 border-red-500 p-6 rounded-r-xl">
-                            <div className="flex items-start gap-3">
-                                <svg
-                                    className="w-6 h-6 text-red-500 flex-shrink-0 mt-0.5"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                                    />
-                                </svg>
-                                <div>
-                                    <h3 className="font-bold text-red-800 mb-1">
-                                        Collection No Longer Available
-                                    </h3>
-                                    <p className="text-sm text-red-700">
-                                        This product collection has been closed and is no longer available for purchase.
-                                    </p>
+            <SectionReveal>
+                <section className="py-16 px-6 md:px-8">
+                    <div className="max-w-[1400px] mx-auto">
+                        {/* Closed Collection Banner */}
+                        {isClosed && (
+                            <div className="mb-12 bg-red-50 border-l-4 border-red-500 p-6 rounded-r-xl">
+                                <div className="flex items-start gap-3">
+                                    <svg
+                                        className="w-6 h-6 text-red-500 flex-shrink-0 mt-0.5"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                                        />
+                                    </svg>
+                                    <div>
+                                        <h3 className="font-bold text-red-800 mb-1">
+                                            Collection No Longer Available
+                                        </h3>
+                                        <p className="text-sm text-red-700">
+                                            This product collection has been closed and is no longer available for purchase.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        )}
 
-                    {/* Section Header */}
-                    {!isClosed && (
-                        <div className="text-center mb-12">
-                            <span className="text-[10px] font-bold tracking-[0.2em] text-[#C1623F] uppercase mb-4 block">
-                                AVAILABLE TIERS
-                            </span>
-                            <h2 className="font-serif text-3xl md:text-4xl text-charcoal mb-4">
-                                Choose Your <span className="italic text-[#C1623F]">License</span>
-                            </h2>
-                            <p className="text-charcoal-soft text-sm max-w-2xl mx-auto">
-                                Select the tier that best fits your needs. All purchases include instant download and lifetime access.
-                            </p>
-                        </div>
-                    )}
+                        {/* Section Header */}
+                        {!isClosed && (
+                            <div className="text-center mb-12">
+                                <span className="text-[10px] font-bold tracking-[0.2em] text-[#C1623F] uppercase mb-4 block">
+                                    AVAILABLE TIERS
+                                </span>
+                                <h2 className="font-serif text-3xl md:text-4xl text-charcoal mb-4">
+                                    Choose Your <span className="italic text-[#C1623F]">License</span>
+                                </h2>
+                                <p className="text-charcoal-soft text-sm max-w-2xl mx-auto">
+                                    Select the tier that best fits your needs. All purchases include instant download and lifetime access.
+                                </p>
+                            </div>
+                        )}
 
-                    {/* Tiers Grid */}
-                    {!isClosed && mappedTiers.length > 0 && (
-                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-                            {mappedTiers.map((tier) => (
-                                <ProductTierCard
-                                    key={tier.id}
-                                    tier={tier}
-                                    onPurchase={handlePurchase}
-                                />
-                            ))}
-                        </div>
-                    )}
+                        {/* Tiers Grid */}
+                        {!isClosed && mappedTiers.length > 0 && (
+                            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+                                {mappedTiers.map((tier) => (
+                                    <ProductTierCard
+                                        key={tier.id}
+                                        tier={tier}
+                                        onPurchase={handlePurchase}
+                                    />
+                                ))}
+                            </div>
+                        )}
 
-                    {/* No Tiers Available */}
-                    {!isClosed && mappedTiers.length === 0 && (
-                        <div className="text-center py-12">
-                            <p className="text-charcoal-soft text-sm">
-                                No tiers are currently available for this product.
-                            </p>
-                        </div>
-                    )}
+                        {/* No Tiers Available */}
+                        {!isClosed && mappedTiers.length === 0 && (
+                            <div className="text-center py-12">
+                                <p className="text-charcoal-soft text-sm">
+                                    No tiers are currently available for this product.
+                                </p>
+                            </div>
+                        )}
 
-                    {/* Back to Products Link */}
-                    <div className="text-center mt-12">
-                        <Link
-                            to="/worldcup/products"
-                            className="inline-flex items-center gap-2 text-sm text-[#C5A665] hover:text-[#D4B77A] font-medium transition-colors"
-                        >
-                            <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.5"
-                                viewBox="0 0 24 24"
+                        {/* Back to Products Link */}
+                        <div className="text-center mt-12">
+                            <Link
+                                to="/worldcup/products"
+                                className="inline-flex items-center gap-2 text-sm text-[#C5A665] hover:text-[#D4B77A] font-medium transition-colors"
                             >
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                            </svg>
-                            Back to All Products
-                        </Link>
+                                <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2.5"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                                </svg>
+                                Back to All Products
+                            </Link>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            </SectionReveal>
 
             <WorldCupFooter />
 

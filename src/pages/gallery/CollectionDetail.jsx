@@ -5,6 +5,7 @@ import ArtworkCard from '../../components/artwork/ArtworkCard'
 import { useCollection } from '../../hooks/useCollection'
 import Spinner from '../../components/ui/Spinner'
 import ErrorMessage from '../../components/ui/ErrorMessage'
+import SectionReveal from '../../components/ui/SectionReveal'
 
 export default function CollectionDetail() {
     const { id } = useParams()
@@ -153,6 +154,7 @@ export default function CollectionDetail() {
                 </div>
             </section>
 
+            <SectionReveal>
             {/* About Section */}
             <section className="py-16 px-6 md:px-8 bg-white border-b border-charcoal/10">
                 <div className="max-w-[1200px] mx-auto">
@@ -188,7 +190,9 @@ export default function CollectionDetail() {
                     </div>
                 </div>
             </section>
+            </SectionReveal>
 
+            <SectionReveal>
             {/* Artworks Grid */}
             <section className="py-16 px-6 md:px-8">
                 <div className="max-w-[1200px] mx-auto">
@@ -209,6 +213,7 @@ export default function CollectionDetail() {
                     </div>
                 </div>
             </section>
+            </SectionReveal>
 
             <GalleryFooter />
         </div>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCartStore } from '../../store/cartStore'
 import { useAuthStore } from '../../store/authStore'
+import { useFavoritesStore } from '../../store/favoritesStore'
 import CartDrawer from '../cart/CartDrawer'
 
 const dropdownCategories = [
@@ -18,14 +19,31 @@ export default function GalleryNavbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { items } = useCartStore();
   const { isAuthenticated, user, logout } = useAuthStore();
+  const { favorites } = useFavoritesStore();
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   const handleLogout = () => {
     logout()
     setUserMenuOpen(false)
     navigate('/')
+  }
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      navigate(`/browse?q=${encodeURIComponent(searchQuery.trim())}`)
+      setSearchOpen(false)
+      setSearchQuery('')
+      setMenuOpen(false)
+    }
+  }
+
+  const handleSearchInputChange = (e) => {
+    setSearchQuery(e.target.value)
   }
 
   return (
@@ -48,7 +66,7 @@ export default function GalleryNavbar() {
             </Link>
 
             {/* Pill Search Bar (Desktop) */}
-            <div className="hidden lg:block relative w-full max-w-[420px]">
+            <form onSubmit={handleSearch} className="hidden lg:block relative w-full max-w-[420px]">
               <svg
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-[16px] h-[16px]"
                 fill="none"
@@ -60,10 +78,12 @@ export default function GalleryNavbar() {
               </svg>
               <input
                 type="text"
+                value={searchQuery}
+                onChange={handleSearchInputChange}
                 placeholder="Search artworks, artists, regions..."
                 className="w-full pl-11 pr-4 py-2.5 rounded-full bg-[#F4F0EA] text-[14px] text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-300 transition-shadow"
               />
-            </div>
+            </form>
           </div>
 
           {/* --- CENTER SECTION: Nav Links --- */}
@@ -133,18 +153,32 @@ export default function GalleryNavbar() {
 
           {/* --- RIGHT SECTION: Icons --- */}
           <div className="flex items-center gap-5 sm:gap-6">
-            <button className="text-gray-800 hover:text-[#C25E36] transition-colors">
+            {/* Mobile Search Toggle */}
+            <button
+              onClick={() => setSearchOpen(!searchOpen)}
+              className="lg:hidden text-gray-800 hover:text-[#C25E36] transition-colors"
+            >
               <svg className="w-[20px] h-[20px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
               </svg>
             </button>
 
-            <button className="hidden sm:block text-gray-800 hover:text-[#C25E36] transition-colors">
+            {/* Favorites */}
+            <Link
+              to="/favorites"
+              className="hidden sm:block text-gray-800 hover:text-[#C25E36] transition-colors relative"
+            >
               <svg className="w-[20px] h-[20px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
               </svg>
-            </button>
+              {favorites.length > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-terracotta text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                  {favorites.length}
+                </span>
+              )}
+            </Link>
 
+            {/* Cart */}
             <button
               onClick={() => setCartOpen(true)}
               className="text-gray-800 hover:text-[#C25E36] transition-colors relative"
@@ -157,12 +191,6 @@ export default function GalleryNavbar() {
                   {cartCount}
                 </span>
               )}
-            </button>
-
-            <button className="hidden sm:block text-gray-800 hover:text-[#C25E36] transition-colors">
-              <svg className="w-[20px] h-[20px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-              </svg>
             </button>
 
             {/* User Menu */}
@@ -228,12 +256,7 @@ export default function GalleryNavbar() {
               </Link>
             )}
 
-            <button className="hidden sm:block text-gray-800 hover:text-[#C25E36] transition-colors">
-              <svg className="w-[20px] h-[20px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-              </svg>
-            </button>
-
+            {/* Hamburger Menu */}
             <button
               className="lg:hidden text-gray-800 ml-2"
               onClick={() => setMenuOpen(!menuOpen)}
@@ -252,25 +275,119 @@ export default function GalleryNavbar() {
         {/* --- MOBILE DROPDOWN MENU --- */}
         {menuOpen && (
           <div className="lg:hidden border-t border-[#1c1a17]/5 bg-[#FCFBF8] px-6 py-5 flex flex-col gap-4 shadow-lg">
-            <div className="relative mb-2">
-              <svg className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-[15px] h-[15px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+
+            {/* Navigation Links */}
+            <div className="flex flex-col gap-3 border-b border-[#1c1a17]/5 pb-4">
+              <Link
+                to="/browse?category=all"
+                onClick={() => setMenuOpen(false)}
+                className="text-[15px] font-medium text-gray-800 py-2"
+              >
+                Categories
+              </Link>
+              <Link
+                to="/browse?region=all"
+                onClick={() => setMenuOpen(false)}
+                className="text-[15px] font-medium text-gray-800 py-2"
+              >
+                By Region
+              </Link>
+              <Link
+                to="/artists"
+                onClick={() => setMenuOpen(false)}
+                className="text-[15px] font-medium text-gray-800 py-2"
+              >
+                Artists
+              </Link>
+              <Link
+                to="/collections"
+                onClick={() => setMenuOpen(false)}
+                className="text-[15px] font-medium text-gray-800 py-2"
+              >
+                Curated Collections
+              </Link>
+              <Link
+                to="/worldcup"
+                onClick={() => setMenuOpen(false)}
+                className="text-[15px] font-semibold text-gold py-2 flex items-center gap-1.5"
+              >
+                <span>⚽</span>
+                World Cup 2026
+              </Link>
+            </div>
+
+            {/* User Links */}
+            <div className="flex flex-col gap-3">
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    to="/account"
+                    onClick={() => setMenuOpen(false)}
+                    className="text-[15px] font-medium text-gray-800 py-2"
+                  >
+                    My Account
+                  </Link>
+                  <Link
+                    to="/orders"
+                    onClick={() => setMenuOpen(false)}
+                    className="text-[15px] font-medium text-gray-800 py-2"
+                  >
+                    My Orders
+                  </Link>
+                  <Link
+                    to="/favorites"
+                    onClick={() => setMenuOpen(false)}
+                    className="text-[15px] font-medium text-gray-800 py-2 flex items-center gap-2"
+                  >
+                    Favorites
+                    {favorites.length > 0 && (
+                      <span className="px-2 py-0.5 bg-terracotta text-white text-xs font-bold rounded-full">
+                        {favorites.length}
+                      </span>
+                    )}
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="text-[15px] font-medium text-red-600 py-2 text-left"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="text-[15px] font-medium text-gray-800 py-2"
+                >
+                  Login / Sign Up
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* --- MOBILE SEARCH OVERLAY --- */}
+        {searchOpen && (
+          <div className="lg:hidden border-t border-[#1c1a17]/5 bg-[#FCFBF8] px-6 py-5">
+            <form onSubmit={handleSearch} className="relative">
+              <svg
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-[15px] h-[15px]"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
               </svg>
               <input
                 type="text"
-                placeholder="Search artworks..."
-                className="w-full pl-11 pr-4 py-2.5 rounded-full bg-[#F4F0EA] text-[14px] text-gray-800 focus:outline-none"
+                value={searchQuery}
+                onChange={handleSearchInputChange}
+                placeholder="Search artworks, artists, regions..."
+                className="w-full pl-11 pr-4 py-2.5 rounded-full bg-[#F4F0EA] text-[14px] text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-300"
+                autoFocus
               />
-            </div>
-            {['Categories', 'By Region', 'Artists', 'Curated Collections'].map(item => (
-              <Link
-                key={item}
-                to="#"
-                className="text-[15px] font-medium text-gray-800 py-2 border-b border-[#1c1a17]/5 last:border-0"
-              >
-                {item}
-              </Link>
-            ))}
+            </form>
           </div>
         )}
       </nav>

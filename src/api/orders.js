@@ -1,7 +1,7 @@
 import client from './client'
 
 export const getOrders = async (params = {}) => {
-  const response = await client.get('/orders', { params })
+  const response = await client.get('/user/orders', { params })
   return response.data
 }
 
@@ -12,6 +12,11 @@ export const getOrder = async (id) => {
 
 export const createOrder = async (orderData) => {
   const response = await client.post('/orders', orderData)
+  return response.data
+}
+
+export const getUserDigitalOrders = async () => {
+  const response = await client.get('/user/digital-orders')
   return response.data
 }
 

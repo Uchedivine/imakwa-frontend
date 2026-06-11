@@ -15,6 +15,7 @@ import Account from './pages/gallery/Account'
 import Checkout from './pages/gallery/Checkout'
 import CheckoutSuccess from './pages/gallery/CheckoutSuccess'
 import Orders from './pages/gallery/Orders'
+import Favorites from './pages/gallery/Favorites'
 import WorldCupHome from './pages/worldcup/WorldCupHome'
 import WorldCupProducts from './pages/worldcup/WorldCupProducts'
 import WorldCupProductDetail from './pages/worldcup/WorldCupProductDetail'
@@ -28,6 +29,8 @@ import ArtistLicensing from './pages/worldcup/ArtistLicensing'
 import Login from './pages/shared/Login'
 import Register from './pages/shared/Register'
 import ForgotPassword from './pages/shared/ForgotPassword'
+import ResetPassword from './pages/shared/ResetPassword'
+import PaystackCallback from './pages/shared/PaystackCallback'
 
 // Create QueryClient instance
 const queryClient = new QueryClient({
@@ -57,12 +60,15 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/payment/callback" element={<PaystackCallback />} />
 
             {/* Protected routes */}
             <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
             <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
             <Route path="/checkout/success" element={<ProtectedRoute><CheckoutSuccess /></ProtectedRoute>} />
             <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+            <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
 
             {/* World Cup */}
             <Route path="/worldcup" element={<WorldCupHome />} />

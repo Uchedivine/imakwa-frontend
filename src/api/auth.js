@@ -21,16 +21,18 @@ export const getMe = async () => {
 }
 
 export const forgotPassword = async ({ email }) => {
-  // TODO: Implement when backend endpoint is ready
-  // const response = await client.post('/auth/forgot-password', { email })
-  // return response.data
-  
-  // Stub for now - simulate success
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ message: 'Password reset link sent to your email' })
-    }, 1000)
+  const response = await client.post('/auth/forgot-password', { email })
+  return response.data
+}
+
+export const resetPassword = async ({ token, email, password, password_confirmation }) => {
+  const response = await client.post('/auth/reset-password', { 
+    token, 
+    email, 
+    password, 
+    password_confirmation 
   })
+  return response.data
 }
 
 export const updateProfile = async (profileData) => {
@@ -40,5 +42,10 @@ export const updateProfile = async (profileData) => {
 
 export const changePassword = async (passwordData) => {
   const response = await client.post('/user/change-password', passwordData)
+  return response.data
+}
+
+export const getUserProfile = async () => {
+  const response = await client.get('/user/profile')
   return response.data
 }

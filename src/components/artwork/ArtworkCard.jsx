@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCartStore } from '../../store/cartStore'
+import { useFavorites } from '../../hooks/useFavorites'
 
 export default function ArtworkCard({ artwork }) {
-    const [isWishlisted, setIsWishlisted] = useState(false)
     const [cartState, setCartState] = useState('idle') // 'idle' | 'loading' | 'added'
     const { addItem } = useCartStore()
+    const { isFavorited, toggle: toggleFavorite } = useFavorites()
 
     const handleAddToCart = (e) => {
         e.preventDefault()
@@ -55,12 +56,12 @@ export default function ArtworkCard({ artwork }) {
                 <button
                     onClick={(e) => {
                         e.preventDefault()
-                        setIsWishlisted(!isWishlisted)
+                        toggleFavorite(artwork.id)
                     }}
                     className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white"
                 >
                     <svg
-                        className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-[#C25E36] stroke-[#C25E36]' : 'fill-none stroke-gray-900'}`}
+                        className={`w-3.5 h-3.5 ${isFavorited(artwork.id) ? 'fill-[#C25E36] stroke-[#C25E36]' : 'fill-none stroke-gray-900'}`}
                         strokeWidth="2"
                         viewBox="0 0 24 24"
                     >

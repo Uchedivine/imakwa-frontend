@@ -8,6 +8,7 @@ import { SkeletonGrid } from '../../components/ui/SkeletonCard'
 import ErrorMessage from '../../components/ui/ErrorMessage'
 import EmptyState from '../../components/ui/EmptyState'
 import { useSearchFilters } from '../../hooks/useSearchFilters'
+import SectionReveal from '../../components/ui/SectionReveal'
 
 const categories = [
     { value: 'all', label: 'All Works' },
@@ -132,6 +133,7 @@ export default function GalleryBrowse() {
                 </div>
             </section>
 
+            <SectionReveal>
             <div className="max-w-[1400px] mx-auto px-6 md:px-8 py-12">
                 <div className="flex flex-col lg:flex-row gap-8">
 
@@ -264,6 +266,7 @@ export default function GalleryBrowse() {
                     </main>
                 </div>
             </div>
+            </SectionReveal>
 
             <GalleryFooter />
         </div>
