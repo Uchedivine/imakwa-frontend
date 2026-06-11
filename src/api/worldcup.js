@@ -6,6 +6,11 @@ export const getWorldCupProducts = async () => {
   return response.data
 }
 
+export const getWorldCupProduct = async (id) => {
+  const response = await client.get(`/worldcup/products/${id}`)
+  return response.data
+}
+
 export const getCountdown = async () => {
   const response = await client.get('/worldcup/countdown')
   return response.data
