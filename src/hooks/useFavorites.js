@@ -9,16 +9,20 @@ export function useFavorites() {
   const { favorites, toggleFavoriteLocal, isFavorited, setFavorites } = useFavoritesStore()
 
   // Fetch server favorites when authenticated
-  useQuery({
+  const favoritesQuery = useQuery({
     queryKey: ['favorites'],
     queryFn: getFavorites,
     enabled: isAuthenticated,
-    onSuccess: (data) => {
-      if (Array.isArray(data)) {
-        setFavorites(data.map((f) => f.favoriteable_id))
-      }
-    },
+    staleTime: 1000 * 30,
   })
+
+  // Update local store when data changes
+  if (favoritesQuery.data && Array.isArray(favoritesQuery.data)) {
+    const ids = favoritesQuery.data.map((f) => f.favoriteable_id || f.id)
+    if (JSON.stringify(ids) !== JSON.stringify(favorites)) {
+      setFavorites(ids)
+    }
+  }
 
   const toggleMutation = useMutation({
     mutationFn: (artworkId) => {

@@ -1,7 +1,7 @@
 import client from './client'
 
 export const getFavorites = async () => {
-  const response = await client.get('/favorites')
+  const response = await client.get('/user/favorites')
   return response.data
 }
 
