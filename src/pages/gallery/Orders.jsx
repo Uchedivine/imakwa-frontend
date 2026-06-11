@@ -3,61 +3,19 @@ import GalleryNavbar from '../../components/layout/GalleryNavbar'
 import GalleryFooter from '../../components/layout/GalleryFooter'
 import Spinner from '../../components/ui/Spinner'
 import EmptyState from '../../components/ui/EmptyState'
-
-// Mock orders data - in real app, this would come from useOrders hook
-const mockOrders = [
-    {
-        id: 'ORD-2024-001',
-        date: '2024-01-15',
-        status: 'delivered',
-        total: 4200,
-        items: [
-            {
-                id: '1',
-                title: "The Elder's Gaze",
-                artist: 'Kola Bankole',
-                price: 4200,
-                image: 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=400&q=80',
-                quantity: 1
-            }
-        ]
-    },
-    {
-        id: 'ORD-2024-002',
-        date: '2024-01-10',
-        status: 'shipped',
-        total: 7800,
-        items: [
-            {
-                id: '2',
-                title: 'Ancestral Echoes',
-                artist: 'Adaeze Okonkwo',
-                price: 3800,
-                image: 'https://images.unsplash.com/photo-1561059488-916d69792237?w=400&q=80',
-                quantity: 1
-            },
-            {
-                id: '3',
-                title: 'Desert Whispers',
-                artist: 'Musa Ibrahim',
-                price: 4000,
-                image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400&q=80',
-                quantity: 1
-            }
-        ]
-    }
-]
+import { useOrders } from '../../hooks/useOrders'
 
 const statusConfig = {
+    pending: { label: 'Pending', color: 'bg-yellow-100 text-yellow-700', icon: '⏳' },
     processing: { label: 'Processing', color: 'bg-yellow-100 text-yellow-700', icon: '⏳' },
+    paid: { label: 'Paid', color: 'bg-green-100 text-green-700', icon: '✓' },
     shipped: { label: 'Shipped', color: 'bg-blue-100 text-blue-700', icon: '🚚' },
     delivered: { label: 'Delivered', color: 'bg-green-100 text-green-700', icon: '✓' },
     cancelled: { label: 'Cancelled', color: 'bg-red-100 text-red-700', icon: '✕' }
 }
 
 export default function Orders() {
-    const isLoading = false
-    const orders = mockOrders
+    const { data: orders = [], isLoading } = useOrders()
 
     return (
         <div className="min-h-screen bg-cream">
@@ -101,7 +59,7 @@ export default function Orders() {
                                         <div>
                                             <span className="text-charcoal-soft">Placed on</span>
                                             <span className="text-charcoal ml-2">
-                                                {new Date(order.date).toLocaleDateString('en-US', {
+                                                {new Date(order.created_at || order.date).toLocaleDateString('en-US', {
                                                     year: 'numeric',
                                                     month: 'long',
                                                     day: 'numeric'
@@ -111,70 +69,77 @@ export default function Orders() {
                                         <div>
                                             <span className="text-charcoal-soft">Total</span>
                                             <span className="font-bold text-charcoal ml-2">
-                                                ${order.total.toLocaleString()}
+                                                ${parseFloat(order.total).toLocaleString()}
                                             </span>
                                         </div>
                                     </div>
 
                                     {/* Status Badge */}
-                                    <span className={`px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 ${statusConfig[order.status].color}`}>
-                                        <span>{statusConfig[order.status].icon}</span>
-                                        {statusConfig[order.status].label}
+                                    <span className={`px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 ${statusConfig[order.status || 'pending']?.color || 'bg-gray-100 text-gray-700'}`}>
+                                        <span>{statusConfig[order.status || 'pending']?.icon || '•'}</span>
+                                        {statusConfig[order.status || 'pending']?.label || (order.status ? order.status.toUpperCase() : 'PENDING')}
                                     </span>
                                 </div>
 
                                 {/* Order Items */}
                                 <div className="p-6 space-y-4">
-                                    {order.items.map((item) => (
-                                        <div key={item.id} className="flex gap-4 pb-4 border-b border-charcoal/10 last:border-0">
-                                            <Link
-                                                to={`/artwork/${item.id}`}
-                                                className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 shrink-0"
-                                            >
-                                                <img
-                                                    src={item.image}
-                                                    alt={item.title}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            </Link>
+                                    {order.items.map((item) => {
+                                        const artworkId = item.itemable_id || item.id;
+                                        const image = item.itemable?.primary_image?.url || item.itemable?.primaryImage?.url || item.image || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=400&q=80';
+                                        const artist = item.itemable?.artist?.name || item.artist || 'Unknown Artist';
+                                        const title = item.title || item.itemable?.title || 'Artwork';
 
-                                            <div className="flex-1 min-w-0">
+                                        return (
+                                            <div key={item.id} className="flex gap-4 pb-4 border-b border-charcoal/10 last:border-0">
                                                 <Link
-                                                    to={`/artwork/${item.id}`}
-                                                    className="block"
+                                                    to={`/artwork/${artworkId}`}
+                                                    className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 shrink-0"
                                                 >
-                                                    <h3 className="font-serif text-lg text-charcoal mb-1 hover:text-terracotta transition-colors">
-                                                        {item.title}
-                                                    </h3>
-                                                    <p className="text-sm text-charcoal-soft mb-2">
-                                                        by {item.artist}
-                                                    </p>
+                                                    <img
+                                                        src={image}
+                                                        alt={title}
+                                                        className="w-full h-full object-cover"
+                                                    />
                                                 </Link>
 
-                                                <div className="flex items-center gap-4">
-                                                    <p className="text-sm text-charcoal-soft">
-                                                        Quantity: {item.quantity}
-                                                    </p>
-                                                    <p className="text-sm font-semibold text-charcoal">
-                                                        ${item.price.toLocaleString()}
-                                                    </p>
+                                                <div className="flex-1 min-w-0">
+                                                    <Link
+                                                        to={`/artwork/${artworkId}`}
+                                                        className="block"
+                                                    >
+                                                        <h3 className="font-serif text-lg text-charcoal mb-1 hover:text-terracotta transition-colors">
+                                                            {title}
+                                                        </h3>
+                                                        <p className="text-sm text-charcoal-soft mb-2">
+                                                            by {artist}
+                                                        </p>
+                                                    </Link>
+
+                                                    <div className="flex items-center gap-4">
+                                                        <p className="text-sm text-charcoal-soft">
+                                                            Quantity: {item.quantity}
+                                                        </p>
+                                                        <p className="text-sm font-semibold text-charcoal">
+                                                            ${parseFloat(item.price).toLocaleString()}
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                {/* Item Actions */}
+                                                <div className="flex flex-col gap-2">
+                                                    <Link
+                                                        to={`/artwork/${artworkId}`}
+                                                        className="px-4 py-2 text-xs font-medium text-charcoal border border-charcoal/20 rounded-full hover:bg-charcoal/5 transition-colors text-center"
+                                                    >
+                                                        View Item
+                                                    </Link>
+                                                    <button className="px-4 py-2 text-xs font-medium text-charcoal border border-charcoal/20 rounded-full hover:bg-charcoal/5 transition-colors">
+                                                        Buy Again
+                                                    </button>
                                                 </div>
                                             </div>
-
-                                            {/* Item Actions */}
-                                            <div className="flex flex-col gap-2">
-                                                <Link
-                                                    to={`/artwork/${item.id}`}
-                                                    className="px-4 py-2 text-xs font-medium text-charcoal border border-charcoal/20 rounded-full hover:bg-charcoal/5 transition-colors text-center"
-                                                >
-                                                    View Item
-                                                </Link>
-                                                <button className="px-4 py-2 text-xs font-medium text-charcoal border border-charcoal/20 rounded-full hover:bg-charcoal/5 transition-colors">
-                                                    Buy Again
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
 
                                 {/* Order Footer */}

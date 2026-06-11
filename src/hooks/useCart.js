@@ -14,7 +14,18 @@ export function useCart() {
     queryFn: getCart,
     enabled: isAuthenticated,
     onSuccess: (data) => {
-      if (data?.items) setItems(data.items)
+      if (data?.items) {
+        setItems(data.items.map(ci => ({
+          id: ci.itemable_id || ci.item_id,
+          cartItemId: ci.id,         // the CartItem row ID
+          artworkId: ci.itemable_id || ci.item_id,
+          title: ci.itemable?.title || ci.item?.title,
+          price: ci.itemable?.price || ci.item?.price || ci.price,
+          image: ci.itemable?.primary_image?.url || ci.itemable?.primaryImage?.url || ci.item?.primary_image_url || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=400&q=80',
+          artist: ci.itemable?.artist?.name || ci.item?.artist?.name || 'Unknown Artist',
+          quantity: ci.quantity,
+        })))
+      }
     },
   })
 
@@ -28,8 +39,9 @@ export function useCart() {
 
   const removeMutation = useMutation({
     mutationFn: (artworkId) => {
+      const cartItem = useCartStore.getState().items.find(i => i.artworkId === artworkId || i.id === artworkId)
       removeItemLocal(artworkId)
-      if (isAuthenticated) return removeFromCart(artworkId)
+      if (isAuthenticated && cartItem?.cartItemId) return removeFromCart(cartItem.cartItemId)
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cart'] }),
   })

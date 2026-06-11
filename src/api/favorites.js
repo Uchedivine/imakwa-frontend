@@ -6,6 +6,9 @@ export const getFavorites = async () => {
 }
 
 export const toggleFavorite = async (artworkId) => {
-  const response = await client.post('/favorites/toggle', { artworkId })
+  const response = await client.post('/favorites/toggle', {
+    item_type: 'artwork',
+    item_id: artworkId,
+  })
   return response.data
 }

@@ -6,12 +6,15 @@ export const getCart = async () => {
 }
 
 export const addToCart = async (artworkId) => {
-  const response = await client.post('/cart/items', { artworkId })
+  const response = await client.post('/cart/items', {
+    item_type: 'artwork',
+    item_id: artworkId,
+  })
   return response.data
 }
 
-export const removeFromCart = async (artworkId) => {
-  const response = await client.delete(`/cart/items/${artworkId}`)
+export const removeFromCart = async (cartItemId) => {
+  const response = await client.delete(`/cart/items/${cartItemId}`)
   return response.data
 }
 

@@ -1,22 +1,25 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import GalleryNavbar from '../../components/layout/GalleryNavbar'
 import GalleryFooter from '../../components/layout/GalleryFooter'
 import { useAuth } from '../../hooks/useAuth'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
+import { updateProfile, changePassword } from '../../api/auth'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function Account() {
     const { user } = useAuth()
+    const queryClient = useQueryClient()
     const [activeTab, setActiveTab] = useState('profile') // 'profile' | 'favorites' | 'settings'
     const [isEditing, setIsEditing] = useState(false)
 
     // Form state
     const [formData, setFormData] = useState({
-        name: user?.name || 'John Doe',
-        email: user?.email || 'john@example.com',
-        phone: '+234 800 000 0000',
-        location: 'Lagos, Nigeria',
-        bio: 'Art collector and enthusiast with a passion for contemporary African art'
+        name: user?.name || '',
+        email: user?.email || '',
+        phone: localStorage.getItem('imakwa-account-phone') || '+234 800 000 0000',
+        location: localStorage.getItem('imakwa-account-location') || 'Lagos, Nigeria',
+        bio: localStorage.getItem('imakwa-account-bio') || 'Art collector and enthusiast with a passion for contemporary African art'
     })
 
     const [passwordForm, setPasswordForm] = useState({
@@ -24,6 +27,24 @@ export default function Account() {
         newPassword: '',
         confirmPassword: ''
     })
+
+    const [saving, setSaving] = useState(false)
+    const [saveError, setSaveError] = useState('')
+    const [saveSuccess, setSaveSuccess] = useState('')
+
+    const [passwordError, setPasswordError] = useState('')
+    const [passwordSuccess, setPasswordSuccess] = useState('')
+    const [passwordLoading, setPasswordLoading] = useState(false)
+
+    useEffect(() => {
+        if (user) {
+            setFormData(prev => ({
+                ...prev,
+                name: user.name || prev.name,
+                email: user.email || prev.email,
+            }))
+        }
+    }, [user])
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -33,15 +54,54 @@ export default function Account() {
         setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value })
     }
 
-    const handleSaveProfile = () => {
-        // TODO: API call to update profile
-        setIsEditing(false)
+    const handleSaveProfile = async () => {
+        setSaving(true)
+        setSaveError('')
+        setSaveSuccess('')
+        try {
+            await updateProfile({
+                name: formData.name,
+                email: formData.email,
+            })
+            // Save local attributes in localStorage
+            localStorage.setItem('imakwa-account-phone', formData.phone)
+            localStorage.setItem('imakwa-account-location', formData.location)
+            localStorage.setItem('imakwa-account-bio', formData.bio)
+
+            await queryClient.invalidateQueries({ queryKey: ['me'] })
+            setSaveSuccess('Profile updated successfully!')
+            setIsEditing(false)
+        } catch (err) {
+            setSaveError(err.response?.data?.message || err.message || 'Failed to update profile')
+        } finally {
+            setSaving(false)
+        }
     }
 
-    const handleChangePassword = (e) => {
+    const handleChangePassword = async (e) => {
         e.preventDefault()
-        // TODO: API call to change password
-        setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
+        setPasswordError('')
+        setPasswordSuccess('')
+
+        if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+            setPasswordError('New passwords do not match')
+            return
+        }
+
+        setPasswordLoading(true)
+        try {
+            await changePassword({
+                current_password: passwordForm.currentPassword,
+                password: passwordForm.newPassword,
+                password_confirmation: passwordForm.confirmPassword,
+            })
+            setPasswordSuccess('Password updated successfully!')
+            setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
+        } catch (err) {
+            setPasswordError(err.response?.data?.message || err.message || 'Failed to change password')
+        } finally {
+            setPasswordLoading(false)
+        }
     }
 
     return (
@@ -61,7 +121,11 @@ export default function Account() {
                         <aside className="lg:sticky lg:top-32 h-fit">
                             <nav className="bg-white rounded-2xl border border-charcoal/10 p-2">
                                 <button
-                                    onClick={() => setActiveTab('profile')}
+                                    onClick={() => {
+                                        setActiveTab('profile')
+                                        setSaveSuccess('')
+                                        setSaveError('')
+                                    }}
                                     className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'profile'
                                             ? 'bg-terracotta text-white'
                                             : 'text-charcoal hover:bg-cream'
@@ -79,7 +143,11 @@ export default function Account() {
                                     Favorite Artists
                                 </button>
                                 <button
-                                    onClick={() => setActiveTab('settings')}
+                                    onClick={() => {
+                                        setActiveTab('settings')
+                                        setPasswordSuccess('')
+                                        setPasswordError('')
+                                    }}
                                     className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'settings'
                                             ? 'bg-terracotta text-white'
                                             : 'text-charcoal hover:bg-cream'
@@ -103,20 +171,31 @@ export default function Account() {
                                             </Button>
                                         ) : (
                                             <div className="flex gap-2">
-                                                <Button onClick={() => setIsEditing(false)} variant="outline" size="sm">
+                                                <Button onClick={() => setIsEditing(false)} variant="outline" size="sm" disabled={saving}>
                                                     Cancel
                                                 </Button>
-                                                <Button onClick={handleSaveProfile} size="sm">
-                                                    Save Changes
+                                                <Button onClick={handleSaveProfile} size="sm" disabled={saving}>
+                                                    {saving ? 'Saving...' : 'Save Changes'}
                                                 </Button>
                                             </div>
                                         )}
                                     </div>
 
+                                    {saveError && (
+                                        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+                                            {saveError}
+                                        </div>
+                                    )}
+                                    {saveSuccess && (
+                                        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-sm text-green-600">
+                                            {saveSuccess}
+                                        </div>
+                                    )}
+
                                     {/* Profile Picture */}
                                     <div className="flex items-center gap-6 mb-8 pb-8 border-b border-charcoal/10">
                                         <div className="w-24 h-24 rounded-full bg-terracotta text-white flex items-center justify-center text-3xl font-bold">
-                                            {formData.name.charAt(0)}
+                                            {formData.name.charAt(0) || 'U'}
                                         </div>
                                         {isEditing && (
                                             <div>
@@ -247,6 +326,17 @@ export default function Account() {
                                     <div className="bg-white rounded-2xl border border-charcoal/10 p-8">
                                         <h2 className="text-2xl font-bold text-charcoal mb-6">Change Password</h2>
 
+                                        {passwordError && (
+                                            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+                                                {passwordError}
+                                            </div>
+                                        )}
+                                        {passwordSuccess && (
+                                            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-xl text-sm text-green-600">
+                                                {passwordSuccess}
+                                            </div>
+                                        )}
+
                                         <form onSubmit={handleChangePassword} className="space-y-4">
                                             <div>
                                                 <label className="block text-sm font-medium text-charcoal mb-2">Current Password</label>
@@ -281,7 +371,9 @@ export default function Account() {
                                                 />
                                             </div>
 
-                                            <Button type="submit">Update Password</Button>
+                                            <Button type="submit" disabled={passwordLoading}>
+                                                {passwordLoading ? 'Updating...' : 'Update Password'}
+                                            </Button>
                                         </form>
                                     </div>
 

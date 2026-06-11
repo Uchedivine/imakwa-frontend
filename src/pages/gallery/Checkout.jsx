@@ -5,16 +5,24 @@ import { useAuthStore } from '../../store/authStore'
 import GalleryNavbar from '../../components/layout/GalleryNavbar'
 import GalleryFooter from '../../components/layout/GalleryFooter'
 import Spinner from '../../components/ui/Spinner'
+import { createOrder, initStripeIntent, initPaystackPayment } from '../../api/orders'
+import { loadStripe } from '@stripe/stripe-js'
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 
-export default function Checkout() {
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder')
+
+function CheckoutForm() {
     const navigate = useNavigate()
     const { items, total, clearCart } = useCartStore()
     const { user } = useAuthStore()
+    const stripe = useStripe()
+    const elements = useElements()
+
     const [isProcessing, setIsProcessing] = useState(false)
+    const [gateway, setGateway] = useState('stripe')
     const [error, setError] = useState('')
 
     const [formData, setFormData] = useState({
-        // Shipping
         fullName: user?.name || '',
         email: user?.email || '',
         phone: '',
@@ -23,12 +31,6 @@ export default function Checkout() {
         state: '',
         zipCode: '',
         country: '',
-
-        // Payment (simplified - real implementation would use Stripe/PayPal)
-        cardNumber: '',
-        cardName: '',
-        expiryDate: '',
-        cvv: ''
     })
 
     const shippingCost = total > 5000 ? 0 : 50 // Free shipping over $5000
@@ -47,19 +49,57 @@ export default function Checkout() {
         setError('')
         setIsProcessing(true)
 
+        if (gateway === 'stripe' && (!stripe || !elements)) {
+            setIsProcessing(false)
+            return
+        }
+
         try {
-            // Simulate API call to process payment
-            await new Promise(resolve => setTimeout(resolve, 2000))
+            // 1. Create order on backend
+            const orderResponse = await createOrder({
+                payment_gateway: gateway,
+                shipping_name: formData.fullName,
+                shipping_email: formData.email,
+                shipping_phone: formData.phone,
+                shipping_address: formData.address,
+                shipping_city: formData.city,
+                shipping_country: formData.country,
+                shipping_postal_code: formData.zipCode,
+            })
 
-            // In real implementation, this would call payment API
-            // const response = await createOrder({ items, total: finalTotal, ...formData })
+            const orderId = orderResponse.order.id
 
-            // Clear cart and redirect to success
-            clearCart()
-            navigate('/checkout/success')
+            if (gateway === 'stripe') {
+                // 2. Initialize Stripe Payment Intent
+                const intentResponse = await initStripeIntent(orderId)
+                const clientSecret = intentResponse.client_secret
+
+                // 3. Confirm card payment via Stripe Elements
+                const cardElement = elements.getElement(CardElement)
+                const result = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: formData.fullName,
+                            email: formData.email,
+                            phone: formData.phone,
+                        },
+                    },
+                })
+
+                if (result.error) {
+                    throw new Error(result.error.message)
+                } else if (result.paymentIntent.status === 'succeeded') {
+                    clearCart()
+                    navigate('/checkout/success')
+                }
+            } else if (gateway === 'paystack') {
+                // 2. Initialize Paystack payment and redirect
+                const paystackResponse = await initPaystackPayment(orderId)
+                window.location.href = paystackResponse.authorization_url
+            }
         } catch (err) {
-            setError('Payment failed. Please check your card details and try again.')
-        } finally {
+            setError(err.response?.data?.message || err.message || 'Payment failed. Please check your details and try again.')
             setIsProcessing(false)
         }
     }
@@ -213,61 +253,69 @@ export default function Checkout() {
                         <div className="bg-white rounded-2xl p-6 md:p-8 border border-charcoal/10">
                             <h2 className="text-xl font-bold text-charcoal mb-6">Payment Information</h2>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium text-charcoal mb-2">Card Number *</label>
-                                    <input
-                                        type="text"
-                                        name="cardNumber"
-                                        required
-                                        placeholder="1234 5678 9012 3456"
-                                        value={formData.cardNumber}
-                                        onChange={handleChange}
-                                        className="w-full px-4 py-3 rounded-xl border border-charcoal/15 focus:outline-none focus:border-terracotta transition-colors"
-                                    />
-                                </div>
-
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium text-charcoal mb-2">Cardholder Name *</label>
-                                    <input
-                                        type="text"
-                                        name="cardName"
-                                        required
-                                        value={formData.cardName}
-                                        onChange={handleChange}
-                                        className="w-full px-4 py-3 rounded-xl border border-charcoal/15 focus:outline-none focus:border-terracotta transition-colors"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-charcoal mb-2">Expiry Date *</label>
-                                    <input
-                                        type="text"
-                                        name="expiryDate"
-                                        required
-                                        placeholder="MM/YY"
-                                        value={formData.expiryDate}
-                                        onChange={handleChange}
-                                        className="w-full px-4 py-3 rounded-xl border border-charcoal/15 focus:outline-none focus:border-terracotta transition-colors"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-charcoal mb-2">CVV *</label>
-                                    <input
-                                        type="text"
-                                        name="cvv"
-                                        required
-                                        placeholder="123"
-                                        maxLength="4"
-                                        value={formData.cvv}
-                                        onChange={handleChange}
-                                        className="w-full px-4 py-3 rounded-xl border border-charcoal/15 focus:outline-none focus:border-terracotta transition-colors"
-                                    />
+                            {/* Gateway Selector */}
+                            <div className="mb-6">
+                                <label className="block text-sm font-medium text-charcoal mb-2">Payment Method *</label>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <button
+                                        type="button"
+                                        onClick={() => setGateway('stripe')}
+                                        className={`py-3 px-4 rounded-xl border text-sm font-semibold transition-all ${
+                                            gateway === 'stripe'
+                                                ? 'border-terracotta bg-terracotta/5 text-terracotta font-bold'
+                                                : 'border-charcoal/15 text-charcoal-soft hover:border-charcoal/30'
+                                        }`}
+                                    >
+                                        💳 Card (Stripe)
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setGateway('paystack')}
+                                        className={`py-3 px-4 rounded-xl border text-sm font-semibold transition-all ${
+                                            gateway === 'paystack'
+                                                ? 'border-terracotta bg-terracotta/5 text-terracotta font-bold'
+                                                : 'border-charcoal/15 text-charcoal-soft hover:border-charcoal/30'
+                                        }`}
+                                    >
+                                        🇳🇬 Paystack (NGN)
+                                    </button>
                                 </div>
                             </div>
 
-                            <p className="text-xs text-charcoal-soft mt-4">
+                            {gateway === 'stripe' ? (
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-charcoal mb-2">Card Details *</label>
+                                        <div className="p-4 bg-white border border-charcoal/15 rounded-xl hover:border-charcoal/30 transition-all duration-300">
+                                            <CardElement options={{
+                                                style: {
+                                                    base: {
+                                                        color: '#1f2937',
+                                                        fontFamily: 'Inter, system-ui, sans-serif',
+                                                        fontSize: '15px',
+                                                        fontSmoothing: 'antialiased',
+                                                        '::placeholder': {
+                                                            color: '#9ca3af',
+                                                        },
+                                                    },
+                                                    invalid: {
+                                                        color: '#ef4444',
+                                                        iconColor: '#ef4444',
+                                                    },
+                                                },
+                                            }} />
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="p-4 bg-cream rounded-xl border border-charcoal/10 text-center">
+                                    <p className="text-sm text-charcoal-soft">
+                                        You will be redirected to Paystack to complete your secure payment in NGN.
+                                    </p>
+                                </div>
+                            )}
+
+                            <p className="text-xs text-charcoal-soft mt-6">
                                 🔒 Your payment information is secure and encrypted
                             </p>
                         </div>
@@ -353,5 +401,13 @@ export default function Checkout() {
 
             <GalleryFooter />
         </div>
+    )
+}
+
+export default function Checkout() {
+    return (
+        <Elements stripe={stripePromise}>
+            <CheckoutForm />
+        </Elements>
     )
 }

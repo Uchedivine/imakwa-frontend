@@ -9,6 +9,17 @@ const client = axios.create({
   },
 })
 
+// Generate or retrieve persistent session ID for guest cart
+function getSessionId() {
+  const KEY = 'imakwa-session-id'
+  let id = localStorage.getItem(KEY)
+  if (!id) {
+    id = crypto.randomUUID()
+    localStorage.setItem(KEY, id)
+  }
+  return id
+}
+
 // Request Interceptor: Inject token from Zustand persisted localStorage
 client.interceptors.request.use(
   (config) => {
@@ -23,6 +34,7 @@ client.interceptors.request.use(
     } catch (error) {
       console.error('Error reading auth token in API client:', error)
     }
+    config.headers['X-Session-ID'] = getSessionId()
     return config
   },
   (error) => {

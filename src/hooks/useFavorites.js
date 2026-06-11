@@ -14,7 +14,9 @@ export function useFavorites() {
     queryFn: getFavorites,
     enabled: isAuthenticated,
     onSuccess: (data) => {
-      if (data?.ids) setFavorites(data.ids)
+      if (Array.isArray(data)) {
+        setFavorites(data.map((f) => f.favoriteable_id))
+      }
     },
   })
 
