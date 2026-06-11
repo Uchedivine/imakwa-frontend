@@ -32,3 +32,13 @@ export const forgotPassword = async ({ email }) => {
     }, 1000)
   })
 }
+
+export const updateProfile = async (profileData) => {
+  const response = await client.put('/user/profile', profileData)
+  return response.data
+}
+
+export const changePassword = async (passwordData) => {
+  const response = await client.post('/user/change-password', passwordData)
+  return response.data
+}

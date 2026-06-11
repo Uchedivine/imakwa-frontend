@@ -7,6 +7,7 @@ import { useArtworks } from '../../hooks/useArtworks'
 import { SkeletonGrid } from '../../components/ui/SkeletonCard'
 import ErrorMessage from '../../components/ui/ErrorMessage'
 import EmptyState from '../../components/ui/EmptyState'
+import { useSearchFilters } from '../../hooks/useSearchFilters'
 
 const categories = [
     { value: 'all', label: 'All Works' },
@@ -45,6 +46,32 @@ const regions = [
 export default function GalleryBrowse() {
     const [searchParams, setSearchParams] = useSearchParams()
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+    const { data: filtersData } = useSearchFilters()
+
+    const toLabel = (str) => {
+        if (!str) return ''
+        return str.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+    }
+
+    const displayedCategories = filtersData?.categories && filtersData.categories.length > 0
+        ? [
+            { value: 'all', label: 'All Works' },
+            ...filtersData.categories.map(cat => ({
+                value: cat,
+                label: toLabel(cat)
+            }))
+          ]
+        : categories
+
+    const displayedRegions = filtersData?.regions && filtersData.regions.length > 0
+        ? [
+            { value: 'all', label: 'All Regions' },
+            ...filtersData.regions.map(reg => ({
+                value: reg,
+                label: toLabel(reg)
+            }))
+          ]
+        : regions
 
     // Scroll to top when component mounts
     useEffect(() => {
@@ -127,7 +154,7 @@ export default function GalleryBrowse() {
                             <div className="mb-8">
                                 <h4 className="text-xs font-bold text-charcoal mb-3">CATEGORY</h4>
                                 <div className="space-y-2">
-                                    {categories.map(cat => (
+                                    {displayedCategories.map(cat => (
                                         <label key={cat.value} className="flex items-center cursor-pointer">
                                             <input
                                                 type="radio"
@@ -165,7 +192,7 @@ export default function GalleryBrowse() {
                             <div className="mb-8">
                                 <h4 className="text-xs font-bold text-charcoal mb-3">REGION</h4>
                                 <div className="space-y-2">
-                                    {regions.map(reg => (
+                                    {displayedRegions.map(reg => (
                                         <label key={reg.value} className="flex items-center cursor-pointer">
                                             <input
                                                 type="radio"
