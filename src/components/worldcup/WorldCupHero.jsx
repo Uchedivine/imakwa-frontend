@@ -63,7 +63,7 @@ export default function WorldCupHero() {
           </Link>
 
           <a
-            href="#digital-access"
+            href="/worldcup/digital-access"
             className="inline-flex items-center justify-center gap-2 px-8 py-3.5 border border-[#5B7566]/40 text-[#A2B5AA] rounded-full text-[13px] font-medium hover:bg-white/5 hover:border-[#5B7566]/70 transition-all"
           >
             What is Digital Access? <span className="font-sans ml-1 text-[15px]">→</span>

@@ -23,6 +23,8 @@ import WorldCupPayment from './pages/worldcup/WorldCupPayment'
 import WorldCupSuccess from './pages/worldcup/WorldCupSuccess'
 import WorldCupDownload from './pages/worldcup/WorldCupDownload'
 import WorldCupOrderLookup from './pages/worldcup/WorldCupOrderLookup'
+import DigitalAccess from './pages/worldcup/DigitalAccess'
+import ArtistLicensing from './pages/worldcup/ArtistLicensing'
 import Login from './pages/shared/Login'
 import Register from './pages/shared/Register'
 import ForgotPassword from './pages/shared/ForgotPassword'
@@ -67,6 +69,8 @@ function App() {
             <Route path="/worldcup/products" element={<WorldCupProducts />} />
             <Route path="/worldcup/products/:id" element={<WorldCupProductDetail />} />
             <Route path="/worldcup/order/:id" element={<WorldCupOrderStatus />} />
+            <Route path="/worldcup/digital-access" element={<DigitalAccess />} />
+            <Route path="/worldcup/licensing" element={<ArtistLicensing />} />
             <Route path="/worldcup/payment/:orderId" element={<WorldCupPayment />} />
             <Route path="/worldcup/success" element={<WorldCupSuccess />} />
             <Route path="/worldcup/download/:token" element={<WorldCupDownload />} />

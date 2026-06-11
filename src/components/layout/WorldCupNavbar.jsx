@@ -20,12 +20,12 @@ export default function WorldCupNavbar() {
                     <Link to="/worldcup/products" className="text-[13px] font-medium text-white/70 hover:text-white transition-colors">
                         Browse Collection
                     </Link>
-                    <a href="#digital-access" className="text-[13px] font-medium text-white/70 hover:text-white transition-colors">
+                    <Link to="/worldcup/digital-access" className="text-[13px] font-medium text-white/70 hover:text-white transition-colors">
                         Digital Access
-                    </a>
-                    <a href="#licensing" className="text-[13px] font-medium text-white/70 hover:text-white transition-colors">
+                    </Link>
+                    <Link to="/worldcup/licensing" className="text-[13px] font-medium text-white/70 hover:text-white transition-colors">
                         Artist Licensing
-                    </a>
+                    </Link>
                 </div>
 
                 {/* Shop Collection Button */}
