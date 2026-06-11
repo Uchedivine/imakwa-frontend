@@ -104,8 +104,8 @@ export default function ArtistDetail() {
             {/* Hero Section */}
             <div className="relative h-[400px] bg-charcoal">
                 <img
-                    src={artistData.coverImage}
-                    alt={artistData.name}
+                    src={artistData.coverImage || artistData.cover_image || artistData.banner || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=1200&q=80'}
+                    alt={artistData.name || artistData.display_name}
                     className="w-full h-full object-cover opacity-40"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/50 to-transparent" />
@@ -118,8 +118,8 @@ export default function ArtistDetail() {
                         {/* Avatar */}
                         <div className="shrink-0">
                             <img
-                                src={artistData.avatar}
-                                alt={artistData.name}
+                                src={artistData.avatar || artistData.profile_image || artistData.image || 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80'}
+                                alt={artistData.name || artistData.display_name}
                                 className="w-40 h-40 rounded-2xl object-cover border-4 border-cream shadow-lg"
                             />
                         </div>
@@ -128,10 +128,12 @@ export default function ArtistDetail() {
                         <div className="flex-1 bg-white rounded-2xl p-6 md:p-8 border border-charcoal/10">
                             <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
                                 <div>
-                                    <h1 className="font-serif text-4xl text-charcoal mb-2">{artistData.name}</h1>
+                                    <h1 className="font-serif text-4xl text-charcoal mb-2">
+                                        {artistData.name || artistData.display_name || 'Artist'}
+                                    </h1>
                                     <p className="text-charcoal-soft flex items-center gap-2">
-                                        <span className="text-lg">{artistData.countryCode}</span>
-                                        {artistData.location}
+                                        <span className="text-lg">{artistData.countryCode || artistData.country_code || ''}</span>
+                                        {artistData.location || artistData.country || ''}
                                     </p>
                                 </div>
                                 <button className="px-6 py-3 bg-terracotta text-white rounded-full font-medium hover:bg-terra-light transition-colors">
@@ -142,20 +144,20 @@ export default function ArtistDetail() {
                             <div className="flex flex-wrap gap-6 text-sm mb-4">
                                 <div>
                                     <span className="text-charcoal-soft">Active Since</span>
-                                    <p className="font-semibold text-charcoal">{artistData.since}</p>
+                                    <p className="font-semibold text-charcoal">{artistData.since || artistData.created_at?.substring(0, 4) || 'N/A'}</p>
                                 </div>
                                 <div>
                                     <span className="text-charcoal-soft">Artworks</span>
-                                    <p className="font-semibold text-charcoal">{artistData.artworks.length}</p>
+                                    <p className="font-semibold text-charcoal">{artistData.artworks?.length || 0}</p>
                                 </div>
                                 <div>
                                     <span className="text-charcoal-soft">Awards</span>
-                                    <p className="font-semibold text-charcoal">{artistData.awards.length}</p>
+                                    <p className="font-semibold text-charcoal">{artistData.awards?.length || 0}</p>
                                 </div>
                             </div>
 
                             <div className="flex flex-wrap gap-2">
-                                {artistData.specialties.map(specialty => (
+                                {artistData.specialties?.map(specialty => (
                                     <span key={specialty} className="px-3 py-1 rounded-full bg-terra-pale text-terracotta text-xs font-medium">
                                         {specialty}
                                     </span>
@@ -174,7 +176,7 @@ export default function ArtistDetail() {
                                     : 'text-charcoal-soft hover:text-charcoal'
                                     }`}
                             >
-                                Artworks ({artistData.artworks.length})
+                                Artworks ({artistData.artworks?.length || 0})
                             </button>
                             <button
                                 onClick={() => setActiveTab('about')}
@@ -200,8 +202,15 @@ export default function ArtistDetail() {
                     {/* Tab Content */}
                     {activeTab === 'artworks' && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                            {artistData.artworks.map(artwork => (
-                                <ArtworkCard key={artwork.id} artwork={artwork} />
+                            {artistData.artworks?.map(artwork => (
+                                <ArtworkCard
+                                    key={artwork.id}
+                                    artwork={{
+                                        ...artwork,
+                                        artist: artwork.artist || artistData.name || artistData.display_name,
+                                        artist_name: artwork.artist_name || artistData.name || artistData.display_name
+                                    }}
+                                />
                             ))}
                         </div>
                     )}
@@ -221,7 +230,7 @@ export default function ArtistDetail() {
                             <div className="bg-white rounded-2xl p-8 border border-charcoal/10">
                                 <h2 className="text-xl font-bold text-charcoal mb-4">Awards & Recognition</h2>
                                 <div className="space-y-3">
-                                    {artistData.awards.map((award, index) => (
+                                    {artistData.awards?.map((award, index) => (
                                         <div key={index} className="flex gap-4 pb-3 border-b border-charcoal/10 last:border-0">
                                             <span className="text-sm font-bold text-terracotta">{award.year}</span>
                                             <span className="text-sm text-charcoal">{award.title}</span>
@@ -237,7 +246,7 @@ export default function ArtistDetail() {
                             <div className="bg-white rounded-2xl p-8 border border-charcoal/10">
                                 <h2 className="text-xl font-bold text-charcoal mb-6">Exhibitions</h2>
                                 <div className="space-y-4">
-                                    {artistData.exhibitions.map((exhibition, index) => (
+                                    {artistData.exhibitions?.map((exhibition, index) => (
                                         <div key={index} className="flex gap-4 pb-4 border-b border-charcoal/10 last:border-0">
                                             <span className="text-sm font-bold text-terracotta w-16">{exhibition.year}</span>
                                             <div>

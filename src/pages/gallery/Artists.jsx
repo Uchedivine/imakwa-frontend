@@ -147,127 +147,131 @@ export default function Artists() {
             {/* Featured Artists */}
             {featuredArtists.length > 0 && (
                 <SectionReveal>
-                <section className="pb-16 px-6 md:px-8">
+                    <section className="pb-16 px-6 md:px-8">
+                        <div className="max-w-[1200px] mx-auto">
+                            <div className="flex items-center gap-3 mb-8">
+                                <div className="w-1 h-8 bg-terracotta rounded-full" />
+                                <h2 className="font-serif text-3xl text-charcoal">Featured Artists</h2>
+                            </div>
+
+                            <div className="grid md:grid-cols-3 gap-8">
+                                {featuredArtists.map(artist => (
+                                    <Link
+                                        key={artist.id}
+                                        to={`/artists/${artist.id}`}
+                                        className="group"
+                                    >
+                                        <div className="relative overflow-hidden rounded-2xl bg-white border border-charcoal/10 hover:shadow-xl transition-shadow">
+                                            {/* Cover Image */}
+                                            <div className="relative h-64 overflow-hidden">
+                                                <img
+                                                    src={artist.coverImage || artist.cover_image || artist.banner || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=800&q=80'}
+                                                    alt={artist.name || artist.display_name}
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent" />
+                                            </div>
+
+                                            {/* Avatar - Overlapping */}
+                                            <div className="relative px-6 pb-6">
+                                                <div className="absolute -top-12 left-6">
+                                                    <img
+                                                        src={artist.avatar || artist.profile_image || artist.image || 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80'}
+                                                        alt={artist.name || artist.display_name}
+                                                        className="w-24 h-24 rounded-2xl object-cover border-4 border-white shadow-lg"
+                                                    />
+                                                </div>
+
+                                                {/* Content */}
+                                                <div className="pt-14">
+                                                    <h3 className="font-serif text-2xl text-charcoal mb-2">
+                                                        {artist.name || artist.display_name || 'Artist'}
+                                                    </h3>
+                                                    <p className="text-sm text-charcoal-soft mb-3 flex items-center gap-2">
+                                                        <span className="text-base">{artist.countryCode || artist.country_code || ''}</span>
+                                                        {artist.location || artist.country || ''}
+                                                    </p>
+
+                                                    <div className="flex flex-wrap gap-2 mb-4">
+                                                        {artist.specialties?.map(specialty => (
+                                                            <span
+                                                                key={specialty}
+                                                                className="px-2.5 py-1 rounded-full bg-terra-pale text-terracotta text-xs font-medium"
+                                                            >
+                                                                {specialty}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+
+                                                    <p className="text-xs text-charcoal-soft">
+                                                        {artist.artworkCount || artist.artwork_count || artist.artworks_count || 0} {(artist.artworkCount || artist.artwork_count || 0) === 1 ? 'artwork' : 'artworks'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                </SectionReveal>
+            )}
+
+            <SectionReveal>
+                {/* All Artists */}
+                <section className="pb-24 px-6 md:px-8">
                     <div className="max-w-[1200px] mx-auto">
                         <div className="flex items-center gap-3 mb-8">
                             <div className="w-1 h-8 bg-terracotta rounded-full" />
-                            <h2 className="font-serif text-3xl text-charcoal">Featured Artists</h2>
+                            <h2 className="font-serif text-3xl text-charcoal">All Artists</h2>
                         </div>
 
-                        <div className="grid md:grid-cols-3 gap-8">
-                            {featuredArtists.map(artist => (
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {otherArtists.map(artist => (
                                 <Link
                                     key={artist.id}
                                     to={`/artists/${artist.id}`}
-                                    className="group"
+                                    className="group bg-white rounded-2xl border border-charcoal/10 overflow-hidden hover:shadow-lg transition-shadow"
                                 >
-                                    <div className="relative overflow-hidden rounded-2xl bg-white border border-charcoal/10 hover:shadow-xl transition-shadow">
-                                        {/* Cover Image */}
-                                        <div className="relative h-64 overflow-hidden">
-                                            <img
-                                                src={artist.coverImage}
-                                                alt={artist.name}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent" />
+                                    {/* Avatar */}
+                                    <div className="relative h-48 overflow-hidden bg-cream">
+                                        <img
+                                            src={artist.avatar || artist.profile_image || artist.image || 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=400&q=80'}
+                                            alt={artist.name || artist.display_name}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        />
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="p-5">
+                                        <h3 className="font-serif text-xl text-charcoal mb-1">
+                                            {artist.name || artist.display_name || 'Artist'}
+                                        </h3>
+                                        <p className="text-xs text-charcoal-soft mb-3 flex items-center gap-1.5">
+                                            <span className="text-sm">{artist.countryCode || artist.country_code || ''}</span>
+                                            {artist.location || artist.country || ''}
+                                        </p>
+
+                                        <div className="flex flex-wrap gap-1.5 mb-3">
+                                            {artist.specialties?.slice(0, 2).map(specialty => (
+                                                <span
+                                                    key={specialty}
+                                                    className="px-2 py-0.5 rounded-full bg-terra-pale text-terracotta text-[10px] font-medium"
+                                                >
+                                                    {specialty}
+                                                </span>
+                                            ))}
                                         </div>
 
-                                        {/* Avatar - Overlapping */}
-                                        <div className="relative px-6 pb-6">
-                                            <div className="absolute -top-12 left-6">
-                                                <img
-                                                    src={artist.avatar}
-                                                    alt={artist.name}
-                                                    className="w-24 h-24 rounded-2xl object-cover border-4 border-white shadow-lg"
-                                                />
-                                            </div>
-
-                                            {/* Content */}
-                                            <div className="pt-14">
-                                                <h3 className="font-serif text-2xl text-charcoal mb-2">{artist.name}</h3>
-                                                <p className="text-sm text-charcoal-soft mb-3 flex items-center gap-2">
-                                                    <span className="text-base">{artist.countryCode}</span>
-                                                    {artist.location}
-                                                </p>
-
-                                                <div className="flex flex-wrap gap-2 mb-4">
-                                                    {artist.specialties.map(specialty => (
-                                                        <span
-                                                            key={specialty}
-                                                            className="px-2.5 py-1 rounded-full bg-terra-pale text-terracotta text-xs font-medium"
-                                                        >
-                                                            {specialty}
-                                                        </span>
-                                                    ))}
-                                                </div>
-
-                                                <p className="text-xs text-charcoal-soft">
-                                                    {artist.artworkCount} {artist.artworkCount === 1 ? 'artwork' : 'artworks'}
-                                                </p>
-                                            </div>
-                                        </div>
+                                        <p className="text-xs text-charcoal-soft">
+                                            {artist.artworkCount || artist.artwork_count || artist.artworks_count || 0} works
+                                        </p>
                                     </div>
                                 </Link>
                             ))}
                         </div>
                     </div>
                 </section>
-                </SectionReveal>
-            )}
-
-            <SectionReveal>
-            {/* All Artists */}
-            <section className="pb-24 px-6 md:px-8">
-                <div className="max-w-[1200px] mx-auto">
-                    <div className="flex items-center gap-3 mb-8">
-                        <div className="w-1 h-8 bg-terracotta rounded-full" />
-                        <h2 className="font-serif text-3xl text-charcoal">All Artists</h2>
-                    </div>
-
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {otherArtists.map(artist => (
-                            <Link
-                                key={artist.id}
-                                to={`/artists/${artist.id}`}
-                                className="group bg-white rounded-2xl border border-charcoal/10 overflow-hidden hover:shadow-lg transition-shadow"
-                            >
-                                {/* Avatar */}
-                                <div className="relative h-48 overflow-hidden bg-cream">
-                                    <img
-                                        src={artist.avatar}
-                                        alt={artist.name}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                    />
-                                </div>
-
-                                {/* Content */}
-                                <div className="p-5">
-                                    <h3 className="font-serif text-xl text-charcoal mb-1">{artist.name}</h3>
-                                    <p className="text-xs text-charcoal-soft mb-3 flex items-center gap-1.5">
-                                        <span className="text-sm">{artist.countryCode}</span>
-                                        {artist.location}
-                                    </p>
-
-                                    <div className="flex flex-wrap gap-1.5 mb-3">
-                                        {artist.specialties.slice(0, 2).map(specialty => (
-                                            <span
-                                                key={specialty}
-                                                className="px-2 py-0.5 rounded-full bg-terra-pale text-terracotta text-[10px] font-medium"
-                                            >
-                                                {specialty}
-                                            </span>
-                                        ))}
-                                    </div>
-
-                                    <p className="text-xs text-charcoal-soft">
-                                        {artist.artworkCount} works
-                                    </p>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-            </section>
             </SectionReveal>
 
             <GalleryFooter />

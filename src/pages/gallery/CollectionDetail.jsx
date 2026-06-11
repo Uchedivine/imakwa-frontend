@@ -155,64 +155,64 @@ export default function CollectionDetail() {
             </section>
 
             <SectionReveal>
-            {/* About Section */}
-            <section className="py-16 px-6 md:px-8 bg-white border-b border-charcoal/10">
-                <div className="max-w-[1200px] mx-auto">
-                    <div className="grid md:grid-cols-[2fr,1fr] gap-12">
-                        {/* Description */}
-                        <div>
-                            <h2 className="font-serif text-2xl text-charcoal mb-4">About This Collection</h2>
-                            <p className="text-charcoal-soft leading-relaxed">
-                                {collectionData.description}
-                            </p>
-                        </div>
-
-                        {/* Curator Info */}
-                        <div className="bg-cream rounded-2xl p-6 border border-charcoal/10 h-fit">
-                            <h3 className="text-sm font-semibold text-charcoal-soft uppercase tracking-wide mb-4">
-                                Curator
-                            </h3>
-                            <div className="flex items-center gap-4 mb-4">
-                                <img
-                                    src={collectionData.curatorAvatar}
-                                    alt={collectionData.curator}
-                                    className="w-16 h-16 rounded-full object-cover"
-                                />
-                                <div>
-                                    <p className="font-semibold text-charcoal">{collectionData.curator}</p>
-                                    <p className="text-sm text-charcoal-soft">Curator & Art Historian</p>
-                                </div>
+                {/* About Section */}
+                <section className="py-16 px-6 md:px-8 bg-white border-b border-charcoal/10">
+                    <div className="max-w-[1200px] mx-auto">
+                        <div className="grid md:grid-cols-[2fr,1fr] gap-12">
+                            {/* Description */}
+                            <div>
+                                <h2 className="font-serif text-2xl text-charcoal mb-4">About This Collection</h2>
+                                <p className="text-charcoal-soft leading-relaxed">
+                                    {collectionData.description}
+                                </p>
                             </div>
-                            <p className="text-sm text-charcoal-soft leading-relaxed">
-                                {collectionData.curatorBio}
-                            </p>
+
+                            {/* Curator Info */}
+                            <div className="bg-cream rounded-2xl p-6 border border-charcoal/10 h-fit">
+                                <h3 className="text-sm font-semibold text-charcoal-soft uppercase tracking-wide mb-4">
+                                    Curator
+                                </h3>
+                                <div className="flex items-center gap-4 mb-4">
+                                    <img
+                                        src={collectionData.curatorAvatar}
+                                        alt={collectionData.curator}
+                                        className="w-16 h-16 rounded-full object-cover"
+                                    />
+                                    <div>
+                                        <p className="font-semibold text-charcoal">{collectionData.curator}</p>
+                                        <p className="text-sm text-charcoal-soft">Curator & Art Historian</p>
+                                    </div>
+                                </div>
+                                <p className="text-sm text-charcoal-soft leading-relaxed">
+                                    {collectionData.curatorBio}
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
             </SectionReveal>
 
             <SectionReveal>
-            {/* Artworks Grid */}
-            <section className="py-16 px-6 md:px-8">
-                <div className="max-w-[1200px] mx-auto">
-                    <div className="flex items-center justify-between mb-8">
-                        <div className="flex items-center gap-3">
-                            <div className="w-1 h-8 bg-terracotta rounded-full" />
-                            <h2 className="font-serif text-3xl text-charcoal">Artworks</h2>
+                {/* Artworks Grid */}
+                <section className="py-16 px-6 md:px-8">
+                    <div className="max-w-[1200px] mx-auto">
+                        <div className="flex items-center justify-between mb-8">
+                            <div className="flex items-center gap-3">
+                                <div className="w-1 h-8 bg-terracotta rounded-full" />
+                                <h2 className="font-serif text-3xl text-charcoal">Artworks</h2>
+                            </div>
+                            <p className="text-charcoal-soft">
+                                {collectionData.artworks?.length || 0} {collectionData.artworks?.length === 1 ? 'piece' : 'pieces'}
+                            </p>
                         </div>
-                        <p className="text-charcoal-soft">
-                            {collectionData.artworks.length} {collectionData.artworks.length === 1 ? 'piece' : 'pieces'}
-                        </p>
-                    </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {collectionData.artworks.map(artwork => (
-                            <ArtworkCard key={artwork.id} artwork={artwork} />
-                        ))}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {collectionData.artworks?.map(artwork => (
+                                <ArtworkCard key={artwork.id} artwork={artwork} />
+                            ))}
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
             </SectionReveal>
 
             <GalleryFooter />
