@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useDownloadInfo } from '../../hooks/useDownloadInfo'
-import { redeemDownload } from '../../api/worldcup'
 import WorldCupNavbar from '../../components/layout/WorldCupNavbar'
 import Spinner from '../../components/ui/Spinner'
 import Button from '../../components/ui/Button'
@@ -10,24 +9,9 @@ export default function WorldCupDownload() {
   const { token } = useParams()
   const { data: info, isLoading, isError, error } = useDownloadInfo(token)
 
-  const [downloading, setDownloading] = useState(false)
-  const [downloadError, setDownloadError] = useState(null)
-
-  const handleDownload = async () => {
-    setDownloading(true)
-    setDownloadError(null)
-    try {
-      const response = await redeemDownload(token)
-      if (response.download_url) {
-        // Redirect browser to download the file directly
-        window.location.href = response.download_url
-      } else {
-        throw new Error('Download URL not found in response.')
-      }
-    } catch (err) {
-      setDownloadError(err.message || 'Failed to trigger download. Please try again or contact support.')
-      setDownloading(false)
-    }
+  const handleDownload = () => {
+    if (!info?.is_valid) return
+    window.location.href = `${import.meta.env.VITE_API_BASE_URL}/downloads/${token}`
   }
 
   // Format expiry date
@@ -70,7 +54,7 @@ export default function WorldCupDownload() {
 
       <div className="flex-1 relative z-10 flex items-center justify-center p-6">
         <div className="bg-[#0A2215]/60 border border-[#1A3C2A] rounded-2xl shadow-2xl max-w-lg w-full p-8 md:p-10 backdrop-blur-md text-center">
-          
+
           {isLoading ? (
             /* ── STATE 1: LOADING ── */
             <div className="py-10 space-y-4 flex flex-col items-center">
@@ -201,26 +185,12 @@ export default function WorldCupDownload() {
                 </p>
               </div>
 
-              {downloadError && (
-                <div className="p-3 bg-red-500/15 border border-red-500/20 rounded-lg text-xs text-red-400">
-                  {downloadError}
-                </div>
-              )}
-
               <div className="pt-4 flex flex-col gap-4">
                 <Button
                   onClick={handleDownload}
-                  disabled={downloading}
                   className="w-full py-4.5 bg-[#C5A665] text-[#0A2215] hover:bg-[#D4B77A] font-bold uppercase tracking-wider text-[11px] rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
                 >
-                  {downloading ? (
-                    <>
-                      <Spinner size="sm" />
-                      Downloading File...
-                    </>
-                  ) : (
-                    'Download Collection Archive'
-                  )}
+                  Download Collection Archive
                 </Button>
                 <Link
                   to="/worldcup"
