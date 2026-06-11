@@ -16,6 +16,27 @@ export const getCountdown = async () => {
   return response.data
 }
 
+// Live scores & fixtures
+export const getLiveScores = async () => {
+  const response = await client.get('/worldcup/live-scores')
+  return response.data
+}
+
+export const getFixtures = async () => {
+  const response = await client.get('/worldcup/fixtures')
+  return response.data
+}
+
+export const getUpcoming = async () => {
+  const response = await client.get('/worldcup/upcoming')
+  return response.data
+}
+
+export const getScoresStatus = async () => {
+  const response = await client.get('/worldcup/scores-status')
+  return response.data
+}
+
 // Step 1 of checkout — creates the pending order, returns order.id
 export const createWorldCupCheckout = async ({ email, tierId, paymentGateway }) => {
   const response = await client.post('/worldcup/checkout', {
