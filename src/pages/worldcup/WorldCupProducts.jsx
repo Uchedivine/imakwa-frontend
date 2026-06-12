@@ -8,6 +8,7 @@ import { useWorldCupProducts } from '../../hooks/useWorldCupProducts'
 import { SkeletonGrid } from '../../components/ui/SkeletonCard'
 import ErrorMessage from '../../components/ui/ErrorMessage'
 import EmptyState from '../../components/ui/EmptyState'
+import SectionReveal from '../../components/ui/SectionReveal'
 import { isProductSoldOut, getActiveTierCount } from '../../utils/worldcup'
 
 const tierFilters = [
