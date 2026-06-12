@@ -50,16 +50,6 @@ export const useCartStore = create(
         set({ items: [], totalAmount: 0, totalCount: 0 })
       },
 
-      // Computed getters - always calculate fresh from items
-      get total() {
-        const items = get().items
-        return items.reduce((sum, item) => {
-          const price = parsePrice(item.price)
-          const quantity = parseInt(item.quantity) || 1
-          return sum + (price * quantity)
-        }, 0)
-      },
-
       // Aliases for easier use
       addItem: (item) => get().addItemLocal(item),
       removeItem: (itemId) => get().removeItemLocal(itemId),

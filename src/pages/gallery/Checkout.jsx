@@ -14,7 +14,7 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 
 
 function CheckoutForm() {
     const navigate = useNavigate()
-    const { items, total, clearCart } = useCartStore()
+    const { items, totalAmount: total, clearCart } = useCartStore()
     const { user } = useAuthStore()
     const stripe = useStripe()
     const elements = useElements()

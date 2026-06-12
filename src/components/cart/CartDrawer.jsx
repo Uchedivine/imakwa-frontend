@@ -3,7 +3,7 @@ import { useCartStore } from '../../store/cartStore'
 import { parsePrice } from '../../lib/utils'
 
 export default function CartDrawer({ isOpen, onClose }) {
-    const { items, removeItem, updateQuantity, total } = useCartStore()
+    const { items, removeItem, updateQuantity, totalAmount } = useCartStore()
 
     const handleBackdropClick = (e) => {
         if (e.target === e.currentTarget) {
@@ -141,7 +141,7 @@ export default function CartDrawer({ isOpen, onClose }) {
                         {/* Subtotal */}
                         <div className="flex items-center justify-between mb-4">
                             <span className="text-sm text-charcoal-soft">Subtotal</span>
-                            <span className="font-serif text-xl text-charcoal">${total.toLocaleString()}</span>
+                            <span className="font-serif text-xl text-charcoal">${totalAmount.toLocaleString()}</span>
                         </div>
 
                         <p className="text-xs text-charcoal-soft mb-4">
