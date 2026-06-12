@@ -8,6 +8,7 @@ import Spinner from '../../components/ui/Spinner'
 import { createOrder, initStripeIntent, initPaystackPayment } from '../../api/orders'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
+import { parsePrice } from '../../lib/utils'
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder')
 
@@ -34,8 +35,8 @@ function CheckoutForm() {
     })
 
     const shippingCost = total > 5000 ? 0 : 50 // Free shipping over $5000
-    const tax = total * 0.08 // 8% tax
-    const finalTotal = total + shippingCost + tax
+    const tax = parsePrice(total) * 0.08 // 8% tax
+    const finalTotal = parsePrice(total) + shippingCost + tax
 
     const handleChange = (e) => {
         setFormData(prev => ({
@@ -260,22 +261,20 @@ function CheckoutForm() {
                                     <button
                                         type="button"
                                         onClick={() => setGateway('stripe')}
-                                        className={`py-3 px-4 rounded-xl border text-sm font-semibold transition-all ${
-                                            gateway === 'stripe'
-                                                ? 'border-terracotta bg-terracotta/5 text-terracotta font-bold'
-                                                : 'border-charcoal/15 text-charcoal-soft hover:border-charcoal/30'
-                                        }`}
+                                        className={`py-3 px-4 rounded-xl border text-sm font-semibold transition-all ${gateway === 'stripe'
+                                            ? 'border-terracotta bg-terracotta/5 text-terracotta font-bold'
+                                            : 'border-charcoal/15 text-charcoal-soft hover:border-charcoal/30'
+                                            }`}
                                     >
                                         💳 Card (Stripe)
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => setGateway('paystack')}
-                                        className={`py-3 px-4 rounded-xl border text-sm font-semibold transition-all ${
-                                            gateway === 'paystack'
-                                                ? 'border-terracotta bg-terracotta/5 text-terracotta font-bold'
-                                                : 'border-charcoal/15 text-charcoal-soft hover:border-charcoal/30'
-                                        }`}
+                                        className={`py-3 px-4 rounded-xl border text-sm font-semibold transition-all ${gateway === 'paystack'
+                                            ? 'border-terracotta bg-terracotta/5 text-terracotta font-bold'
+                                            : 'border-charcoal/15 text-charcoal-soft hover:border-charcoal/30'
+                                            }`}
                                     >
                                         🇳🇬 Paystack (NGN)
                                     </button>
@@ -347,7 +346,7 @@ function CheckoutForm() {
                                             <p className="text-xs text-charcoal-soft">Qty: {item.quantity}</p>
                                         </div>
                                         <p className="text-sm font-semibold text-charcoal">
-                                            ${(item.price * item.quantity).toLocaleString()}
+                                            ${(parsePrice(item.price) * (parseInt(item.quantity) || 1)).toLocaleString()}
                                         </p>
                                     </div>
                                 ))}

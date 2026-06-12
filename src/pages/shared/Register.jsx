@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import AuthLayout from '../../components/layout/AuthLayout'
 import { useAuth } from '../../hooks/useAuth'
 import Spinner from '../../components/ui/Spinner'
 
 export default function Register() {
     const navigate = useNavigate()
+    const location = useLocation()
     const { register, isLoading } = useAuth()
 
     const [formData, setFormData] = useState({
@@ -16,6 +17,8 @@ export default function Register() {
         role: 'collector'
     })
     const [error, setError] = useState('')
+
+    const from = location.state?.from?.pathname || '/'
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -28,9 +31,22 @@ export default function Register() {
 
         try {
             await register(formData)
-            navigate('/')
+            navigate(from, { replace: true })
         } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed. Please try again.')
+            // Handle Laravel validation errors (422)
+            let errorMessage = 'Registration failed. Please try again.'
+
+            if (err.response?.data?.errors) {
+                // Extract all errors from Laravel validation errors object
+                const errors = err.response.data.errors
+                const errorMessages = Object.values(errors).flat()
+                errorMessage = errorMessages.join('. ')
+            } else if (err.response?.data?.message) {
+                // Generic error message
+                errorMessage = err.response.data.message
+            }
+
+            setError(errorMessage)
         }
     }
 

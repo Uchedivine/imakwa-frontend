@@ -25,7 +25,20 @@ export default function Login() {
             await login(formData)
             navigate(from, { replace: true })
         } catch (err) {
-            setError(err.response?.data?.message || 'Invalid email or password')
+            // Handle Laravel validation errors (422)
+            let errorMessage = 'Invalid email or password'
+
+            if (err.response?.data?.errors) {
+                // Extract first error from Laravel validation errors object
+                const errors = err.response.data.errors
+                const firstErrorKey = Object.keys(errors)[0]
+                errorMessage = errors[firstErrorKey][0]
+            } else if (err.response?.data?.message) {
+                // Generic error message
+                errorMessage = err.response.data.message
+            }
+
+            setError(errorMessage)
         }
     }
 

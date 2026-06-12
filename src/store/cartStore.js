@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { parsePrice } from '../lib/utils'
 
 export const useCartStore = create(
   persist(
@@ -11,8 +12,12 @@ export const useCartStore = create(
       // Recalculates total values after changes
       recalculate: () => {
         const items = get().items
-        const totalAmount = items.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0)
-        const totalCount = items.reduce((sum, item) => sum + (item.quantity || 1), 0)
+        const totalAmount = items.reduce((sum, item) => {
+          const price = parsePrice(item.price)
+          const quantity = parseInt(item.quantity) || 1
+          return sum + (price * quantity)
+        }, 0)
+        const totalCount = items.reduce((sum, item) => sum + (parseInt(item.quantity) || 1), 0)
         set({ totalAmount, totalCount })
       },
 
@@ -45,9 +50,14 @@ export const useCartStore = create(
         set({ items: [], totalAmount: 0, totalCount: 0 })
       },
 
-      // Computed getters
+      // Computed getters - always calculate fresh from items
       get total() {
-        return get().totalAmount
+        const items = get().items
+        return items.reduce((sum, item) => {
+          const price = parsePrice(item.price)
+          const quantity = parseInt(item.quantity) || 1
+          return sum + (price * quantity)
+        }, 0)
       },
 
       // Aliases for easier use
@@ -64,6 +74,12 @@ export const useCartStore = create(
     }),
     {
       name: 'imakwa-cart', // localStorage key
+      onRehydrateStorage: () => (state) => {
+        // Recalculate totals after rehydration from localStorage
+        if (state) {
+          state.recalculate()
+        }
+      },
     }
   )
 )

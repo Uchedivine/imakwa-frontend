@@ -38,6 +38,15 @@ export function useAuth() {
     mutationFn: registerApi,
     onSuccess: (data) => {
       storeLogin(data.user, data.token)
+      
+      // Merge guest cart into server cart on registration
+      if (localCartItems.length > 0) {
+        mergeCart(localCartItems)
+      }
+
+      queryClient.invalidateQueries({ queryKey: ['me'] })
+      queryClient.invalidateQueries({ queryKey: ['cart'] })
+      queryClient.invalidateQueries({ queryKey: ['favorites'] })
     },
   })
 

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useCartStore } from '../../store/cartStore'
+import { parsePrice } from '../../lib/utils'
 
 export default function CartDrawer({ isOpen, onClose }) {
     const { items, removeItem, updateQuantity, total } = useCartStore()
@@ -90,7 +91,7 @@ export default function CartDrawer({ isOpen, onClose }) {
 
                                         <div className="flex items-center justify-between">
                                             <p className="text-sm font-semibold text-charcoal">
-                                                ${item.price.toLocaleString()}
+                                                ${parsePrice(item.price).toLocaleString()}
                                             </p>
 
                                             {/* Quantity Controls */}

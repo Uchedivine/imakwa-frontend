@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getCart, addToCart, removeFromCart, clearCart, mergeCart } from '../api/cart'
 import { useCartStore } from '../store/cartStore'
 import { useAuthStore } from '../store/authStore'
+import { parsePrice } from '../lib/utils'
 
 export function useCart() {
   const queryClient = useQueryClient()
@@ -20,10 +21,10 @@ export function useCart() {
           cartItemId: ci.id,         // the CartItem row ID
           artworkId: ci.itemable_id || ci.item_id,
           title: ci.itemable?.title || ci.item?.title,
-          price: ci.itemable?.price || ci.item?.price || ci.price,
+          price: parsePrice(ci.itemable?.price || ci.item?.price || ci.price),
           image: ci.itemable?.primary_image?.url || ci.itemable?.primaryImage?.url || ci.item?.primary_image_url || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=400&q=80',
           artist: ci.itemable?.artist?.name || ci.item?.artist?.name || 'Unknown Artist',
-          quantity: ci.quantity,
+          quantity: parseInt(ci.quantity) || 1,
         })))
       }
     },

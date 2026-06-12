@@ -20,3 +20,20 @@ export function formatDate(date) {
     day: 'numeric',
   }).format(new Date(date))
 }
+
+/**
+ * Safely parse a price value to a number
+ * Handles: numbers, strings, formatted strings like "$5,000" or "5,000.00"
+ * @param {any} price - The price value to parse
+ * @returns {number} - The parsed price as a number, or 0 if invalid
+ */
+export function parsePrice(price) {
+  if (typeof price === 'number') return price
+  if (!price) return 0
+  
+  // Remove currency symbols, commas, and spaces
+  const cleanedPrice = String(price).replace(/[$,\s]/g, '')
+  const parsed = parseFloat(cleanedPrice)
+  
+  return isNaN(parsed) ? 0 : parsed
+}

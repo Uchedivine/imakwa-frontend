@@ -7,6 +7,7 @@ import { useCartStore } from '../../store/cartStore'
 import Spinner from '../../components/ui/Spinner'
 import ErrorMessage from '../../components/ui/ErrorMessage'
 import SectionReveal from '../../components/ui/SectionReveal'
+import { parsePrice } from '../../lib/utils'
 
 export default function ArtworkDetail() {
     const { id } = useParams()
@@ -17,6 +18,20 @@ export default function ArtworkDetail() {
     const [selectedImage, setSelectedImage] = useState(0)
     const [isWishlisted, setIsWishlisted] = useState(false)
     const [cartState, setCartState] = useState('idle') // 'idle' | 'loading' | 'added'
+
+    // Helper to process images array from API
+    const getImagesArray = (artData) => {
+        if (artData.images && Array.isArray(artData.images)) {
+            // If images is array of objects with url property
+            if (artData.images.length > 0 && typeof artData.images[0] === 'object' && artData.images[0].url) {
+                return artData.images.map(img => img.url)
+            }
+            // If images is already array of URLs
+            return artData.images
+        }
+        // Fallback to single image or placeholder
+        return [artData.image || artData.primary_image?.url || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=800&q=80']
+    }
 
     const handleAddToCart = () => {
         if (cartState !== 'idle') return
@@ -30,12 +45,13 @@ export default function ArtworkDetail() {
 
     // Helper to get art data after it's defined
     const addToCartWithData = (artData) => {
+        const imagesArray = getImagesArray(artData)
         addItem({
             id: artData.id,
             title: artData.title,
-            artist: artData.artist.name,
-            price: artData.price,
-            image: artData.images[0],
+            artist: artData.artist?.name || artData.artist?.display_name || artData.artist_name,
+            price: parsePrice(artData.price),
+            image: imagesArray[0],
             quantity: 1
         })
     }
@@ -91,6 +107,9 @@ export default function ArtworkDetail() {
         stock: 1
     }
 
+    // Process images array for display
+    const artImages = getImagesArray(art)
+
     return (
         <div className="min-h-screen bg-cream">
             <GalleryNavbar />
@@ -112,7 +131,7 @@ export default function ArtworkDetail() {
                             {/* Main Image */}
                             <div className="relative rounded-3xl overflow-hidden bg-gray-100 aspect-[4/5] mb-4">
                                 <img
-                                    src={art.images[selectedImage]}
+                                    src={artImages[selectedImage]}
                                     alt={art.title}
                                     className="w-full h-full object-cover"
                                 />
@@ -126,9 +145,9 @@ export default function ArtworkDetail() {
                             </div>
 
                             {/* Thumbnail Gallery */}
-                            {art.images.length > 1 && (
+                            {artImages.length > 1 && (
                                 <div className="flex gap-3">
-                                    {art.images.map((img, index) => (
+                                    {artImages.map((img, index) => (
                                         <button
                                             key={index}
                                             onClick={() => setSelectedImage(index)}

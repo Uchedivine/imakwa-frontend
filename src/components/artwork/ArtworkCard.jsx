@@ -2,11 +2,25 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCartStore } from '../../store/cartStore'
 import { useFavorites } from '../../hooks/useFavorites'
+import { parsePrice } from '../../lib/utils'
 
 export default function ArtworkCard({ artwork }) {
     const [cartState, setCartState] = useState('idle') // 'idle' | 'loading' | 'added'
     const { addItem } = useCartStore()
     const { isFavorited, toggle: toggleFavorite } = useFavorites()
+
+    // Helper function to get the artwork image
+    const getArtworkImage = () => {
+        // If images array exists, find primary or use first image
+        if (artwork.images && Array.isArray(artwork.images) && artwork.images.length > 0) {
+            const primaryImage = artwork.images.find(img => img.is_primary === 1 || img.is_primary === true)
+            return primaryImage ? primaryImage.url : artwork.images[0].url
+        }
+        // Fallback to direct image field or placeholder
+        return artwork.image || artwork.primary_image?.url || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=400&q=80'
+    }
+
+    const artworkImage = getArtworkImage()
 
     const handleAddToCart = (e) => {
         e.preventDefault()
@@ -19,8 +33,8 @@ export default function ArtworkCard({ artwork }) {
             id: artwork.id,
             title: artwork.title,
             artist: artwork.artist?.display_name || artwork.artist?.name || artwork.artist,
-            price: artwork.price,
-            image: artwork.image,
+            price: parsePrice(artwork.price),
+            image: artworkImage,
             quantity: 1
         })
 
@@ -38,7 +52,7 @@ export default function ArtworkCard({ artwork }) {
             {/* Image container */}
             <Link to={`/artwork/${artwork.id}`} className="block relative rounded-2xl overflow-hidden aspect-[4/5] mb-4 bg-gray-100">
                 <img
-                    src={artwork.image}
+                    src={artworkImage}
                     alt={artwork.title}
                     className="w-full h-full object-cover"
                 />

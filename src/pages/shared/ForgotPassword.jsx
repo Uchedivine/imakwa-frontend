@@ -19,7 +19,20 @@ export default function ForgotPassword() {
             await forgotPassword({ email })
             setSuccess(true)
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to send reset link')
+            // Handle Laravel validation errors (422)
+            let errorMessage = 'Failed to send reset link'
+
+            if (err.response?.data?.errors) {
+                // Extract first error from Laravel validation errors object
+                const errors = err.response.data.errors
+                const firstErrorKey = Object.keys(errors)[0]
+                errorMessage = errors[firstErrorKey][0]
+            } else if (err.response?.data?.message) {
+                // Generic error message
+                errorMessage = err.response.data.message
+            }
+
+            setError(errorMessage)
         } finally {
             setIsLoading(false)
         }

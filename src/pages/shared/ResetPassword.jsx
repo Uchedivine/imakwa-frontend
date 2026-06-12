@@ -73,7 +73,11 @@ export default function ResetPassword() {
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {resetMutation.isError && (
                             <ErrorMessage
-                                message={resetMutation.error?.response?.data?.message || 'Failed to reset password'}
+                                message={
+                                    resetMutation.error?.response?.data?.errors
+                                        ? Object.values(resetMutation.error.response.data.errors).flat().join('. ')
+                                        : resetMutation.error?.response?.data?.message || 'Failed to reset password'
+                                }
                             />
                         )}
 
