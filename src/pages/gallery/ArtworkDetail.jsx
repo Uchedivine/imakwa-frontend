@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import GalleryNavbar from '../../components/layout/GalleryNavbar'
 import GalleryFooter from '../../components/layout/GalleryFooter'
 import { useArtwork } from '../../hooks/useArtwork'
-import { useCartStore } from '../../store/cartStore'
+import { useCart } from '../../hooks/useCart'
 import Spinner from '../../components/ui/Spinner'
 import ErrorMessage from '../../components/ui/ErrorMessage'
 import SectionReveal from '../../components/ui/SectionReveal'
@@ -13,7 +13,7 @@ export default function ArtworkDetail() {
     const { id } = useParams()
     const navigate = useNavigate()
     const { data: artwork, isLoading, isError, error, refetch } = useArtwork(id)
-    const { addItem } = useCartStore()
+    const { addToCart } = useCart()
 
     const [selectedImage, setSelectedImage] = useState(0)
     const [isWishlisted, setIsWishlisted] = useState(false)
@@ -46,7 +46,7 @@ export default function ArtworkDetail() {
     // Helper to get art data after it's defined
     const addToCartWithData = (artData) => {
         const imagesArray = getImagesArray(artData)
-        addItem({
+        addToCart({
             id: artData.id,
             title: artData.title,
             artist: artData.artist?.name || artData.artist?.display_name || artData.artist_name,

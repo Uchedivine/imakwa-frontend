@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useCartStore } from '../../store/cartStore'
+import { useCart } from '../../hooks/useCart'
 import { useFavorites } from '../../hooks/useFavorites'
 import { parsePrice } from '../../lib/utils'
 
 export default function ArtworkCard({ artwork }) {
     const [cartState, setCartState] = useState('idle') // 'idle' | 'loading' | 'added'
-    const { addItem } = useCartStore()
+    const { addToCart, isAddingToCart } = useCart()
     const { isFavorited, toggle: toggleFavorite } = useFavorites()
 
     // Helper function to get the artwork image
@@ -28,8 +28,8 @@ export default function ArtworkCard({ artwork }) {
 
         setCartState('loading');
 
-        // Add to cart store
-        addItem({
+        // Add to cart via backend
+        addToCart({
             id: artwork.id,
             title: artwork.title,
             artist: artwork.artist?.display_name || artwork.artist?.name || artwork.artist,

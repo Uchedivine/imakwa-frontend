@@ -7,13 +7,13 @@ import { parsePrice } from '../lib/utils'
 export function useCart() {
   const queryClient = useQueryClient()
   const { isAuthenticated } = useAuthStore()
-  const { addItemLocal, removeItemLocal, clearCartLocal, setItems } = useCartStore()
+  const { setItems, clearCartLocal } = useCartStore()
 
-  // Fetch server cart only when authenticated
+  // Fetch cart from server for BOTH authenticated users AND guests (session-based)
   const cartQuery = useQuery({
     queryKey: ['cart'],
     queryFn: getCart,
-    enabled: isAuthenticated,
+    enabled: true, // Always fetch cart (backend uses session ID for guests)
     onSuccess: (data) => {
       if (data?.items) {
         setItems(data.items.map(ci => ({
@@ -31,33 +31,46 @@ export function useCart() {
   })
 
   const addMutation = useMutation({
-    mutationFn: (artwork) => {
-      addItemLocal(artwork)
-      if (isAuthenticated) return addToCart(artwork.id)
+    mutationFn: async (artwork) => {
+      // Always call backend for both guests and authenticated users
+      const response = await addToCart(artwork.id)
+      return response
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cart'] }),
+    onSuccess: () => {
+      // Reload cart from backend to get updated state
+      queryClient.invalidateQueries({ queryKey: ['cart'] })
+    },
   })
 
   const removeMutation = useMutation({
-    mutationFn: (artworkId) => {
-      const cartItem = useCartStore.getState().items.find(i => i.artworkId === artworkId || i.id === artworkId)
-      removeItemLocal(artworkId)
-      if (isAuthenticated && cartItem?.cartItemId) return removeFromCart(cartItem.cartItemId)
+    mutationFn: async (cartItemId) => {
+      // Call backend to remove item
+      await removeFromCart(cartItemId)
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cart'] }),
+    onSuccess: () => {
+      // Reload cart from backend
+      queryClient.invalidateQueries({ queryKey: ['cart'] })
+    },
   })
 
   const clearMutation = useMutation({
-    mutationFn: () => {
+    mutationFn: async () => {
+      // Call backend to clear cart
+      await clearCart()
+      // Also clear local state
       clearCartLocal()
-      if (isAuthenticated) return clearCart()
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cart'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cart'] })
+    },
   })
 
   const mergeMutation = useMutation({
     mutationFn: (items) => mergeCart(items),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cart'] }),
+    onSuccess: () => {
+      // Reload cart after merge
+      queryClient.invalidateQueries({ queryKey: ['cart'] })
+    },
   })
 
   return {
@@ -67,5 +80,6 @@ export function useCart() {
     clearCart: clearMutation.mutate,
     mergeCart: mergeMutation.mutate,
     isAddingToCart: addMutation.isPending,
+    isLoadingCart: cartQuery.isLoading,
   }
 }

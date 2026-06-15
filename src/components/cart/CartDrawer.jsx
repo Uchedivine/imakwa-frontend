@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom'
 import { useCartStore } from '../../store/cartStore'
+import { useCart } from '../../hooks/useCart'
 import { parsePrice } from '../../lib/utils'
 
 export default function CartDrawer({ isOpen, onClose }) {
-    const { items, removeItem, updateQuantity, totalAmount } = useCartStore()
+    const { items, totalAmount } = useCartStore()
+    const { removeFromCart } = useCart()
 
     const handleBackdropClick = (e) => {
         if (e.target === e.currentTarget) {
@@ -89,44 +91,21 @@ export default function CartDrawer({ isOpen, onClose }) {
                                             </p>
                                         </Link>
 
-                                        <div className="flex items-center justify-between">
+                                        <div class="flex items-center justify-between">
                                             <p className="text-sm font-semibold text-charcoal">
                                                 ${parsePrice(item.price).toLocaleString()}
                                             </p>
 
-                                            {/* Quantity Controls */}
-                                            <div className="flex items-center gap-2">
-                                                <button
-                                                    onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                                                    className="w-6 h-6 rounded-full border border-charcoal/20 flex items-center justify-center hover:bg-charcoal/5 transition-colors"
-                                                >
-                                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4" />
-                                                    </svg>
-                                                </button>
-
-                                                <span className="text-sm font-medium text-charcoal w-6 text-center">
-                                                    {item.quantity}
-                                                </span>
-
-                                                <button
-                                                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                    className="w-6 h-6 rounded-full border border-charcoal/20 flex items-center justify-center hover:bg-charcoal/5 transition-colors"
-                                                >
-                                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                                                    </svg>
-                                                </button>
-
-                                                <button
-                                                    onClick={() => removeItem(item.id)}
-                                                    className="ml-2 text-charcoal-soft hover:text-red-600 transition-colors"
-                                                >
-                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                    </svg>
-                                                </button>
-                                            </div>
+                                            {/* Remove Button */}
+                                            <button
+                                                onClick={() => removeFromCart(item.cartItemId)}
+                                                className="text-charcoal-soft hover:text-red-600 transition-colors"
+                                                title="Remove from cart"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

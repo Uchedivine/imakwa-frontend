@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCartStore } from '../../store/cartStore'
+import { useCart } from '../../hooks/useCart'
 import { useAuthStore } from '../../store/authStore'
 import GalleryNavbar from '../../components/layout/GalleryNavbar'
 import GalleryFooter from '../../components/layout/GalleryFooter'
@@ -14,7 +15,8 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 
 
 function CheckoutForm() {
     const navigate = useNavigate()
-    const { items, totalAmount: total, clearCart } = useCartStore()
+    const { items, totalAmount: total } = useCartStore()
+    const { clearCart } = useCart()
     const { user } = useAuthStore()
     const stripe = useStripe()
     const elements = useElements()

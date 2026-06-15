@@ -5,7 +5,7 @@ import { parsePrice } from '../lib/utils'
 export const useCartStore = create(
   persist(
     (set, get) => ({
-      items: [], // [{ id, title, price, image, quantity, artist }]
+      items: [], // [{ id, title, price, image, quantity, artist, cartItemId }]
       totalAmount: 0,
       totalCount: 0,
 
@@ -21,46 +21,16 @@ export const useCartStore = create(
         set({ totalAmount, totalCount })
       },
 
+      // Set items from backend response
       setItems: (items) => {
         set({ items })
         get().recalculate()
       },
 
-      addItemLocal: (item) => {
-        const items = [...get().items]
-        const existingIndex = items.findIndex((i) => i.id === item.id)
-
-        if (existingIndex > -1) {
-          items[existingIndex].quantity = (items[existingIndex].quantity || 1) + 1
-        } else {
-          items.push({ ...item, quantity: 1 })
-        }
-
-        set({ items })
-        get().recalculate()
-      },
-
-      removeItemLocal: (itemId) => {
-        const items = get().items.filter((i) => i.id !== itemId)
-        set({ items })
-        get().recalculate()
-      },
-
+      // Clear cart (only used internally after backend clear)
       clearCartLocal: () => {
         set({ items: [], totalAmount: 0, totalCount: 0 })
       },
-
-      // Aliases for easier use
-      addItem: (item) => get().addItemLocal(item),
-      removeItem: (itemId) => get().removeItemLocal(itemId),
-      updateQuantity: (itemId, quantity) => {
-        const items = get().items.map(item =>
-          item.id === itemId ? { ...item, quantity } : item
-        )
-        set({ items })
-        get().recalculate()
-      },
-      clearCart: () => get().clearCartLocal(),
     }),
     {
       name: 'imakwa-cart', // localStorage key
