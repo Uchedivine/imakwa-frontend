@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
+import { persist } from 'zustand/middleware'
 
 export const useAuthStore = create(
   persist(
@@ -29,8 +29,7 @@ export const useAuthStore = create(
       },
     }),
     {
-      name: 'imakwa-auth', // localStorage key - MUST match what client.js reads
-      storage: createJSONStorage(() => localStorage),
+      name: 'imakwa-auth', // Zustand automatically uses localStorage by default
     }
   )
 )
