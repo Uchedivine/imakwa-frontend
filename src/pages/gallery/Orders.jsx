@@ -16,7 +16,19 @@ const statusConfig = {
 }
 
 export default function Orders() {
-    const { data: orders = [], isLoading, isError, error } = useOrders()
+    const { data: response, isLoading, isError, error } = useOrders()
+
+    // Handle different response structures from backend
+    const orders = Array.isArray(response)
+        ? response
+        : response?.data
+            ? (Array.isArray(response.data) ? response.data : [])
+            : response?.orders
+                ? (Array.isArray(response.orders) ? response.orders : [])
+                : []
+
+    console.log('📦 [ORDERS PAGE] Response:', response)
+    console.log('📦 [ORDERS PAGE] Parsed orders:', orders)
 
     return (
         <div className="min-h-screen bg-cream">
