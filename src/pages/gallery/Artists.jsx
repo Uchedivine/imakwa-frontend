@@ -132,12 +132,12 @@ export default function Artists() {
             <GalleryNavbar />
 
             {/* Hero Section */}
-            <section className="pt-32 pb-16 px-6 md:px-8">
+            <section className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-14 md:pb-16 px-4 sm:px-6 md:px-8">
                 <div className="max-w-[1200px] mx-auto">
-                    <h1 className="font-serif text-5xl md:text-6xl text-charcoal mb-4">
+                    <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-charcoal mb-3 sm:mb-4">
                         Meet Our Artists
                     </h1>
-                    <p className="text-charcoal-soft text-lg max-w-2xl">
+                    <p className="text-charcoal-soft text-base sm:text-lg max-w-2xl leading-relaxed">
                         Discover the creative minds behind the masterworks. Each artist brings their unique vision,
                         cultural heritage, and contemporary perspective to the canvas.
                     </p>
@@ -147,14 +147,14 @@ export default function Artists() {
             {/* Featured Artists */}
             {featuredArtists.length > 0 && (
                 <SectionReveal>
-                    <section className="pb-16 px-6 md:px-8">
+                    <section className="pb-12 sm:pb-14 md:pb-16 px-4 sm:px-6 md:px-8">
                         <div className="max-w-[1200px] mx-auto">
-                            <div className="flex items-center gap-3 mb-8">
-                                <div className="w-1 h-8 bg-terracotta rounded-full" />
-                                <h2 className="font-serif text-3xl text-charcoal">Featured Artists</h2>
+                            <div className="flex items-center gap-2 sm:gap-3 mb-6 sm:mb-8">
+                                <div className="w-1 h-6 sm:h-8 bg-terracotta rounded-full" />
+                                <h2 className="font-serif text-2xl sm:text-3xl text-charcoal">Featured Artists</h2>
                             </div>
 
-                            <div className="grid md:grid-cols-3 gap-8">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                                 {featuredArtists.map(artist => (
                                     <Link
                                         key={artist.id}
@@ -163,7 +163,7 @@ export default function Artists() {
                                     >
                                         <div className="relative overflow-hidden rounded-2xl bg-white border border-charcoal/10 hover:shadow-xl transition-shadow">
                                             {/* Cover Image */}
-                                            <div className="relative h-64 overflow-hidden">
+                                            <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
                                                 <img
                                                     src={artist.coverImage || artist.cover_image || artist.banner || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=800&q=80'}
                                                     alt={artist.name || artist.display_name}
@@ -173,30 +173,30 @@ export default function Artists() {
                                             </div>
 
                                             {/* Avatar - Overlapping */}
-                                            <div className="relative px-6 pb-6">
-                                                <div className="absolute -top-12 left-6">
+                                            <div className="relative px-5 sm:px-6 pb-5 sm:pb-6">
+                                                <div className="absolute -top-10 sm:-top-12 left-5 sm:left-6">
                                                     <img
                                                         src={artist.avatar || artist.profile_image || artist.image || 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80'}
                                                         alt={artist.name || artist.display_name}
-                                                        className="w-24 h-24 rounded-2xl object-cover border-4 border-white shadow-lg"
+                                                        className="w-20 sm:w-24 h-20 sm:h-24 rounded-2xl object-cover border-4 border-white shadow-lg"
                                                     />
                                                 </div>
 
                                                 {/* Content */}
-                                                <div className="pt-14">
-                                                    <h3 className="font-serif text-2xl text-charcoal mb-2">
+                                                <div className="pt-12 sm:pt-14">
+                                                    <h3 className="font-serif text-xl sm:text-2xl text-charcoal mb-2">
                                                         {artist.name || artist.display_name || 'Artist'}
                                                     </h3>
-                                                    <p className="text-sm text-charcoal-soft mb-3 flex items-center gap-2">
-                                                        <span className="text-base">{artist.countryCode || artist.country_code || ''}</span>
+                                                    <p className="text-xs sm:text-sm text-charcoal-soft mb-3 flex items-center gap-1.5 sm:gap-2">
+                                                        <span className="text-sm sm:text-base">{artist.countryCode || artist.country_code || ''}</span>
                                                         {artist.location || artist.country || ''}
                                                     </p>
 
-                                                    <div className="flex flex-wrap gap-2 mb-4">
+                                                    <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
                                                         {artist.specialties?.map(specialty => (
                                                             <span
                                                                 key={specialty}
-                                                                className="px-2.5 py-1 rounded-full bg-terra-pale text-terracotta text-xs font-medium"
+                                                                className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-terra-pale text-terracotta text-[10px] sm:text-xs font-medium"
                                                             >
                                                                 {specialty}
                                                             </span>
@@ -219,14 +219,14 @@ export default function Artists() {
 
             <SectionReveal>
                 {/* All Artists */}
-                <section className="pb-24 px-6 md:px-8">
+                <section className="pb-20 sm:pb-24 px-4 sm:px-6 md:px-8">
                     <div className="max-w-[1200px] mx-auto">
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="w-1 h-8 bg-terracotta rounded-full" />
-                            <h2 className="font-serif text-3xl text-charcoal">All Artists</h2>
+                        <div className="flex items-center gap-2 sm:gap-3 mb-6 sm:mb-8">
+                            <div className="w-1 h-6 sm:h-8 bg-terracotta rounded-full" />
+                            <h2 className="font-serif text-2xl sm:text-3xl text-charcoal">All Artists</h2>
                         </div>
 
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
                             {otherArtists.map(artist => (
                                 <Link
                                     key={artist.id}
@@ -234,7 +234,7 @@ export default function Artists() {
                                     className="group bg-white rounded-2xl border border-charcoal/10 overflow-hidden hover:shadow-lg transition-shadow"
                                 >
                                     {/* Avatar */}
-                                    <div className="relative h-48 overflow-hidden bg-cream">
+                                    <div className="relative h-44 sm:h-48 overflow-hidden bg-cream">
                                         <img
                                             src={artist.avatar || artist.profile_image || artist.image || 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=400&q=80'}
                                             alt={artist.name || artist.display_name}
@@ -243,16 +243,16 @@ export default function Artists() {
                                     </div>
 
                                     {/* Content */}
-                                    <div className="p-5">
-                                        <h3 className="font-serif text-xl text-charcoal mb-1">
+                                    <div className="p-4 sm:p-5">
+                                        <h3 className="font-serif text-lg sm:text-xl text-charcoal mb-1">
                                             {artist.name || artist.display_name || 'Artist'}
                                         </h3>
-                                        <p className="text-xs text-charcoal-soft mb-3 flex items-center gap-1.5">
+                                        <p className="text-xs text-charcoal-soft mb-2 sm:mb-3 flex items-center gap-1.5">
                                             <span className="text-sm">{artist.countryCode || artist.country_code || ''}</span>
                                             {artist.location || artist.country || ''}
                                         </p>
 
-                                        <div className="flex flex-wrap gap-1.5 mb-3">
+                                        <div className="flex flex-wrap gap-1.5 mb-2 sm:mb-3">
                                             {artist.specialties?.slice(0, 2).map(specialty => (
                                                 <span
                                                     key={specialty}
