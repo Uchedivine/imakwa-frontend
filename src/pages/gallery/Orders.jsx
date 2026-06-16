@@ -16,7 +16,7 @@ const statusConfig = {
 }
 
 export default function Orders() {
-    const { data: orders = [], isLoading } = useOrders()
+    const { data: orders = [], isLoading, isError, error } = useOrders()
 
     return (
         <div className="min-h-screen bg-cream">
@@ -34,6 +34,25 @@ export default function Orders() {
                     {isLoading ? (
                         <div className="flex justify-center py-20">
                             <Spinner size="lg" />
+                        </div>
+                    ) : isError ? (
+                        /* Error State */
+                        <div className="flex flex-col items-center justify-center py-20">
+                            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+                                <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                                </svg>
+                            </div>
+                            <h2 className="font-serif text-2xl text-charcoal mb-2">Unable to Load Orders</h2>
+                            <p className="text-charcoal-soft mb-6 text-center max-w-md">
+                                {error?.message || 'There was a problem loading your orders. Please try again.'}
+                            </p>
+                            <Link
+                                to="/browse"
+                                className="px-8 py-3 bg-terracotta text-white rounded-full hover:bg-terra-light transition-colors"
+                            >
+                                Continue Shopping
+                            </Link>
                         </div>
                     ) : orders.length === 0 ? (
                         /* Empty State */

@@ -8,6 +8,8 @@ export function useOrders() {
     queryKey: ['orders'],
     queryFn: getOrders,
     enabled: isAuthenticated,
+    retry: 1,
+    retryDelay: 1000,
   })
 }
 
