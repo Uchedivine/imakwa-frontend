@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useAuthStore } from './store/authStore'
@@ -82,6 +82,10 @@ function App() {
             <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
             <Route path="/orders/:id" element={<ProtectedRoute><OrderDetail /></ProtectedRoute>} />
             <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+
+            {/* Legacy redirects */}
+            <Route path="/user/orders" element={<Navigate to="/orders" replace />} />
+            <Route path="/user/orders/:id" element={<Navigate to="/orders/:id" replace />} />
 
             {/* World Cup */}
             <Route path="/worldcup" element={<WorldCupHome />} />

@@ -142,6 +142,14 @@ export default function GalleryNavbar() {
             >
               Curated Collections
             </Link>
+            {isAuthenticated && (
+              <Link
+                to="/orders"
+                className="text-[14.5px] text-gray-800 hover:text-[#C25E36] transition-colors font-medium whitespace-nowrap"
+              >
+                My Orders
+              </Link>
+            )}
             <Link
               to="/worldcup"
               className="text-[14.5px] text-gold hover:text-gold-light transition-colors font-semibold whitespace-nowrap flex items-center gap-1.5"
@@ -306,6 +314,15 @@ export default function GalleryNavbar() {
               >
                 Curated Collections
               </Link>
+              {isAuthenticated && (
+                <Link
+                  to="/orders"
+                  onClick={() => setMenuOpen(false)}
+                  className="text-[15px] font-medium text-gray-800 py-2"
+                >
+                  My Orders
+                </Link>
+              )}
               <Link
                 to="/worldcup"
                 onClick={() => setMenuOpen(false)}
