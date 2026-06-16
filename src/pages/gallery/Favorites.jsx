@@ -96,7 +96,13 @@ export default function Favorites() {
                                 {favoriteArtworks.map((favorite) => {
                                     // Handle different response structures from backend
                                     const artwork = favorite.artwork || favorite.itemable || favorite
-                                    const artworkId = artwork.id || favorite.favoriteable_id || favorite.id
+                                    const artworkId = artwork?.id || favorite?.favoriteable_id || favorite?.id
+
+                                    // Skip if no valid artwork data
+                                    if (!artwork || !artworkId) {
+                                        console.warn('⚠️ [FAVORITES] Skipping invalid favorite:', favorite)
+                                        return null
+                                    }
 
                                     return (
                                         <ArtworkCard

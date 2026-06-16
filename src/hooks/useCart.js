@@ -12,11 +12,17 @@ export function useCart() {
   // Fetch cart from server for BOTH authenticated users AND guests (session-based)
   const cartQuery = useQuery({
     queryKey: ['cart'],
-    queryFn: getCart,
-    enabled: true, // Always fetch cart (backend uses session ID for guests)
-    onSuccess: (data) => {
+    queryFn: async () => {
+      console.log('🛒 [USE CART] Fetching cart from server...')
+      const data = await getCart()
+      console.log('✅ [USE CART] Cart data received:', {
+        hasItems: !!data?.items,
+        itemCount: data?.items?.length,
+        items: data?.items
+      })
+      
       if (data?.items) {
-        setItems(data.items.map(ci => ({
+        const mappedItems = data.items.map(ci => ({
           id: ci.itemable_id || ci.item_id,
           cartItemId: ci.id,         // the CartItem row ID
           artworkId: ci.itemable_id || ci.item_id,
@@ -25,9 +31,15 @@ export function useCart() {
           image: ci.itemable?.primary_image?.url || ci.itemable?.primaryImage?.url || ci.item?.primary_image_url || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=400&q=80',
           artist: ci.itemable?.artist?.name || ci.item?.artist?.name || 'Unknown Artist',
           quantity: parseInt(ci.quantity) || 1,
-        })))
+        }))
+        
+        console.log('💾 [USE CART] Setting items in store:', mappedItems)
+        setItems(mappedItems)
       }
+      
+      return data
     },
+    enabled: true, // Always fetch cart (backend uses session ID for guests)
   })
 
   const addMutation = useMutation({

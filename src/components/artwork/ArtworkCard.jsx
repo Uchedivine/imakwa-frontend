@@ -9,6 +9,12 @@ export default function ArtworkCard({ artwork }) {
     const { addToCart, isAddingToCart } = useCart()
     const { isFavorited, toggle: toggleFavorite } = useFavorites()
 
+    // Validate artwork data
+    if (!artwork || !artwork.id) {
+        console.error('❌ [ARTWORK CARD] Invalid artwork data:', artwork)
+        return null
+    }
+
     // Helper function to get the artwork image
     const getArtworkImage = () => {
         // If images array exists, find primary or use first image
@@ -94,11 +100,11 @@ export default function ArtworkCard({ artwork }) {
             {/* Card info */}
             <Link to={`/artwork/${artwork.id}`} className="block px-1 pb-1">
                 <p className="text-[9px] font-bold tracking-[0.15em] uppercase text-[#C25E36] mb-1.5">
-                    {artwork.countryCode} {artwork.country}
+                    {artwork.countryCode || ''} {artwork.country || ''}
                 </p>
 
                 <h3 className="font-serif text-[17px] text-gray-900 leading-tight mb-0.5">
-                    {artwork.title}
+                    {artwork.title || 'Untitled'}
                 </h3>
 
                 <p className="text-[12px] text-gray-500 mb-4">
@@ -111,7 +117,7 @@ export default function ArtworkCard({ artwork }) {
 
                 <div className="flex items-center justify-between">
                     <span className="font-sans text-[17px] font-semibold text-gray-900">
-                        ${artwork.price.toLocaleString()}
+                        ${(artwork.price || 0).toLocaleString()}
                     </span>
 
                     {/* Updated Add to Cart Button */}

@@ -6,6 +6,7 @@ export const getFavorites = async () => {
     const response = await client.get('/user/favorites')
     console.log('✅ [FAVORITES API] Response:', {
       count: response.data?.length,
+      fullData: response.data,
       sample: response.data?.[0]
     })
     return response.data
