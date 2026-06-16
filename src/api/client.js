@@ -25,12 +25,27 @@ client.interceptors.request.use(
   (config) => {
     // Get token directly from localStorage (simple and reliable)
     const token = localStorage.getItem('authToken')
+    
+    console.log('🔐 [AXIOS INTERCEPTOR] Request:', {
+      url: config.url,
+      method: config.method,
+      hasToken: !!token,
+      tokenPreview: token ? `${token.substring(0, 10)}...` : 'null',
+      headers: config.headers
+    })
+    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
     
     // Add session ID for guest users
     config.headers['X-Session-ID'] = getSessionId()
+    
+    console.log('📤 [AXIOS INTERCEPTOR] Final headers:', {
+      Authorization: config.headers.Authorization ? 'Set' : 'Not set',
+      'X-Session-ID': config.headers['X-Session-ID']
+    })
+    
     return config
   },
   (error) => {

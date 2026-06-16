@@ -8,6 +8,7 @@ export const useAuthStore = create((set) => ({
   // Initialize from localStorage on app start
   initAuth: () => {
     console.log('🔄 [AUTH STORE] initAuth() called - loading from localStorage...')
+    console.log('🔍 [AUTH STORE] localStorage keys:', Object.keys(localStorage))
     
     const token = localStorage.getItem('authToken')
     const user = localStorage.getItem('authUser')
@@ -16,6 +17,7 @@ export const useAuthStore = create((set) => ({
       hasToken: !!token,
       hasUser: !!user,
       tokenLength: token?.length,
+      tokenPreview: token ? `${token.substring(0, 20)}...` : 'null',
       userPreview: user?.substring(0, 50)
     })
     
@@ -30,7 +32,8 @@ export const useAuthStore = create((set) => ({
         console.log('✅ [AUTH STORE] Auth restored:', {
           userId: parsedUser.id,
           userEmail: parsedUser.email,
-          isAuthenticated: true
+          isAuthenticated: true,
+          tokenInState: !!token
         })
       } catch (error) {
         console.error('❌ [AUTH STORE] Failed to parse user from localStorage:', error)
