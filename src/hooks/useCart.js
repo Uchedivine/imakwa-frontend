@@ -18,23 +18,31 @@ export function useCart() {
       console.log('✅ [USE CART] Cart data received:', {
         hasItems: !!data?.items,
         itemCount: data?.items?.length,
+        fullResponse: data,
         items: data?.items
       })
       
-      if (data?.items) {
-        const mappedItems = data.items.map(ci => ({
-          id: ci.itemable_id || ci.item_id,
-          cartItemId: ci.id,         // the CartItem row ID
-          artworkId: ci.itemable_id || ci.item_id,
-          title: ci.itemable?.title || ci.item?.title,
-          price: parsePrice(ci.itemable?.price || ci.item?.price || ci.price),
-          image: ci.itemable?.images?.[0]?.image_url || ci.itemable?.primary_image?.image_url || ci.item?.primary_image_url || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=400&q=80',
-          artist: ci.itemable?.artist?.name || ci.item?.artist?.name || 'Unknown Artist',
-          quantity: parseInt(ci.quantity) || 1,
-        }))
+      if (data?.items && Array.isArray(data.items)) {
+        const mappedItems = data.items.map(ci => {
+          console.log('📦 [USE CART] Mapping cart item:', ci)
+          return {
+            id: ci.itemable_id || ci.item_id,
+            cartItemId: ci.id,         // the CartItem row ID
+            artworkId: ci.itemable_id || ci.item_id,
+            title: ci.itemable?.title || ci.item?.title || 'Unknown Title',
+            price: parsePrice(ci.itemable?.price || ci.item?.price || ci.price),
+            image: ci.itemable?.images?.[0]?.image_url || ci.itemable?.primary_image?.image_url || ci.item?.primary_image_url || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=400&q=80',
+            artist: ci.itemable?.artist?.name || ci.item?.artist?.name || 'Unknown Artist',
+            quantity: parseInt(ci.quantity) || 1,
+          }
+        })
         
         console.log('💾 [USE CART] Setting items in store:', mappedItems)
+        console.log('💾 [USE CART] Current store state before setItems:', useCartStore.getState())
         setItems(mappedItems)
+        console.log('💾 [USE CART] Store state after setItems:', useCartStore.getState())
+      } else {
+        console.warn('⚠️ [USE CART] No items array in response or items is not an array')
       }
       
       return data
