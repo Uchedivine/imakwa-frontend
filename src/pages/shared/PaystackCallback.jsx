@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import client from '../../api/client'
 import { getOrderStatusByReference } from '../../api/worldcup'
 import Spinner from '../../components/ui/Spinner'
 import Button from '../../components/ui/Button'
@@ -9,149 +9,137 @@ export default function PaystackCallback() {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
     const reference = searchParams.get('reference')
-    const [pollingCount, setPollingCount] = useState(0)
+    const orderType = searchParams.get('order_type') ?? 'gallery' // 'gallery' or 'worldcup'
 
-    // Poll order status by reference
-    const { data: order, isLoading, isError, error } = useQuery({
-        queryKey: ['order-status-by-reference', reference],
-        queryFn: () => getOrderStatusByReference(reference),
-        enabled: !!reference,
-        refetchInterval: (data) => {
-            // Stop polling if order is completed or after 20 attempts (1 minute)
-            if (!data || data.status === 'completed' || pollingCount >= 20) {
-                return false
-            }
-            setPollingCount(prev => prev + 1)
-            return 3000 // Poll every 3 seconds
-        },
-    })
+    const [status, setStatus] = useState('verifying') // 'verifying' | 'success' | 'failed'
+    const [errorMsg, setErrorMsg] = useState('')
 
     useEffect(() => {
-        if (order?.status === 'completed') {
-            // Redirect to success page after a brief delay
-            setTimeout(() => {
-                navigate('/worldcup/success', {
-                    state: {
-                        order,
-                        message: 'Payment successful! Check your email for download instructions.'
-                    }
-                })
-            }, 2000)
+        if (!reference) {
+            setErrorMsg('No payment reference found.')
+            setStatus('failed')
+            return
         }
-    }, [order, navigate])
 
-    if (!reference) {
-        return (
-            <div className="min-h-screen bg-cream flex items-center justify-center px-6">
-                <div className="max-w-md w-full bg-white rounded-3xl p-8 text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
-                        <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </div>
-                    <h2 className="font-serif text-2xl mb-4 text-charcoal">Invalid Payment Reference</h2>
-                    <p className="text-charcoal-soft mb-6">
-                        No payment reference found. Please try again.
-                    </p>
-                    <Button onClick={() => navigate('/worldcup')}>
-                        Return to World Cup
-                    </Button>
-                </div>
-            </div>
-        )
-    }
+        const verify = async () => {
+            try {
+                let paymentStatus
 
-    if (isLoading || (!order && pollingCount < 20)) {
+                if (orderType === 'worldcup') {
+                    const data = await getOrderStatusByReference(reference)
+                    paymentStatus = data.payment_status
+                } else {
+                    // Gallery order — poll the gallery endpoint
+                    const res = await client.get(`/orders/by-reference/${reference}`)
+                    paymentStatus = res.data.payment_status
+                }
+
+                if (paymentStatus === 'paid') {
+                    setStatus('success')
+                    setTimeout(() => {
+                        if (orderType === 'worldcup') {
+                            navigate('/worldcup/success')
+                        } else {
+                            navigate('/checkout/success')
+                        }
+                    }, 2000)
+                } else {
+                    // Payment pending — webhook may not have fired yet, poll briefly
+                    let attempts = 0
+                    const poll = setInterval(async () => {
+                        attempts++
+                        try {
+                            let ps
+                            if (orderType === 'worldcup') {
+                                const d = await getOrderStatusByReference(reference)
+                                ps = d.payment_status
+                            } else {
+                                const r = await client.get(`/orders/by-reference/${reference}`)
+                                ps = r.data.payment_status
+                            }
+                            if (ps === 'paid') {
+                                clearInterval(poll)
+                                setStatus('success')
+                                setTimeout(() => {
+                                    navigate(orderType === 'worldcup' ? '/worldcup/success' : '/checkout/success')
+                                }, 2000)
+                            } else if (attempts >= 10) {
+                                clearInterval(poll)
+                                setErrorMsg('Payment is taking longer than expected. Check your email for confirmation.')
+                                setStatus('failed')
+                            }
+                        } catch {
+                            clearInterval(poll)
+                            setErrorMsg('Could not verify payment. Contact support if you were charged.')
+                            setStatus('failed')
+                        }
+                    }, 3000)
+                }
+            } catch (err) {
+                setErrorMsg(err?.response?.data?.message || 'Unable to verify payment. Contact support if you were charged.')
+                setStatus('failed')
+            }
+        }
+
+        verify()
+    }, [reference, orderType, navigate])
+
+    if (status === 'verifying') {
         return (
             <div className="min-h-screen bg-cream flex items-center justify-center px-6">
                 <div className="max-w-md w-full bg-white rounded-3xl p-8 text-center">
                     <Spinner size="lg" className="mx-auto mb-4" />
-                    <h2 className="font-serif text-2xl mb-4 text-charcoal">Processing Payment</h2>
-                    <p className="text-charcoal-soft mb-2">
-                        Please wait while we verify your payment...
-                    </p>
-                    <p className="text-sm text-charcoal-soft/70">
-                        This may take a few moments.
-                    </p>
+                    <h2 className="font-serif text-2xl mb-4 text-charcoal">Verifying Payment</h2>
+                    <p className="text-charcoal-soft">Please wait while we confirm your transaction...</p>
                 </div>
             </div>
         )
     }
 
-    if (isError) {
+    if (status === 'success') {
         return (
             <div className="min-h-screen bg-cream flex items-center justify-center px-6">
                 <div className="max-w-md w-full bg-white rounded-3xl p-8 text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
-                        <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                     </div>
-                    <h2 className="font-serif text-2xl mb-4 text-charcoal">Payment Failed</h2>
-                    <p className="text-charcoal-soft mb-6">
-                        {error?.response?.data?.message || 'Unable to verify payment. Please contact support.'}
-                    </p>
-                    <div className="space-y-3">
-                        <Button onClick={() => navigate('/worldcup/lookup')} className="w-full">
-                            Look Up Order
-                        </Button>
-                        <button
-                            onClick={() => navigate('/worldcup')}
-                            className="w-full py-3 text-charcoal-soft hover:text-charcoal transition-colors"
-                        >
-                            Return to World Cup
-                        </button>
-                    </div>
+                    <h2 className="font-serif text-2xl mb-2 text-charcoal">Payment Confirmed!</h2>
+                    <p className="text-charcoal-soft text-sm">Redirecting you now...</p>
                 </div>
             </div>
         )
     }
 
-    if (order?.status === 'failed') {
-        return (
-            <div className="min-h-screen bg-cream flex items-center justify-center px-6">
-                <div className="max-w-md w-full bg-white rounded-3xl p-8 text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
-                        <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </div>
-                    <h2 className="font-serif text-2xl mb-4 text-charcoal">Payment Failed</h2>
-                    <p className="text-charcoal-soft mb-6">
-                        Your payment was not successful. Please try again or contact support.
-                    </p>
-                    <div className="space-y-3">
-                        <Button onClick={() => navigate('/worldcup/products')} className="w-full">
-                            Try Again
-                        </Button>
-                        <button
-                            onClick={() => navigate('/worldcup')}
-                            className="w-full py-3 text-charcoal-soft hover:text-charcoal transition-colors"
-                        >
-                            Return to World Cup
-                        </button>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
-    // Payment successful - showing success state while redirecting
+    // Failed state
     return (
         <div className="min-h-screen bg-cream flex items-center justify-center px-6">
             <div className="max-w-md w-full bg-white rounded-3xl p-8 text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
-                    <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </div>
-                <h2 className="font-serif text-2xl mb-4 text-charcoal">Payment Successful!</h2>
-                <p className="text-charcoal-soft mb-2">
-                    Your order has been confirmed.
-                </p>
-                <p className="text-sm text-charcoal-soft/70">
-                    Redirecting to download page...
-                </p>
+                <h2 className="font-serif text-2xl mb-3 text-charcoal">Payment Failed</h2>
+                <p className="text-charcoal-soft mb-6 text-sm">{errorMsg}</p>
+                <div className="space-y-3">
+                    {orderType === 'worldcup' ? (
+                        <>
+                            <Button onClick={() => navigate('/worldcup/lookup')} className="w-full">Look Up Order</Button>
+                            <button onClick={() => navigate('/worldcup')} className="w-full py-3 text-charcoal-soft hover:text-charcoal transition-colors text-sm">
+                                Return to World Cup
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <Button onClick={() => navigate('/orders')} className="w-full">View My Orders</Button>
+                            <button onClick={() => navigate('/browse')} className="w-full py-3 text-charcoal-soft hover:text-charcoal transition-colors text-sm">
+                                Continue Shopping
+                            </button>
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     )

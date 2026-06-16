@@ -15,8 +15,9 @@ import Collections from './pages/gallery/Collections'
 import CollectionDetail from './pages/gallery/CollectionDetail'
 import Account from './pages/gallery/Account'
 import Checkout from './pages/gallery/Checkout'
-import CheckoutSuccess from './pages/gallery/Success'
+import CheckoutSuccess from './pages/gallery/CheckoutSuccess'
 import Orders from './pages/gallery/Orders'
+import OrderDetail from './pages/gallery/OrderDetail'
 import Favorites from './pages/gallery/Favorites'
 import WorldCupHome from './pages/worldcup/WorldCupHome'
 import WorldCupProducts from './pages/worldcup/WorldCupProducts'
@@ -79,6 +80,7 @@ function App() {
             <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
             <Route path="/checkout/success" element={<CheckoutSuccess />} />
             <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+            <Route path="/orders/:id" element={<ProtectedRoute><OrderDetail /></ProtectedRoute>} />
             <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
 
             {/* World Cup */}

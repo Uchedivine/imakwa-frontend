@@ -29,3 +29,13 @@ export const initPaystackPayment = async (orderId) => {
   const response = await client.post('/payments/paystack/init', { order_id: orderId })
   return response.data
 }
+
+export const getOrderStatusByReference = async (reference) => {
+  const response = await client.get(`/orders/by-reference/${reference}`)
+  return response.data
+}
+
+export const getGalleryOrderByReference = async (reference) => {
+  const response = await client.get(`/orders/by-reference/${reference}`)
+  return response.data
+}

@@ -51,7 +51,7 @@ export default function CheckoutSuccess() {
             </div>
             <h1 className="text-4xl font-serif text-charcoal mb-4">Thank you for your order!</h1>
             <p className="text-charcoal-soft mb-8">Your payment was processed successfully. We've sent a receipt to your email.</p>
-            <Link to="/user/orders" className="px-8 py-3 bg-terracotta text-white rounded-full">View My Orders</Link>
+            <Link to="/orders" className="px-8 py-3 bg-terracotta text-white rounded-full">View My Orders</Link>
         </div>
     )
 }

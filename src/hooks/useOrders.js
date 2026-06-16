@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { getOrders } from '../api/orders'
+import { getOrders, getOrder } from '../api/orders'
 import { useAuthStore } from '../store/authStore'
 
 export function useOrders() {
@@ -8,5 +8,14 @@ export function useOrders() {
     queryKey: ['orders'],
     queryFn: getOrders,
     enabled: isAuthenticated,
+  })
+}
+
+export function useOrder(id) {
+  const { isAuthenticated } = useAuthStore()
+  return useQuery({
+    queryKey: ['order', id],
+    queryFn: () => getOrder(id),
+    enabled: isAuthenticated && !!id,
   })
 }
