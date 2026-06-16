@@ -32,37 +32,37 @@ export default function GalleryHero() {
       <div className="max-w-[1600px] mx-auto w-full flex flex-col lg:flex-row relative">
 
         {/* --- LEFT COLUMN: Content --- */}
-        <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 lg:px-10 pt-16 lg:py-20 relative z-20">
-          <div className="flex items-center gap-4 mb-6 sm:mb-8">
-            <div className="w-12 h-[1px] bg-[#C25E36]"></div>
-            <p className="text-[11px] font-bold tracking-[0.15em] uppercase text-[#C25E36]">
+        <div className="w-full lg:w-1/2 flex flex-col justify-center px-4 sm:px-6 lg:px-10 pt-12 sm:pt-16 lg:py-20 relative z-20">
+          <div className="flex items-center gap-3 sm:gap-4 mb-5 sm:mb-6 lg:mb-8">
+            <div className="w-10 sm:w-12 h-[1px] bg-[#C25E36]"></div>
+            <p className="text-[10px] sm:text-[11px] font-bold tracking-[0.15em] uppercase text-[#C25E36]">
               Premier African Art Marketplace
             </p>
           </div>
 
-          <h1 className="mb-6 text-[#1A1A1A]">
-            <span className="block font-serif text-[2.5rem] sm:text-[3.5rem] lg:text-[4.5rem] leading-[1.1] tracking-tight">
+          <h1 className="mb-5 sm:mb-6 text-[#1A1A1A]">
+            <span className="block font-serif text-[2.25rem] sm:text-[3rem] lg:text-[4.5rem] leading-[1.1] tracking-tight">
               Own a Piece of
             </span>
-            <span className="block font-serif text-[2.5rem] sm:text-[3.5rem] lg:text-[4.5rem] leading-[1.1] italic text-[#C25E36]">
+            <span className="block font-serif text-[2.25rem] sm:text-[3rem] lg:text-[4.5rem] leading-[1.1] italic text-[#C25E36]">
               Authentic African
             </span>
-            <span className="block font-serif text-[2.5rem] sm:text-[3.5rem] lg:text-[4.5rem] leading-[1.1] tracking-tight">
+            <span className="block font-serif text-[2.25rem] sm:text-[3rem] lg:text-[4.5rem] leading-[1.1] tracking-tight">
               Heritage.
             </span>
           </h1>
 
-          <p className="text-[15px] leading-relaxed text-gray-600 max-w-[500px] mb-8 sm:mb-10">
+          <p className="text-[14px] sm:text-[15px] leading-relaxed text-gray-600 max-w-[500px] mb-7 sm:mb-8 lg:mb-10">
             Connecting global collectors with master artists across the African
             continent — from ancestral sculptors in Benin City to contemporary
             digital visionaries in Nairobi. Every piece is certified,
             provenance-verified, and shipped worldwide.
           </p>
 
-          <div className="flex flex-wrap gap-4 mb-12">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-10 sm:mb-12">
             <Link
               to="/browse"
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-[#C25E36] text-white text-[14px] font-medium rounded-full hover:bg-[#a64e2c] transition-colors w-full sm:w-auto"
+              className="inline-flex items-center justify-center gap-2 px-7 py-4 sm:py-3.5 bg-[#C25E36] text-white text-[14px] font-medium rounded-full hover:bg-[#a64e2c] transition-colors min-h-[48px] sm:min-h-0"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <rect x="3" y="3" width="7" height="7"></rect>
@@ -75,7 +75,7 @@ export default function GalleryHero() {
 
             <Link
               to="/artists"
-              className="inline-flex items-center justify-center px-7 py-3.5 border border-[#1A1A1A] text-[#1A1A1A] text-[14px] font-medium rounded-full hover:bg-gray-50 transition-colors w-full sm:w-auto"
+              className="inline-flex items-center justify-center px-7 py-4 sm:py-3.5 border border-[#1A1A1A] text-[#1A1A1A] text-[14px] font-medium rounded-full hover:bg-gray-50 transition-colors min-h-[48px] sm:min-h-0"
             >
               Meet the Artists
             </Link>
@@ -95,7 +95,7 @@ export default function GalleryHero() {
         </div>
 
         {/* --- CENTER/RIGHT COLUMN: Artwork Showcase Container --- */}
-        <div className="relative lg:absolute right-0 top-0 bottom-0 w-full lg:w-[53%] h-[55vh] min-h-[450px] lg:h-full z-10 overflow-hidden bg-[#1c1a17]">
+        <div className="relative lg:absolute right-0 top-0 bottom-0 w-full lg:w-[53%] h-[50vh] min-h-[400px] sm:min-h-[450px] lg:h-full z-10 overflow-hidden bg-[#1c1a17]">
 
           <img
             src={eldersGaze}
@@ -122,33 +122,33 @@ export default function GalleryHero() {
                 e.stopPropagation();
               }
             }}
-            className={`absolute bottom-10 left-4 right-4 sm:left-auto sm:bottom-16 sm:right-10 bg-[#F4F0EA] rounded-xl shadow-2xl p-5 sm:p-6 w-auto sm:w-[320px] z-30 transition-all duration-500 peer-hover:opacity-0 peer-hover:translate-y-4 hover:opacity-100 ${isUiVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+            className={`absolute bottom-8 sm:bottom-10 left-4 right-4 sm:left-auto sm:bottom-16 sm:right-10 bg-[#F4F0EA] rounded-xl shadow-2xl p-4 sm:p-5 lg:p-6 w-auto sm:w-[320px] z-30 transition-all duration-500 peer-hover:opacity-0 peer-hover:translate-y-4 hover:opacity-100 ${isUiVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
           >
-            <div className="flex items-center gap-2 mb-2.5 sm:mb-3">
+            <div className="flex items-center gap-2 mb-2 sm:mb-2.5 lg:mb-3">
               <span className="text-[11px] sm:text-[12px]">🔥</span>
               <p className="text-[9px] sm:text-[10px] font-bold tracking-[0.15em] uppercase text-[#C25E36]">
                 JUST LISTED
               </p>
             </div>
 
-            <h3 className="font-serif text-[20px] sm:text-[22px] leading-tight text-[#1A1A1A] mb-1">
+            <h3 className="font-serif text-[19px] sm:text-[20px] lg:text-[22px] leading-tight text-[#1A1A1A] mb-1">
               The Elder's Gaze
             </h3>
 
-            <p className="text-[11px] sm:text-[12px] text-gray-500 mb-5 sm:mb-6">
+            <p className="text-[11px] sm:text-[12px] text-gray-500 mb-4 sm:mb-5 lg:mb-6">
               Kola Bankole · Oil on Canvas · Nigeria
             </p>
 
-            <div className="flex items-center justify-between">
-              <span className="font-serif text-[22px] sm:text-[24px] text-[#C25E36]">
+            <div className="flex items-center justify-between gap-3">
+              <span className="font-serif text-[21px] sm:text-[22px] lg:text-[24px] text-[#C25E36]">
                 $4,200
               </span>
 
-              {/* Smaller optimized button styling on mobile screens */}
+              {/* Optimized button with proper touch target */}
               <button
                 onClick={handleAddToCart}
                 disabled={cartState !== 'idle'}
-                className={`flex items-center justify-center w-[100px] sm:w-[120px] h-[34px] sm:h-[40px] text-[11px] sm:text-[13px] font-medium rounded-full transition-all duration-300 ${cartState === 'added'
+                className={`flex items-center justify-center flex-1 max-w-[140px] sm:max-w-[120px] min-h-[44px] sm:h-[40px] px-4 text-[12px] sm:text-[13px] font-medium rounded-full transition-all duration-300 ${cartState === 'added'
                   ? 'bg-green-700 text-white'
                   : 'bg-[#C25E36] text-white hover:bg-[#a64e2c]'
                   } ${cartState === 'loading' ? 'opacity-80 cursor-not-allowed' : ''}`}
@@ -169,11 +169,11 @@ export default function GalleryHero() {
         </div>
 
         {/* --- BOTTOM MOBILE PANEL: Independent Stats block --- */}
-        <div className="block lg:hidden w-full px-6 py-12 bg-[#FCFBF8] border-t border-[#1c1a17]/5 relative z-20">
-          <div className="flex gap-8 flex-wrap justify-between sm:justify-start sm:gap-16">
+        <div className="block lg:hidden w-full px-4 sm:px-6 py-10 sm:py-12 bg-[#FCFBF8] border-t border-[#1c1a17]/5 relative z-20">
+          <div className="flex gap-6 sm:gap-8 flex-wrap justify-between sm:justify-start sm:gap-x-16">
             {stats.map(({ value, label }) => (
-              <div key={label} className="min-w-[110px]">
-                <p className="font-serif text-[26px] sm:text-[28px] leading-none text-[#1A1A1A] mb-1.5">
+              <div key={label} className="min-w-[100px] sm:min-w-[110px]">
+                <p className="font-serif text-[24px] sm:text-[26px] lg:text-[28px] leading-none text-[#1A1A1A] mb-1.5">
                   {value}
                 </p>
                 <p className="text-[11px] sm:text-[12px] text-gray-500 font-medium">
