@@ -127,7 +127,7 @@ export default function CollectionDetail() {
             <GalleryNavbar />
 
             {/* Hero Section */}
-            <section className="relative h-[500px] bg-charcoal overflow-hidden">
+            <section className="relative h-[350px] sm:h-[420px] md:h-[500px] bg-charcoal overflow-hidden">
                 <img
                     src={collectionData.coverImage}
                     alt={collectionData.title}
@@ -135,20 +135,20 @@ export default function CollectionDetail() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/60 to-transparent" />
 
-                <div className="absolute bottom-0 left-0 right-0 px-6 md:px-8 pb-12">
+                <div className="absolute bottom-0 left-0 right-0 px-4 sm:px-6 md:px-8 pb-8 sm:pb-10 md:pb-12">
                     <div className="max-w-[1200px] mx-auto">
-                        <div className="inline-block px-4 py-1.5 rounded-full bg-terracotta text-white text-xs font-medium mb-4">
+                        <div className="inline-block px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-terracotta text-white text-[10px] sm:text-xs font-medium mb-3 sm:mb-4">
                             COLLECTION
                         </div>
-                        <h1 className="font-serif text-5xl md:text-6xl text-white mb-4">
+                        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white mb-3 sm:mb-4">
                             {collectionData.title}
                         </h1>
-                        <div className="flex flex-wrap items-center gap-4 text-white/80 text-sm">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 text-white/80 text-xs sm:text-sm">
                             <span>Curated by {collectionData.curator}</span>
-                            <span>•</span>
+                            <span className="hidden sm:inline">•</span>
                             <span>{collectionData.artworkCount} artworks</span>
-                            <span>•</span>
-                            <span>Created {new Date(collectionData.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+                            <span className="hidden md:inline">•</span>
+                            <span className="hidden md:inline">Created {new Date(collectionData.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
                         </div>
                     </div>
                 </div>
@@ -156,34 +156,34 @@ export default function CollectionDetail() {
 
             <SectionReveal>
                 {/* About Section */}
-                <section className="py-16 px-6 md:px-8 bg-white border-b border-charcoal/10">
+                <section className="py-12 sm:py-14 md:py-16 px-4 sm:px-6 md:px-8 bg-white border-b border-charcoal/10">
                     <div className="max-w-[1200px] mx-auto">
-                        <div className="grid md:grid-cols-[2fr,1fr] gap-12">
+                        <div className="grid grid-cols-1 md:grid-cols-[2fr,1fr] gap-8 sm:gap-10 md:gap-12">
                             {/* Description */}
                             <div>
-                                <h2 className="font-serif text-2xl text-charcoal mb-4">About This Collection</h2>
-                                <p className="text-charcoal-soft leading-relaxed">
+                                <h2 className="font-serif text-xl sm:text-2xl text-charcoal mb-3 sm:mb-4">About This Collection</h2>
+                                <p className="text-sm sm:text-base text-charcoal-soft leading-relaxed">
                                     {collectionData.description}
                                 </p>
                             </div>
 
                             {/* Curator Info */}
-                            <div className="bg-cream rounded-2xl p-6 border border-charcoal/10 h-fit">
-                                <h3 className="text-sm font-semibold text-charcoal-soft uppercase tracking-wide mb-4">
+                            <div className="bg-cream rounded-2xl p-5 sm:p-6 border border-charcoal/10 h-fit">
+                                <h3 className="text-xs sm:text-sm font-semibold text-charcoal-soft uppercase tracking-wide mb-3 sm:mb-4">
                                     Curator
                                 </h3>
-                                <div className="flex items-center gap-4 mb-4">
+                                <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
                                     <img
                                         src={collectionData.curatorAvatar}
                                         alt={collectionData.curator}
-                                        className="w-16 h-16 rounded-full object-cover"
+                                        className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover"
                                     />
                                     <div>
-                                        <p className="font-semibold text-charcoal">{collectionData.curator}</p>
-                                        <p className="text-sm text-charcoal-soft">Curator & Art Historian</p>
+                                        <p className="text-sm sm:text-base font-semibold text-charcoal">{collectionData.curator}</p>
+                                        <p className="text-xs sm:text-sm text-charcoal-soft">Curator & Art Historian</p>
                                     </div>
                                 </div>
-                                <p className="text-sm text-charcoal-soft leading-relaxed">
+                                <p className="text-xs sm:text-sm text-charcoal-soft leading-relaxed">
                                     {collectionData.curatorBio}
                                 </p>
                             </div>
@@ -194,19 +194,19 @@ export default function CollectionDetail() {
 
             <SectionReveal>
                 {/* Artworks Grid */}
-                <section className="py-16 px-6 md:px-8">
+                <section className="py-12 sm:py-14 md:py-16 px-4 sm:px-6 md:px-8">
                     <div className="max-w-[1200px] mx-auto">
-                        <div className="flex items-center justify-between mb-8">
-                            <div className="flex items-center gap-3">
-                                <div className="w-1 h-8 bg-terracotta rounded-full" />
-                                <h2 className="font-serif text-3xl text-charcoal">Artworks</h2>
+                        <div className="flex items-center justify-between mb-6 sm:mb-8">
+                            <div className="flex items-center gap-2 sm:gap-3">
+                                <div className="w-1 h-6 sm:h-8 bg-terracotta rounded-full" />
+                                <h2 className="font-serif text-2xl sm:text-3xl text-charcoal">Artworks</h2>
                             </div>
-                            <p className="text-charcoal-soft">
+                            <p className="text-xs sm:text-sm text-charcoal-soft">
                                 {collectionData.artworks?.length || 0} {collectionData.artworks?.length === 1 ? 'piece' : 'pieces'}
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
                             {collectionData.artworks?.map(artwork => (
                                 <ArtworkCard key={artwork.id} artwork={artwork} />
                             ))}
