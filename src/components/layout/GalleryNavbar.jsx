@@ -6,11 +6,11 @@ import { useFavoritesStore } from '../../store/favoritesStore'
 import CartDrawer from '../cart/CartDrawer'
 
 const dropdownCategories = [
-  { name: 'Paintings & Canvas', icon: '🖼️', to: '/categories/paintings' },
-  { name: 'Sculptures', icon: '🗿', to: '/categories/sculptures' },
-  { name: 'Digital Art', icon: '💻', to: '/categories/digital-art' },
-  { name: 'Textiles & Crafts', icon: '🧵', to: '/categories/textiles' },
-  { name: 'Photography', icon: '📷', to: '/categories/photography' },
+  { name: 'Paintings & Canvas', icon: '🖼️', to: '/browse?category=paintings' },
+  { name: 'Sculptures', icon: '🗿', to: '/browse?category=sculpture' },
+  { name: 'Digital Art', icon: '💻', to: '/browse?category=digital' },
+  { name: 'Textiles & Crafts', icon: '🧵', to: '/browse?category=textiles' },
+  { name: 'Photography', icon: '📷', to: '/browse?category=photography' },
 ];
 
 export default function GalleryNavbar() {
