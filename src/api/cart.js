@@ -6,11 +6,22 @@ export const getCart = async () => {
 }
 
 export const addToCart = async (artworkId) => {
-  const response = await client.post('/cart/items', {
-    item_type: 'artwork',
-    item_id: artworkId,
-  })
-  return response.data
+  console.log('🛒 [CART API] Adding to cart:', { artworkId })
+  try {
+    const response = await client.post('/cart/items', {
+      item_type: 'artwork',
+      item_id: artworkId,
+    })
+    console.log('✅ [CART API] Add response:', response.data)
+    return response.data
+  } catch (error) {
+    console.error('❌ [CART API] Add to cart failed:', {
+      status: error.response?.status,
+      message: error.response?.data?.message,
+      data: error.response?.data
+    })
+    throw error
+  }
 }
 
 export const removeFromCart = async (cartItemId) => {

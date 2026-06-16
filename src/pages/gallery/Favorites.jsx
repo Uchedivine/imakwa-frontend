@@ -93,12 +93,18 @@ export default function Favorites() {
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                {favoriteArtworks.map((favorite) => (
-                                    <ArtworkCard
-                                        key={favorite.favoriteable_id}
-                                        artwork={favorite.artwork || favorite}
-                                    />
-                                ))}
+                                {favoriteArtworks.map((favorite) => {
+                                    // Handle different response structures from backend
+                                    const artwork = favorite.artwork || favorite.itemable || favorite
+                                    const artworkId = artwork.id || favorite.favoriteable_id || favorite.id
+
+                                    return (
+                                        <ArtworkCard
+                                            key={artworkId}
+                                            artwork={artwork}
+                                        />
+                                    )
+                                })}
                             </div>
                         </>
                     )}

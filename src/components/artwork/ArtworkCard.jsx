@@ -26,6 +26,13 @@ export default function ArtworkCard({ artwork }) {
         e.preventDefault()
         if (cartState !== 'idle') return;
 
+        console.log('🛒 [ARTWORK CARD] Add to cart clicked:', {
+            artworkId: artwork.id,
+            title: artwork.title,
+            price: artwork.price,
+            parsedPrice: parsePrice(artwork.price)
+        })
+
         setCartState('loading');
 
         // Add to cart via backend

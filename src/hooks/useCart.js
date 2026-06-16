@@ -32,13 +32,23 @@ export function useCart() {
 
   const addMutation = useMutation({
     mutationFn: async (artwork) => {
+      console.log('🛒 [USE CART] Adding to cart:', { artworkId: artwork.id, artwork })
       // Always call backend for both guests and authenticated users
       const response = await addToCart(artwork.id)
+      console.log('✅ [USE CART] Add to cart response:', response)
       return response
     },
     onSuccess: () => {
+      console.log('✅ [USE CART] Item added successfully, invalidating cart query')
       // Reload cart from backend to get updated state
       queryClient.invalidateQueries({ queryKey: ['cart'] })
+    },
+    onError: (error) => {
+      console.error('❌ [USE CART] Add to cart failed:', {
+        status: error.response?.status,
+        message: error.response?.data?.message,
+        error: error.response?.data
+      })
     },
   })
 
