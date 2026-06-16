@@ -1,12 +1,25 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useLiveScores } from '../../hooks/useLiveScores'
 import { useCountdown } from '../../hooks/useCountdown'
 
 export default function WorldCupNavbar() {
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const { data: countdown } = useCountdown()
     const { data: liveScoresData } = useLiveScores()
     const worldCupStarted = countdown?.worldCupStarted || false
+
+    // Prevent body scroll when mobile menu is open
+    useEffect(() => {
+        if (mobileMenuOpen) {
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = 'unset'
+        }
+        return () => {
+            document.body.style.overflow = 'unset'
+        }
+    }, [mobileMenuOpen])
 
     // Extract matches from response
     const matches = liveScoresData?.data?.matches || []
@@ -26,14 +39,14 @@ export default function WorldCupNavbar() {
     return (
         <nav className="w-full flex flex-col z-50 sticky top-0 select-none">
             {/* 1. Main Navigation Bar (Top) */}
-            <div className="bg-[#12110F] border-b border-white/5 h-[64px] flex items-center justify-between px-6 lg:px-10 w-full">
+            <div className="bg-[#12110F] border-b border-white/5 h-[64px] flex items-center justify-between px-4 sm:px-6 lg:px-10 w-full relative z-50">
 
                 {/* Logo */}
-                <Link to="/worldcup" className="font-serif text-[24px] font-bold tracking-tight text-white flex items-baseline">
+                <Link to="/worldcup" className="font-serif text-[20px] sm:text-[24px] font-bold tracking-tight text-white flex items-baseline">
                     imakwa<span className="text-[#C25E36]">.</span>
                 </Link>
 
-                {/* Navigation Links */}
+                {/* Navigation Links - Desktop */}
                 <div className="hidden md:flex items-center gap-8">
                     <Link to="/" className="text-[13px] font-medium text-white/70 hover:text-white transition-colors flex items-center gap-2">
                         <span>←</span> Back to Gallery
@@ -49,14 +62,76 @@ export default function WorldCupNavbar() {
                     </Link>
                 </div>
 
-                {/* Browse Collection Button */}
+                {/* Browse Collection Button - Desktop */}
                 <Link
                     to="/worldcup/products"
-                    className="h-[40px] px-6 bg-[#C25E36] hover:bg-[#a64e2c] transition-colors text-white rounded-full text-[13px] font-semibold flex items-center gap-2"
+                    className="hidden md:flex h-[40px] px-6 bg-[#C25E36] hover:bg-[#a64e2c] transition-colors text-white rounded-full text-[13px] font-semibold items-center gap-2"
                 >
                     Browse Collection
                 </Link>
+
+                {/* Mobile Menu Button */}
+                <button
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    className="md:hidden w-10 h-10 flex items-center justify-center text-white hover:bg-white/10 rounded-lg transition-colors"
+                    aria-label="Toggle menu"
+                >
+                    {mobileMenuOpen ? (
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    ) : (
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    )}
+                </button>
             </div>
+
+            {/* Mobile Menu Drawer */}
+            {mobileMenuOpen && (
+                <>
+                    {/* Backdrop */}
+                    <div
+                        className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+                        onClick={() => setMobileMenuOpen(false)}
+                    />
+
+                    {/* Menu Panel */}
+                    <div className="md:hidden fixed top-[64px] left-0 right-0 bg-[#12110F] border-b border-white/5 z-40 animate-slide-down">
+                        <div className="px-4 py-6 space-y-1">
+                            <Link
+                                to="/"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="flex items-center gap-2 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                            >
+                                <span>←</span> Back to Gallery
+                            </Link>
+                            <Link
+                                to="/worldcup/products"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="block px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                            >
+                                Browse Collection
+                            </Link>
+                            <Link
+                                to="/worldcup/digital-access"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="block px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                            >
+                                Digital Access
+                            </Link>
+                            <Link
+                                to="/worldcup/licensing"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="block px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                            >
+                                Artist Licensing
+                            </Link>
+                        </div>
+                    </div>
+                </>
+            )}
 
             {/* 2. Live Match Ticker (Bottom) */}
             <div className="bg-[#0B2217] relative overflow-hidden h-[38px] flex items-center border-b border-[#0B2217]">
@@ -130,9 +205,22 @@ export default function WorldCupNavbar() {
                     0% { transform: translateX(0); }
                     100% { transform: translateX(-33.333333%); }
                 }
+                @keyframes slide-down {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-10px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
                 .animate-scroll {
                     animation: scroll 45s linear infinite;
                     width: max-content;
+                }
+                .animate-slide-down {
+                    animation: slide-down 0.2s ease-out;
                 }
             `}</style>
         </nav>
