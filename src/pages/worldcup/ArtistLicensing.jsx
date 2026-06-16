@@ -11,9 +11,9 @@ export default function ArtistLicensing() {
             <CountdownBanner />
 
             {/* Breadcrumb */}
-            <div className="bg-white border-b border-charcoal/5 py-4 px-6 md:px-8">
+            <div className="bg-white border-b border-charcoal/5 py-3 sm:py-4 px-4 sm:px-6 md:px-8">
                 <div className="max-w-[1400px] mx-auto">
-                    <nav className="flex items-center gap-2 text-sm text-charcoal-soft">
+                    <nav className="flex items-center gap-2 text-xs sm:text-sm text-charcoal-soft">
                         <Link to="/worldcup" className="hover:text-[#C5A665] transition-colors">
                             World Cup
                         </Link>
@@ -25,7 +25,7 @@ export default function ArtistLicensing() {
 
             {/* Hero Section */}
             <section
-                className="relative py-20 px-6 md:px-8 overflow-hidden"
+                className="relative py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 overflow-hidden"
                 style={{
                     background: 'radial-gradient(circle at center, #124E31 0%, #051A0F 100%)',
                 }}
@@ -39,13 +39,13 @@ export default function ArtistLicensing() {
                 />
 
                 <div className="relative z-10 max-w-[900px] mx-auto text-center">
-                    <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#C5A665] mb-4">
+                    <p className="text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase text-[#C5A665] mb-3 sm:mb-4">
                         SUPPORTING AFRICAN ARTISTS
                     </p>
-                    <h1 className="font-serif text-[3rem] sm:text-[4rem] md:text-[5rem] font-normal leading-tight mb-6 text-white">
+                    <h1 className="font-serif text-[2.5rem] sm:text-[3.5rem] md:text-[5rem] font-normal leading-tight mb-4 sm:mb-6 text-white">
                         Artist <span className="italic text-[#C5A665]">Licensing</span>
                     </h1>
-                    <p className="text-[15px] leading-relaxed text-[#8DA094] max-w-2xl mx-auto">
+                    <p className="text-[14px] sm:text-[15px] leading-relaxed text-[#8DA094] max-w-2xl mx-auto px-4">
                         How we compensate artists and structure licensing for the World Cup 2026 collection
                     </p>
                 </div>
@@ -53,30 +53,30 @@ export default function ArtistLicensing() {
 
             {/* How Artists Are Paid Section */}
             <SectionReveal>
-                <section className="py-20 px-6 md:px-8 bg-white">
+                <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 bg-white">
                     <div className="max-w-[1200px] mx-auto">
-                        <div className="text-center mb-16">
-                            <h2 className="font-serif text-3xl md:text-4xl text-charcoal mb-4">
+                        <div className="text-center mb-10 sm:mb-14 md:mb-16">
+                            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-charcoal mb-3 sm:mb-4">
                                 How Artists Are <span className="italic text-[#C1623F]">Compensated</span>
                             </h2>
-                            <p className="text-charcoal-soft text-sm max-w-2xl mx-auto">
+                            <p className="text-charcoal-soft text-xs sm:text-sm max-w-2xl mx-auto">
                                 Transparent, ethical revenue sharing with every digital sale
                             </p>
                         </div>
 
-                        <div className="grid md:grid-cols-3 gap-8 mb-12">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-12">
                             {/* Revenue Share */}
-                            <div className="bg-[#FDFBF7] border border-charcoal/5 rounded-xl p-8 text-center">
-                                <div className="w-16 h-16 bg-[#C5A665]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <svg className="w-8 h-8 text-[#C5A665]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <div className="bg-[#FDFBF7] border border-charcoal/5 rounded-xl p-6 sm:p-8 text-center">
+                                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#C5A665]/10 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                                    <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#C5A665]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 </div>
-                                <h3 className="font-serif text-2xl text-charcoal mb-2">Fair Split</h3>
-                                <p className="text-sm text-charcoal-soft leading-relaxed mb-3">
+                                <h3 className="font-serif text-xl sm:text-2xl text-charcoal mb-2">Fair Split</h3>
+                                <p className="text-xs sm:text-sm text-charcoal-soft leading-relaxed mb-3">
                                     Artists receive a significant percentage of every sale, ensuring sustainable creative work
                                 </p>
-                                <div className="text-3xl font-bold font-serif text-[#C5A665]">60%</div>
+                                <div className="text-2xl sm:text-3xl font-bold font-serif text-[#C5A665]">60%</div>
                                 <p className="text-xs text-charcoal-soft mt-1">to artists</p>
                             </div>
 
@@ -112,8 +112,8 @@ export default function ArtistLicensing() {
                         </div>
 
                         {/* Revenue Breakdown */}
-                        <div className="bg-[#0A2215] border border-[#1A3C2A] rounded-2xl p-8 md:p-10">
-                            <h3 className="font-serif text-2xl text-white mb-6 text-center">Revenue Distribution Model</h3>
+                        <div className="bg-[#0A2215] border border-[#1A3C2A] rounded-2xl p-6 sm:p-8 md:p-10">
+                            <h3 className="font-serif text-xl sm:text-2xl text-white mb-5 sm:mb-6 text-center">Revenue Distribution Model</h3>
                             <div className="max-w-[600px] mx-auto space-y-4">
                                 <div className="flex items-center gap-4">
                                     <div className="flex-1">
@@ -162,30 +162,30 @@ export default function ArtistLicensing() {
 
             {/* Licensing Structure Section */}
             <SectionReveal>
-                <section className="py-20 px-6 md:px-8 bg-[#FDFBF7]">
+                <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 bg-[#FDFBF7]">
                     <div className="max-w-[1200px] mx-auto">
-                        <div className="text-center mb-16">
-                            <h2 className="font-serif text-3xl md:text-4xl text-charcoal mb-4">
+                        <div className="text-center mb-10 sm:mb-14 md:mb-16">
+                            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-charcoal mb-3 sm:mb-4">
                                 Licensing <span className="italic text-[#C1623F]">Structure</span>
                             </h2>
-                            <p className="text-charcoal-soft text-sm max-w-2xl mx-auto">
+                            <p className="text-charcoal-soft text-xs sm:text-sm max-w-2xl mx-auto">
                                 How rights are managed between artists and Imakwa
                             </p>
                         </div>
 
-                        <div className="grid md:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                             {/* What Artists Retain */}
-                            <div className="bg-white border border-charcoal/10 rounded-2xl p-8">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center">
-                                        <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <div className="bg-white border border-charcoal/10 rounded-2xl p-6 sm:p-8">
+                                <div className="flex items-center gap-2.5 sm:gap-3 mb-5 sm:mb-6">
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-500/10 rounded-xl flex items-center justify-center">
+                                        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                                         </svg>
                                     </div>
-                                    <h3 className="font-serif text-2xl text-charcoal">Artists Retain</h3>
+                                    <h3 className="font-serif text-xl sm:text-2xl text-charcoal">Artists Retain</h3>
                                 </div>
 
-                                <div className="space-y-4">
+                                <div className="space-y-3 sm:space-y-4">
                                     <div className="flex items-start gap-3">
                                         <span className="text-green-600 font-bold mt-0.5">✓</span>
                                         <div>
@@ -288,15 +288,15 @@ export default function ArtistLicensing() {
 
             {/* Artist Benefits Section */}
             <SectionReveal>
-                <section className="py-20 px-6 md:px-8 bg-white">
+                <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 bg-white">
                     <div className="max-w-[1000px] mx-auto">
-                        <div className="text-center mb-16">
-                            <h2 className="font-serif text-3xl md:text-4xl text-charcoal mb-4">
+                        <div className="text-center mb-10 sm:mb-14 md:mb-16">
+                            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-charcoal mb-3 sm:mb-4">
                                 Why Partner With <span className="italic text-[#C1623F]">Imakwa?</span>
                             </h2>
                         </div>
 
-                        <div className="grid md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
                             <div className="flex gap-4">
                                 <div className="w-10 h-10 bg-[#C5A665]/10 rounded-lg flex items-center justify-center flex-shrink-0">
                                     <svg className="w-5 h-5 text-[#C5A665]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -375,9 +375,9 @@ export default function ArtistLicensing() {
 
             {/* CTA Section for Artists */}
             <SectionReveal>
-                <section className="py-20 px-6 md:px-8 bg-[#FDFBF7]">
+                <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 bg-[#FDFBF7]">
                     <div className="max-w-[800px] mx-auto">
-                        <div className="bg-gradient-to-br from-[#0A2215] to-[#051A0F] rounded-2xl p-8 md:p-12 text-center relative overflow-hidden">
+                        <div className="bg-gradient-to-br from-[#0A2215] to-[#051A0F] rounded-2xl p-6 sm:p-8 md:p-12 text-center relative overflow-hidden">
                             <div
                                 className="absolute inset-0 opacity-5"
                                 style={{
@@ -387,17 +387,17 @@ export default function ArtistLicensing() {
                             />
 
                             <div className="relative z-10">
-                                <h2 className="font-serif text-3xl md:text-4xl text-white mb-4">
+                                <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-white mb-3 sm:mb-4">
                                     Interested in <span className="italic text-[#C5A665]">Licensing?</span>
                                 </h2>
-                                <p className="text-[#8DA094] text-sm mb-8 max-w-xl mx-auto">
+                                <p className="text-[#8DA094] text-xs sm:text-sm mb-6 sm:mb-8 max-w-xl mx-auto">
                                     We're always looking for talented African artists to join our roster. Get in touch to discuss licensing opportunities.
                                 </p>
                                 <a
                                     href="mailto:licensing@imakwa.com?subject=Artist Licensing Inquiry"
-                                    className="inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-[#C5A665] text-[#092215] rounded-full text-sm font-bold uppercase tracking-wider hover:bg-[#D4B77A] transition-all shadow-lg hover:shadow-xl"
+                                    className="inline-flex items-center justify-center gap-2 sm:gap-2.5 px-6 sm:px-8 py-3 sm:py-4 bg-[#C5A665] text-[#092215] rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider hover:bg-[#D4B77A] transition-all shadow-lg hover:shadow-xl min-h-[48px] sm:min-h-0"
                                 >
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                     </svg>
                                     Contact Licensing Team
@@ -410,17 +410,17 @@ export default function ArtistLicensing() {
 
             {/* Browse Collection CTA */}
             <SectionReveal>
-                <section className="py-20 px-6 md:px-8 bg-white">
+                <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 bg-white">
                     <div className="max-w-[800px] mx-auto text-center">
-                        <h2 className="font-serif text-3xl md:text-4xl text-charcoal mb-6">
+                        <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-charcoal mb-4 sm:mb-6">
                             View The <span className="italic text-[#C1623F]">Collection</span>
                         </h2>
-                        <p className="text-charcoal-soft text-sm mb-8 max-w-2xl mx-auto">
+                        <p className="text-charcoal-soft text-xs sm:text-sm mb-6 sm:mb-8 max-w-2xl mx-auto">
                             Discover works from 46 African artists celebrating the beautiful game
                         </p>
                         <Link
                             to="/worldcup/products"
-                            className="inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-[#111111] text-white rounded-full text-sm font-bold uppercase tracking-wider hover:bg-black transition-all shadow-lg hover:shadow-xl"
+                            className="inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3 sm:py-4 bg-[#111111] text-white rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider hover:bg-black transition-all shadow-lg hover:shadow-xl min-h-[48px] sm:min-h-0"
                         >
                             Browse the Collection
                         </Link>
