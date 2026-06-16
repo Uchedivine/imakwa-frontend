@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { useAuthStore } from './store/authStore'
 import ErrorBoundary from './components/ui/ErrorBoundary'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 
@@ -44,6 +46,13 @@ const queryClient = new QueryClient({
 })
 
 function App() {
+  const initAuth = useAuthStore((state) => state.initAuth)
+
+  // Initialize auth from localStorage on app mount
+  useEffect(() => {
+    initAuth()
+  }, [initAuth])
+
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>

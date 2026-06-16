@@ -1,35 +1,39 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
 
-export const useAuthStore = create(
-  persist(
-    (set) => ({
-      user: null,
-      token: null,
-      isAuthenticated: false,
+export const useAuthStore = create((set) => ({
+  user: null,
+  token: null,
+  isAuthenticated: false,
 
-      login: (user, token) => {
-        set({
-          user,
-          token,
-          isAuthenticated: true,
-        })
-      },
-
-      logout: () => {
-        set({
-          user: null,
-          token: null,
-          isAuthenticated: false,
-        })
-      },
-
-      setUser: (user) => {
-        set({ user })
-      },
-    }),
-    {
-      name: 'imakwa-auth', // Zustand automatically uses localStorage by default
+  // Initialize from localStorage on app start
+  initAuth: () => {
+    const token = localStorage.getItem('authToken')
+    const user = localStorage.getItem('authUser')
+    if (token && user) {
+      set({
+        token,
+        user: JSON.parse(user),
+        isAuthenticated: true,
+      })
     }
-  )
-)
+  },
+
+  // Save to localStorage AND state
+  login: (user, token) => {
+    localStorage.setItem('authToken', token)
+    localStorage.setItem('authUser', JSON.stringify(user))
+    set({ user, token, isAuthenticated: true })
+  },
+
+  // Clear localStorage AND state
+  logout: () => {
+    localStorage.removeItem('authToken')
+    localStorage.removeItem('authUser')
+    set({ user: null, token: null, isAuthenticated: false })
+  },
+
+  setUser: (user) => {
+    localStorage.setItem('authUser', JSON.stringify(user))
+    set({ user })
+  },
+}))

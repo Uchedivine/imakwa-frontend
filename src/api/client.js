@@ -20,20 +20,16 @@ function getSessionId() {
   return id
 }
 
-// Request Interceptor: Inject token from Zustand persisted localStorage
+// Request Interceptor: Inject token from localStorage
 client.interceptors.request.use(
   (config) => {
-    try {
-      const authData = localStorage.getItem('imakwa-auth')
-      if (authData) {
-        const { state } = JSON.parse(authData)
-        if (state?.token) {
-          config.headers.Authorization = `Bearer ${state.token}`
-        }
-      }
-    } catch (error) {
-      console.error('Error reading auth token in API client:', error)
+    // Get token directly from localStorage (simple and reliable)
+    const token = localStorage.getItem('authToken')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
     }
+    
+    // Add session ID for guest users
     config.headers['X-Session-ID'] = getSessionId()
     return config
   },
@@ -47,10 +43,11 @@ client.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Clear localStorage auth state to force logout on token expiration
-      localStorage.removeItem('imakwa-auth')
+      // Clear localStorage auth state on token expiration
+      localStorage.removeItem('authToken')
+      localStorage.removeItem('authUser')
       
-      // Dispatch custom event to trigger app-wide redirects or states if needed
+      // Dispatch custom event to trigger app-wide logout
       window.dispatchEvent(new Event('auth-unauthorized'))
     }
     return Promise.reject(error)
