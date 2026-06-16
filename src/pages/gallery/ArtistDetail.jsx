@@ -102,7 +102,7 @@ export default function ArtistDetail() {
             <GalleryNavbar />
 
             {/* Hero Section */}
-            <div className="relative h-[400px] bg-charcoal">
+            <div className="relative h-[280px] sm:h-[350px] md:h-[400px] bg-charcoal">
                 <img
                     src={artistData.coverImage || artistData.cover_image || artistData.banner || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=1200&q=80'}
                     alt={artistData.name || artistData.display_name}
@@ -113,52 +113,52 @@ export default function ArtistDetail() {
 
             {/* Artist Profile */}
             <SectionReveal>
-                <div className="max-w-[1200px] mx-auto px-6 md:px-8 -mt-20 relative z-10">
-                    <div className="flex flex-col md:flex-row gap-8 mb-12">
+                <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 -mt-16 sm:-mt-20 relative z-10">
+                    <div className="flex flex-col md:flex-row gap-6 sm:gap-8 mb-10 sm:mb-12">
                         {/* Avatar */}
-                        <div className="shrink-0">
+                        <div className="shrink-0 mx-auto md:mx-0">
                             <img
                                 src={artistData.avatar || artistData.profile_image || artistData.image || 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80'}
                                 alt={artistData.name || artistData.display_name}
-                                className="w-40 h-40 rounded-2xl object-cover border-4 border-cream shadow-lg"
+                                className="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl object-cover border-4 border-cream shadow-lg"
                             />
                         </div>
 
                         {/* Info */}
-                        <div className="flex-1 bg-white rounded-2xl p-6 md:p-8 border border-charcoal/10">
+                        <div className="flex-1 bg-white rounded-2xl p-5 sm:p-6 md:p-8 border border-charcoal/10">
                             <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
                                 <div>
-                                    <h1 className="font-serif text-4xl text-charcoal mb-2">
+                                    <h1 className="font-serif text-3xl sm:text-4xl text-charcoal mb-2">
                                         {artistData.name || artistData.display_name || 'Artist'}
                                     </h1>
-                                    <p className="text-charcoal-soft flex items-center gap-2">
-                                        <span className="text-lg">{artistData.countryCode || artistData.country_code || ''}</span>
+                                    <p className="text-sm sm:text-base text-charcoal-soft flex items-center gap-2">
+                                        <span className="text-base sm:text-lg">{artistData.countryCode || artistData.country_code || ''}</span>
                                         {artistData.location || artistData.country || ''}
                                     </p>
                                 </div>
-                                <button className="px-6 py-3 bg-terracotta text-white rounded-full font-medium hover:bg-terra-light transition-colors">
+                                <button className="w-full md:w-auto px-6 py-3 bg-terracotta text-white rounded-full text-sm font-medium hover:bg-terra-light transition-colors min-h-[48px] md:min-h-0">
                                     Follow Artist
                                 </button>
                             </div>
 
-                            <div className="flex flex-wrap gap-6 text-sm mb-4">
+                            <div className="flex flex-wrap gap-4 sm:gap-6 text-sm mb-4">
                                 <div>
-                                    <span className="text-charcoal-soft">Active Since</span>
+                                    <span className="text-charcoal-soft text-xs sm:text-sm">Active Since</span>
                                     <p className="font-semibold text-charcoal">{artistData.since || artistData.created_at?.substring(0, 4) || 'N/A'}</p>
                                 </div>
                                 <div>
-                                    <span className="text-charcoal-soft">Artworks</span>
+                                    <span className="text-charcoal-soft text-xs sm:text-sm">Artworks</span>
                                     <p className="font-semibold text-charcoal">{artistData.artworks?.length || 0}</p>
                                 </div>
                                 <div>
-                                    <span className="text-charcoal-soft">Awards</span>
+                                    <span className="text-charcoal-soft text-xs sm:text-sm">Awards</span>
                                     <p className="font-semibold text-charcoal">{artistData.awards?.length || 0}</p>
                                 </div>
                             </div>
 
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-wrap gap-1.5 sm:gap-2">
                                 {artistData.specialties?.map(specialty => (
-                                    <span key={specialty} className="px-3 py-1 rounded-full bg-terra-pale text-terracotta text-xs font-medium">
+                                    <span key={specialty} className="px-2.5 sm:px-3 py-1 rounded-full bg-terra-pale text-terracotta text-[10px] sm:text-xs font-medium">
                                         {specialty}
                                     </span>
                                 ))}
@@ -167,11 +167,11 @@ export default function ArtistDetail() {
                     </div>
 
                     {/* Tabs */}
-                    <div className="border-b border-charcoal/10 mb-8">
-                        <div className="flex gap-8">
+                    <div className="border-b border-charcoal/10 mb-8 overflow-x-auto scrollbar-hide">
+                        <div className="flex gap-6 sm:gap-8 min-w-max px-4 sm:px-0">
                             <button
                                 onClick={() => setActiveTab('artworks')}
-                                className={`pb-4 text-sm font-medium transition-colors ${activeTab === 'artworks'
+                                className={`pb-3 sm:pb-4 text-sm font-medium transition-colors whitespace-nowrap ${activeTab === 'artworks'
                                     ? 'text-terracotta border-b-2 border-terracotta'
                                     : 'text-charcoal-soft hover:text-charcoal'
                                     }`}
@@ -180,7 +180,7 @@ export default function ArtistDetail() {
                             </button>
                             <button
                                 onClick={() => setActiveTab('about')}
-                                className={`pb-4 text-sm font-medium transition-colors ${activeTab === 'about'
+                                className={`pb-3 sm:pb-4 text-sm font-medium transition-colors whitespace-nowrap ${activeTab === 'about'
                                     ? 'text-terracotta border-b-2 border-terracotta'
                                     : 'text-charcoal-soft hover:text-charcoal'
                                     }`}
@@ -189,7 +189,7 @@ export default function ArtistDetail() {
                             </button>
                             <button
                                 onClick={() => setActiveTab('exhibitions')}
-                                className={`pb-4 text-sm font-medium transition-colors ${activeTab === 'exhibitions'
+                                className={`pb-3 sm:pb-4 text-sm font-medium transition-colors whitespace-nowrap ${activeTab === 'exhibitions'
                                     ? 'text-terracotta border-b-2 border-terracotta'
                                     : 'text-charcoal-soft hover:text-charcoal'
                                     }`}
@@ -217,23 +217,23 @@ export default function ArtistDetail() {
 
                     {activeTab === 'about' && (
                         <div className="max-w-3xl mb-12">
-                            <div className="bg-white rounded-2xl p-8 border border-charcoal/10 mb-8">
-                                <h2 className="text-xl font-bold text-charcoal mb-4">Biography</h2>
-                                <p className="text-charcoal-soft leading-relaxed mb-6">{artistData.bio}</p>
-                                <p className="text-charcoal-soft leading-relaxed">
+                            <div className="bg-white rounded-2xl p-5 sm:p-6 md:p-8 border border-charcoal/10 mb-6 sm:mb-8">
+                                <h2 className="text-lg sm:text-xl font-bold text-charcoal mb-3 sm:mb-4">Biography</h2>
+                                <p className="text-sm sm:text-base text-charcoal-soft leading-relaxed mb-4 sm:mb-6">{artistData.bio}</p>
+                                <p className="text-sm sm:text-base text-charcoal-soft leading-relaxed">
                                     A graduate of the Yaba College of Technology and a 2024 Dak'Art Grand Prize winner,
                                     Kola has exhibited across Lagos, London, and São Paulo. His practice asks: what does it
                                     mean to carry the past into an unwritten future?
                                 </p>
                             </div>
 
-                            <div className="bg-white rounded-2xl p-8 border border-charcoal/10">
-                                <h2 className="text-xl font-bold text-charcoal mb-4">Awards & Recognition</h2>
+                            <div className="bg-white rounded-2xl p-5 sm:p-6 md:p-8 border border-charcoal/10">
+                                <h2 className="text-lg sm:text-xl font-bold text-charcoal mb-3 sm:mb-4">Awards & Recognition</h2>
                                 <div className="space-y-3">
                                     {artistData.awards?.map((award, index) => (
-                                        <div key={index} className="flex gap-4 pb-3 border-b border-charcoal/10 last:border-0">
-                                            <span className="text-sm font-bold text-terracotta">{award.year}</span>
-                                            <span className="text-sm text-charcoal">{award.title}</span>
+                                        <div key={index} className="flex gap-3 sm:gap-4 pb-3 border-b border-charcoal/10 last:border-0">
+                                            <span className="text-xs sm:text-sm font-bold text-terracotta w-12 sm:w-14">{award.year}</span>
+                                            <span className="text-xs sm:text-sm text-charcoal">{award.title}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -243,15 +243,15 @@ export default function ArtistDetail() {
 
                     {activeTab === 'exhibitions' && (
                         <div className="max-w-3xl mb-12">
-                            <div className="bg-white rounded-2xl p-8 border border-charcoal/10">
-                                <h2 className="text-xl font-bold text-charcoal mb-6">Exhibitions</h2>
-                                <div className="space-y-4">
+                            <div className="bg-white rounded-2xl p-5 sm:p-6 md:p-8 border border-charcoal/10">
+                                <h2 className="text-lg sm:text-xl font-bold text-charcoal mb-4 sm:mb-6">Exhibitions</h2>
+                                <div className="space-y-3 sm:space-y-4">
                                     {artistData.exhibitions?.map((exhibition, index) => (
-                                        <div key={index} className="flex gap-4 pb-4 border-b border-charcoal/10 last:border-0">
-                                            <span className="text-sm font-bold text-terracotta w-16">{exhibition.year}</span>
+                                        <div key={index} className="flex gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-charcoal/10 last:border-0">
+                                            <span className="text-xs sm:text-sm font-bold text-terracotta w-12 sm:w-16">{exhibition.year}</span>
                                             <div>
-                                                <p className="text-sm font-medium text-charcoal">{exhibition.title}</p>
-                                                <p className="text-xs text-charcoal-soft">{exhibition.location}</p>
+                                                <p className="text-xs sm:text-sm font-medium text-charcoal">{exhibition.title}</p>
+                                                <p className="text-[10px] sm:text-xs text-charcoal-soft">{exhibition.location}</p>
                                             </div>
                                         </div>
                                     ))}
