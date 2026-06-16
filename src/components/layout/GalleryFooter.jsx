@@ -36,19 +36,19 @@ const socialLinks = [
 export default function GalleryFooter() {
   return (
     <footer className="bg-[#1C1915] text-white font-sans antialiased">
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-12 md:py-16">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 py-10 sm:py-12 md:py-16">
 
         {/* Responsive Layout Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-12 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 sm:gap-x-8 gap-y-10 sm:gap-y-12 mb-12 sm:mb-14 md:mb-16">
 
           {/* Brand Column */}
-          <div className="md:col-span-1">
-            <Link to="/" className="inline-block mb-5">
-              <span className="font-display text-[22px] font-normal tracking-tight text-white">
+          <div className="sm:col-span-2 md:col-span-1">
+            <Link to="/" className="inline-block mb-4 sm:mb-5">
+              <span className="font-display text-[20px] sm:text-[22px] font-normal tracking-tight text-white">
                 imakwa<span className="text-[#C05C3D]">.</span>
               </span>
             </Link>
-            <p className="text-[13px] leading-[1.65] text-[#A39E93] mb-6 max-w-[260px]">
+            <p className="text-xs sm:text-[13px] leading-[1.65] text-[#A39E93] mb-5 sm:mb-6 max-w-[260px]">
               Where authentic African artistry meets the global collector. Every piece tells a story older than any gallery wall.
             </p>
 
@@ -90,15 +90,15 @@ export default function GalleryFooter() {
 
           {/* Discover Column */}
           <div>
-            <h3 className="text-[11px] font-bold tracking-[0.14em] uppercase text-white mb-4.5">
+            <h3 className="text-[10px] sm:text-[11px] font-bold tracking-[0.14em] uppercase text-white mb-3.5 sm:mb-4.5">
               DISCOVER
             </h3>
-            <ul className="space-y-3.5">
+            <ul className="space-y-2.5 sm:space-y-3.5">
               {footerLinks.discover.map(({ label, href }) => (
                 <li key={label}>
                   <Link
                     to={href}
-                    className="text-[13px] text-[#A39E93] hover:text-white transition-colors duration-150 ease-out"
+                    className="text-xs sm:text-[13px] text-[#A39E93] hover:text-white transition-colors duration-150 ease-out"
                   >
                     {label}
                   </Link>
@@ -109,15 +109,15 @@ export default function GalleryFooter() {
 
           {/* Artists & Sellers Column */}
           <div>
-            <h3 className="text-[11px] font-bold tracking-[0.14em] uppercase text-white mb-4.5">
+            <h3 className="text-[10px] sm:text-[11px] font-bold tracking-[0.14em] uppercase text-white mb-3.5 sm:mb-4.5">
               ARTISTS & SELLERS
             </h3>
-            <ul className="space-y-3.5">
+            <ul className="space-y-2.5 sm:space-y-3.5">
               {footerLinks.artistsAndSellers.map(({ label, href }) => (
                 <li key={label}>
                   <Link
                     to={href}
-                    className="text-[13px] text-[#A39E93] hover:text-white transition-colors duration-150 ease-out"
+                    className="text-xs sm:text-[13px] text-[#A39E93] hover:text-white transition-colors duration-150 ease-out"
                   >
                     {label}
                   </Link>
@@ -128,15 +128,15 @@ export default function GalleryFooter() {
 
           {/* Support Column */}
           <div>
-            <h3 className="text-[11px] font-bold tracking-[0.14em] uppercase text-white mb-4.5">
+            <h3 className="text-[10px] sm:text-[11px] font-bold tracking-[0.14em] uppercase text-white mb-3.5 sm:mb-4.5">
               SUPPORT
             </h3>
-            <ul className="space-y-3.5">
+            <ul className="space-y-2.5 sm:space-y-3.5">
               {footerLinks.support.map(({ label, href }) => (
                 <li key={label}>
                   <Link
                     to={href}
-                    className="text-[13px] text-[#A39E93] hover:text-white transition-colors duration-150 ease-out"
+                    className="text-xs sm:text-[13px] text-[#A39E93] hover:text-white transition-colors duration-150 ease-out"
                   >
                     {label}
                   </Link>
@@ -148,11 +148,11 @@ export default function GalleryFooter() {
         </div>
 
         {/* Bottom Bar Container */}
-        <div className="pt-6 border-t border-white/[0.06] flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-[12px] text-[#A39E93]/60">
+        <div className="pt-5 sm:pt-6 border-t border-white/[0.06] flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4 text-[11px] sm:text-[12px] text-[#A39E93]/60">
           <p>
             © 2025 Imakwa.co — All rights reserved. Honoring African creativity worldwide.
           </p>
-          <div className="flex flex-wrap gap-x-6 gap-y-2">
+          <div className="flex flex-wrap gap-x-4 sm:gap-x-6 gap-y-2">
             <Link to="/privacy" className="hover:text-white transition-colors duration-150">
               Privacy Policy
             </Link>
