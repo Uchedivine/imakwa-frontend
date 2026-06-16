@@ -110,17 +110,56 @@ export default function Account() {
             <GalleryNavbar />
 
             <SectionReveal>
-                <div className="pt-32 pb-24 px-6 md:px-8">
+                <div className="pt-24 md:pt-32 pb-24 px-4 sm:px-6 md:px-8">
                     <div className="max-w-[1200px] mx-auto">
                         {/* Header */}
-                        <div className="mb-12">
-                            <h1 className="font-serif text-5xl text-charcoal mb-2">My Account</h1>
-                            <p className="text-charcoal-soft">Manage your profile and preferences</p>
+                        <div className="mb-8 md:mb-12">
+                            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-charcoal mb-2">My Account</h1>
+                            <p className="text-charcoal-soft text-sm sm:text-base">Manage your profile and preferences</p>
+                        </div>
+
+                        {/* Mobile Tab Navigation */}
+                        <div className="lg:hidden flex gap-2 overflow-x-auto pb-2 mb-6 border-b border-charcoal/10 scrollbar-hide">
+                            <button
+                                onClick={() => {
+                                    setActiveTab('profile')
+                                    setSaveSuccess('')
+                                    setSaveError('')
+                                }}
+                                className={`px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap shrink-0 transition-colors ${activeTab === 'profile'
+                                    ? 'bg-terracotta text-white'
+                                    : 'bg-white border border-charcoal/10 text-charcoal hover:border-terracotta/30'
+                                    }`}
+                            >
+                                Profile
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('favorites')}
+                                className={`px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap shrink-0 transition-colors ${activeTab === 'favorites'
+                                    ? 'bg-terracotta text-white'
+                                    : 'bg-white border border-charcoal/10 text-charcoal hover:border-terracotta/30'
+                                    }`}
+                            >
+                                Favorites
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setActiveTab('settings')
+                                    setPasswordSuccess('')
+                                    setPasswordError('')
+                                }}
+                                className={`px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap shrink-0 transition-colors ${activeTab === 'settings'
+                                    ? 'bg-terracotta text-white'
+                                    : 'bg-white border border-charcoal/10 text-charcoal hover:border-terracotta/30'
+                                    }`}
+                            >
+                                Settings
+                            </button>
                         </div>
 
                         <div className="grid lg:grid-cols-[240px,1fr] gap-8">
-                            {/* Sidebar Navigation */}
-                            <aside className="lg:sticky lg:top-32 h-fit">
+                            {/* Desktop Sidebar Navigation */}
+                            <aside className="hidden lg:block lg:sticky lg:top-32 h-fit">
                                 <nav className="bg-white rounded-2xl border border-charcoal/10 p-2">
                                     <button
                                         onClick={() => {
@@ -164,9 +203,9 @@ export default function Account() {
                             <div>
                                 {/* Profile Tab */}
                                 {activeTab === 'profile' && (
-                                    <div className="bg-white rounded-2xl border border-charcoal/10 p-8">
-                                        <div className="flex items-center justify-between mb-8">
-                                            <h2 className="text-2xl font-bold text-charcoal">Profile Information</h2>
+                                    <div className="bg-white rounded-2xl border border-charcoal/10 p-6 sm:p-8">
+                                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+                                            <h2 className="text-xl sm:text-2xl font-bold text-charcoal">Profile Information</h2>
                                             {!isEditing ? (
                                                 <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
                                                     Edit Profile
@@ -272,8 +311,8 @@ export default function Account() {
 
                                 {/* Favorites Tab */}
                                 {activeTab === 'favorites' && (
-                                    <div className="bg-white rounded-2xl border border-charcoal/10 p-8">
-                                        <h2 className="text-2xl font-bold text-charcoal mb-8">Favorite Artists</h2>
+                                    <div className="bg-white rounded-2xl border border-charcoal/10 p-6 sm:p-8">
+                                        <h2 className="text-xl sm:text-2xl font-bold text-charcoal mb-6 sm:mb-8">Favorite Artists</h2>
 
                                         <div className="space-y-4">
                                             {[
@@ -325,8 +364,8 @@ export default function Account() {
                                 {activeTab === 'settings' && (
                                     <div className="space-y-6">
                                         {/* Change Password */}
-                                        <div className="bg-white rounded-2xl border border-charcoal/10 p-8">
-                                            <h2 className="text-2xl font-bold text-charcoal mb-6">Change Password</h2>
+                                        <div className="bg-white rounded-2xl border border-charcoal/10 p-6 sm:p-8">
+                                            <h2 className="text-xl sm:text-2xl font-bold text-charcoal mb-6">Change Password</h2>
 
                                             {passwordError && (
                                                 <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
@@ -380,8 +419,8 @@ export default function Account() {
                                         </div>
 
                                         {/* Email Preferences */}
-                                        <div className="bg-white rounded-2xl border border-charcoal/10 p-8">
-                                            <h2 className="text-2xl font-bold text-charcoal mb-6">Email Preferences</h2>
+                                        <div className="bg-white rounded-2xl border border-charcoal/10 p-6 sm:p-8">
+                                            <h2 className="text-xl sm:text-2xl font-bold text-charcoal mb-6">Email Preferences</h2>
 
                                             <div className="space-y-4">
                                                 <label className="flex items-center justify-between cursor-pointer">
@@ -419,8 +458,8 @@ export default function Account() {
                                         </div>
 
                                         {/* Danger Zone */}
-                                        <div className="bg-white rounded-2xl border border-red-200 p-8">
-                                            <h2 className="text-2xl font-bold text-red-600 mb-4">Danger Zone</h2>
+                                        <div className="bg-white rounded-2xl border border-red-200 p-6 sm:p-8">
+                                            <h2 className="text-xl sm:text-2xl font-bold text-red-600 mb-4">Danger Zone</h2>
                                             <p className="text-charcoal-soft mb-6">
                                                 Once you delete your account, there is no going back. Please be certain.
                                             </p>
