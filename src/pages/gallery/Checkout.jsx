@@ -145,9 +145,9 @@ function CheckoutForm() {
 
                 <h1 className="font-serif text-4xl text-charcoal mb-12">Checkout</h1>
 
-                <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                     {/* Left: Checkout Form */}
-                    <div className="lg:col-span-2 space-y-8">
+                    <div className="lg:col-span-2 space-y-6 lg:space-y-8 order-last lg:order-first">
 
                         {/* Shipping Information */}
                         <div className="bg-white rounded-2xl p-6 md:p-8 border border-charcoal/10">
@@ -287,13 +287,13 @@ function CheckoutForm() {
                                 <div className="space-y-4">
                                     <div>
                                         <label className="block text-sm font-medium text-charcoal mb-2">Card Details *</label>
-                                        <div className="p-4 bg-white border border-charcoal/15 rounded-xl hover:border-charcoal/30 transition-all duration-300">
+                                        <div className="p-4 bg-white border border-charcoal/15 rounded-xl hover:border-charcoal/30 transition-all duration-300 min-h-[50px]">
                                             <CardElement options={{
                                                 style: {
                                                     base: {
                                                         color: '#1f2937',
                                                         fontFamily: 'Inter, system-ui, sans-serif',
-                                                        fontSize: '15px',
+                                                        fontSize: '16px',
                                                         fontSmoothing: 'antialiased',
                                                         '::placeholder': {
                                                             color: '#9ca3af',
@@ -328,9 +328,9 @@ function CheckoutForm() {
                         )}
                     </div>
 
-                    {/* Right: Order Summary */}
-                    <div className="lg:col-span-1">
-                        <div className="bg-white rounded-2xl p-6 border border-charcoal/10 sticky top-24">
+                    {/* Right: Order Summary - Shows first on mobile */}
+                    <div className="lg:col-span-1 order-first lg:order-last">
+                        <div className="bg-white rounded-2xl p-6 border border-charcoal/10 lg:sticky lg:top-24">
                             <h2 className="text-lg font-bold text-charcoal mb-6">Order Summary</h2>
 
                             {/* Cart Items */}
