@@ -28,7 +28,7 @@ export function useCart() {
           artworkId: ci.itemable_id || ci.item_id,
           title: ci.itemable?.title || ci.item?.title,
           price: parsePrice(ci.itemable?.price || ci.item?.price || ci.price),
-          image: ci.itemable?.primary_image?.url || ci.itemable?.primaryImage?.url || ci.item?.primary_image_url || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=400&q=80',
+          image: ci.itemable?.images?.[0]?.image_url || ci.itemable?.primary_image?.image_url || ci.item?.primary_image_url || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=400&q=80',
           artist: ci.itemable?.artist?.name || ci.item?.artist?.name || 'Unknown Artist',
           quantity: parseInt(ci.quantity) || 1,
         }))
@@ -88,10 +88,14 @@ export function useCart() {
   })
 
   const mergeMutation = useMutation({
-    mutationFn: (items) => mergeCart(items),
+    mutationFn: () => mergeCart(),
     onSuccess: () => {
+      console.log('✅ [USE CART] Cart merged successfully')
       // Reload cart after merge
       queryClient.invalidateQueries({ queryKey: ['cart'] })
+    },
+    onError: (error) => {
+      console.error('❌ [USE CART] Cart merge failed:', error)
     },
   })
 

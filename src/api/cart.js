@@ -34,7 +34,7 @@ export const clearCart = async () => {
   return response.data
 }
 
-export const mergeCart = async (items) => {
-  const response = await client.post('/cart/merge', { items })
+export const mergeCart = async () => {
+  const response = await client.post('/cart/merge')
   return response.data
 }

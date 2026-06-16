@@ -1,13 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { login as loginApi, register as registerApi, logout as logoutApi, getMe } from '../api/auth'
 import { useAuthStore } from '../store/authStore'
-import { useCartStore } from '../store/cartStore'
 import { useCart } from './useCart'
 
 export function useAuth() {
   const queryClient = useQueryClient()
   const { login: storeLogin, logout: storeLogout, isAuthenticated, user, token } = useAuthStore()
-  const { items: localCartItems } = useCartStore()
   const { mergeCart } = useCart()
 
   // Fetch current user profile when authenticated
@@ -24,19 +22,16 @@ export function useAuth() {
       console.log('🎉 [USE AUTH] Login mutation succeeded:', {
         hasUser: !!data.user,
         hasToken: !!data.token,
-        tokenLength: data.token?.length,
-        localCartItemsCount: localCartItems.length
+        tokenLength: data.token?.length
       })
       
       console.log('📞 [USE AUTH] Calling storeLogin...')
       storeLogin(data.user, data.token)
       console.log('✅ [USE AUTH] storeLogin completed')
 
-      // Merge guest cart into server cart on login
-      if (localCartItems.length > 0) {
-        console.log('🛒 [USE AUTH] Merging cart with', localCartItems.length, 'items')
-        mergeCart(localCartItems)
-      }
+      // Merge guest cart into server cart on login (backend uses session ID)
+      console.log('🛒 [USE AUTH] Calling mergeCart...')
+      mergeCart()
 
       console.log('♻️ [USE AUTH] Invalidating queries...')
       queryClient.invalidateQueries({ queryKey: ['me'] })
@@ -56,12 +51,12 @@ export function useAuth() {
   const registerMutation = useMutation({
     mutationFn: registerApi,
     onSuccess: (data) => {
+      console.log('🎉 [USE AUTH] Registration succeeded')
       storeLogin(data.user, data.token)
       
-      // Merge guest cart into server cart on registration
-      if (localCartItems.length > 0) {
-        mergeCart(localCartItems)
-      }
+      // Merge guest cart into server cart on registration (backend uses session ID)
+      console.log('🛒 [USE AUTH] Calling mergeCart...')
+      mergeCart()
 
       queryClient.invalidateQueries({ queryKey: ['me'] })
       queryClient.invalidateQueries({ queryKey: ['cart'] })
