@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import GalleryNavbar from '../../components/layout/GalleryNavbar'
 import GalleryFooter from '../../components/layout/GalleryFooter'
 import { useArtwork } from '../../hooks/useArtwork'
@@ -11,7 +11,6 @@ import { parsePrice } from '../../lib/utils'
 
 export default function ArtworkDetail() {
     const { id } = useParams()
-    const navigate = useNavigate()
     const { data: artwork, isLoading, isError, error, refetch } = useArtwork(id)
     const { addToCart } = useCart()
 
@@ -33,18 +32,92 @@ export default function ArtworkDetail() {
         return [artData.image || artData.primary_image?.url || 'https://images.unsplash.com/photo-1578926288207-a90a5366a2b6?w=800&q=80']
     }
 
-    const handleAddToCart = () => {
-        if (cartState !== 'idle') return
-        setCartState('loading')
+    // ========================================
+    // PHASE 1: Status-based availability checks
+    // ========================================
+    const isAvailable = artwork?.status === 'available' && artwork?.is_active !== false
+    const isSold = artwork?.status === 'sold'
+    const isReserved = artwork?.status === 'reserved'
+    const isUnavailable = artwork?.is_active === false
 
-        setTimeout(() => {
-            setCartState('added')
-            setTimeout(() => setCartState('idle'), 2500)
-        }, 800)
+    // ========================================
+    // PHASE 2: Inventory checks (future enhancement)
+    // ========================================
+    const hasInventory = artwork?.stock_quantity !== undefined && artwork?.stock_quantity !== null
+    const isOutOfStock = hasInventory && (
+        artwork?.stock_available === 0 ||
+        artwork?.status === 'out_of_stock'
+    )
+    const isLowStock = hasInventory &&
+        artwork?.stock_available > 0 &&
+        artwork?.stock_available <= 3
+
+    // ========================================
+    // Button Configuration Logic
+    // ========================================
+    const getButtonConfig = () => {
+        // Priority order: unavailable > sold/out of stock > reserved > available
+        if (isUnavailable) {
+            return {
+                text: 'Unavailable',
+                className: 'bg-gray-400 text-white cursor-not-allowed',
+                icon: '🚫',
+                disabled: true,
+            }
+        }
+
+        if (isSold || isOutOfStock) {
+            return {
+                text: '✓ Sold',
+                className: 'bg-gray-500 text-white cursor-not-allowed',
+                icon: '✓',
+                disabled: true,
+            }
+        }
+
+        if (isReserved) {
+            return {
+                text: '🔒 Reserved',
+                className: 'bg-yellow-500 text-gray-900 cursor-not-allowed',
+                icon: '🔒',
+                disabled: true,
+            }
+        }
+
+        if (isAvailable) {
+            return {
+                text: 'Add to Cart',
+                className: 'bg-terracotta text-white hover:bg-terra-light',
+                icon: null,
+                disabled: false,
+            }
+        }
+
+        // Fallback
+        return {
+            text: 'Unavailable',
+            className: 'bg-gray-400 text-white cursor-not-allowed',
+            icon: '🚫',
+            disabled: true,
+        }
     }
 
-    // Helper to get art data after it's defined
-    const addToCartWithData = (artData) => {
+    const buttonConfig = getButtonConfig()
+
+    const handleAddToCart = (artData) => {
+        if (buttonConfig.disabled || cartState !== 'idle') return
+
+        console.log('🛒 [ARTWORK DETAIL] Add to cart clicked:', {
+            artworkId: artData.id,
+            title: artData.title,
+            price: artData.price,
+            parsedPrice: parsePrice(artData.price),
+            status: artData.status,
+            isAvailable
+        })
+
+        setCartState('loading')
+
         const imagesArray = getImagesArray(artData)
         addToCart({
             id: artData.id,
@@ -54,6 +127,11 @@ export default function ArtworkDetail() {
             image: imagesArray[0],
             quantity: 1
         })
+
+        setTimeout(() => {
+            setCartState('added')
+            setTimeout(() => setCartState('idle'), 2500)
+        }, 800)
     }
 
     if (isLoading) {
@@ -135,6 +213,38 @@ export default function ArtworkDetail() {
                                     alt={art.title}
                                     className="w-full h-full object-cover"
                                 />
+                                {/* Status Badges - Larger for detail page */}
+                                {(isOutOfStock || isLowStock || isSold || isReserved) && (
+                                    <div className="absolute top-4 left-4 flex flex-col gap-2 items-start">
+                                        {/* Out of Stock Badge */}
+                                        {isOutOfStock && (
+                                            <span className="inline-block px-4 py-2 rounded-full text-xs font-bold tracking-[0.15em] uppercase bg-red-500 text-white shadow-lg">
+                                                Out of Stock
+                                            </span>
+                                        )}
+
+                                        {/* Low Stock Badge */}
+                                        {isLowStock && !isOutOfStock && (
+                                            <span className="inline-block px-4 py-2 rounded-full text-xs font-bold tracking-[0.15em] uppercase bg-yellow-500 text-white shadow-lg">
+                                                Only {artwork.stock_available} left
+                                            </span>
+                                        )}
+
+                                        {/* Sold Badge */}
+                                        {isSold && !hasInventory && (
+                                            <span className="inline-block px-4 py-2 rounded-full text-xs font-bold tracking-[0.15em] uppercase bg-gray-500 text-white shadow-lg">
+                                                ✓ Sold
+                                            </span>
+                                        )}
+
+                                        {/* Reserved Badge */}
+                                        {isReserved && (
+                                            <span className="inline-block px-4 py-2 rounded-full text-xs font-bold tracking-[0.15em] uppercase bg-yellow-500 text-gray-900 shadow-lg">
+                                                🔒 Reserved
+                                            </span>
+                                        )}
+                                    </div>
+                                )}
                                 {art.badge && (
                                     <div className="absolute top-4 left-4">
                                         <span className="inline-block px-4 py-2 rounded-full text-xs font-bold tracking-wider uppercase bg-terracotta text-white">
@@ -186,29 +296,69 @@ export default function ArtworkDetail() {
                                 </div>
                             </Link>
 
-                            {/* Price */}
+                            {/* Price and Stock Availability */}
                             <div className="mb-8 pb-8 border-b border-charcoal/10">
                                 <p className="text-xs text-charcoal-soft mb-2">Price</p>
                                 <p className="font-serif text-4xl text-charcoal">${art.price.toLocaleString()}</p>
+
+                                {/* Stock Availability Info */}
+                                {hasInventory && isAvailable && (
+                                    <div className="mt-3">
+                                        {isLowStock ? (
+                                            <p className="text-sm text-yellow-600 font-medium">
+                                                ⚠️ Only {artwork.stock_available} left in stock
+                                            </p>
+                                        ) : (
+                                            <p className="text-sm text-green-600 font-medium">
+                                                ✓ {artwork.stock_available} available
+                                            </p>
+                                        )}
+                                        {artwork.stock_quantity > 1 && (
+                                            <p className="text-xs text-charcoal-soft mt-1">
+                                                Limited edition of {artwork.stock_quantity}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* Sold/Reserved Status */}
+                                {(isSold || isOutOfStock) && (
+                                    <p className="text-sm text-gray-500 mt-3">
+                                        This artwork has been sold
+                                    </p>
+                                )}
+                                {isReserved && (
+                                    <p className="text-sm text-yellow-600 mt-3">
+                                        This artwork is currently reserved
+                                    </p>
+                                )}
+
                                 <p className="text-xs text-charcoal-soft mt-2">Free shipping worldwide • Secure payment</p>
                             </div>
 
                             {/* CTA Buttons */}
                             <div className="flex gap-3 mb-8">
                                 <button
-                                    onClick={() => {
-                                        addToCartWithData(art)
-                                        handleAddToCart()
-                                    }}
-                                    disabled={cartState !== 'idle' || art.stock === 0}
+                                    onClick={() => handleAddToCart(art)}
+                                    disabled={buttonConfig.disabled || cartState !== 'idle'}
                                     className={`flex-1 py-4 rounded-full text-sm font-medium transition-all ${cartState === 'added'
                                         ? 'bg-green-700 text-white'
-                                        : art.stock === 0
-                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                            : 'bg-terracotta text-white hover:bg-terra-light'
+                                        : buttonConfig.className
                                         }`}
                                 >
-                                    {art.stock === 0 ? 'Sold Out' : cartState === 'idle' ? 'Add to Cart' : cartState === 'loading' ? 'Adding...' : '✓ Added'}
+                                    {cartState === 'loading' ? (
+                                        <span className="flex items-center justify-center gap-2">
+                                            <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            Adding...
+                                        </span>
+                                    ) : cartState === 'added' ? (
+                                        '✓ Added to Cart'
+                                    ) : (
+                                        buttonConfig.text
+                                    )}
                                 </button>
 
                                 <button

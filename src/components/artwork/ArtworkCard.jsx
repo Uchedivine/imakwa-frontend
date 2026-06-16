@@ -6,7 +6,7 @@ import { parsePrice } from '../../lib/utils'
 
 export default function ArtworkCard({ artwork }) {
     const [cartState, setCartState] = useState('idle') // 'idle' | 'loading' | 'added'
-    const { addToCart, isAddingToCart } = useCart()
+    const { addToCart } = useCart()
     const { isFavorited, toggle: toggleFavorite } = useFavorites()
 
     // Validate artwork data
@@ -14,6 +14,78 @@ export default function ArtworkCard({ artwork }) {
         console.error('❌ [ARTWORK CARD] Invalid artwork data:', artwork)
         return null
     }
+
+    // ========================================
+    // PHASE 1: Status-based availability checks
+    // ========================================
+    const isAvailable = artwork.status === 'available' && artwork.is_active !== false
+    const isSold = artwork.status === 'sold'
+    const isReserved = artwork.status === 'reserved'
+    const isUnavailable = artwork.is_active === false
+
+    // ========================================
+    // PHASE 2: Inventory checks (future enhancement)
+    // ========================================
+    const hasInventory = artwork.stock_quantity !== undefined && artwork.stock_quantity !== null
+    const isOutOfStock = hasInventory && (
+        artwork.stock_available === 0 ||
+        artwork.status === 'out_of_stock'
+    )
+    const isLowStock = hasInventory &&
+        artwork.stock_available > 0 &&
+        artwork.stock_available <= 3
+
+    // ========================================
+    // Button Configuration Logic
+    // ========================================
+    const getButtonConfig = () => {
+        // Priority order: unavailable > sold/out of stock > reserved > available
+        if (isUnavailable) {
+            return {
+                text: 'Unavailable',
+                className: 'btn-unavailable',
+                icon: '🚫',
+                disabled: true,
+            }
+        }
+
+        if (isSold || isOutOfStock) {
+            return {
+                text: 'Sold',
+                className: 'btn-sold',
+                icon: '✓',
+                disabled: true,
+            }
+        }
+
+        if (isReserved) {
+            return {
+                text: 'Reserved',
+                className: 'btn-reserved',
+                icon: '🔒',
+                disabled: true,
+            }
+        }
+
+        if (isAvailable) {
+            return {
+                text: 'Add to Cart',
+                className: 'btn-add-to-cart',
+                icon: '+',
+                disabled: false,
+            }
+        }
+
+        // Fallback
+        return {
+            text: 'Unavailable',
+            className: 'btn-unavailable',
+            icon: '🚫',
+            disabled: true,
+        }
+    }
+
+    const buttonConfig = getButtonConfig()
 
     // Helper function to get the artwork image
     const getArtworkImage = () => {
@@ -30,16 +102,19 @@ export default function ArtworkCard({ artwork }) {
 
     const handleAddToCart = (e) => {
         e.preventDefault()
-        if (cartState !== 'idle') return;
+
+        if (buttonConfig.disabled || cartState !== 'idle') return
 
         console.log('🛒 [ARTWORK CARD] Add to cart clicked:', {
             artworkId: artwork.id,
             title: artwork.title,
             price: artwork.price,
-            parsedPrice: parsePrice(artwork.price)
+            parsedPrice: parsePrice(artwork.price),
+            status: artwork.status,
+            isAvailable
         })
 
-        setCartState('loading');
+        setCartState('loading')
 
         // Add to cart via backend
         addToCart({
@@ -52,12 +127,12 @@ export default function ArtworkCard({ artwork }) {
         })
 
         setTimeout(() => {
-            setCartState('added');
+            setCartState('added')
 
             setTimeout(() => {
-                setCartState('idle');
-            }, 2500);
-        }, 800);
+                setCartState('idle')
+            }, 2500)
+        }, 800)
     }
 
     return (
@@ -70,14 +145,43 @@ export default function ArtworkCard({ artwork }) {
                     className="w-full h-full object-cover"
                 />
 
-                {/* Badge */}
-                {artwork.badge && (
-                    <div className="absolute top-3 left-3">
+                {/* Status Badges */}
+                <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
+                    {/* Out of Stock Badge */}
+                    {isOutOfStock && (
+                        <span className="inline-block px-3 py-1 rounded-full text-[9px] font-bold tracking-[0.1em] uppercase bg-red-500 text-white">
+                            Out of Stock
+                        </span>
+                    )}
+
+                    {/* Low Stock Badge */}
+                    {isLowStock && !isOutOfStock && (
+                        <span className="inline-block px-3 py-1 rounded-full text-[9px] font-bold tracking-[0.1em] uppercase bg-yellow-500 text-white">
+                            Only {artwork.stock_available} left
+                        </span>
+                    )}
+
+                    {/* Sold Badge */}
+                    {isSold && !hasInventory && (
+                        <span className="inline-block px-3 py-1 rounded-full text-[9px] font-bold tracking-[0.1em] uppercase bg-gray-500 text-white">
+                            ✓ Sold
+                        </span>
+                    )}
+
+                    {/* Reserved Badge */}
+                    {isReserved && (
+                        <span className="inline-block px-3 py-1 rounded-full text-[9px] font-bold tracking-[0.1em] uppercase bg-yellow-500 text-gray-900">
+                            🔒 Reserved
+                        </span>
+                    )}
+
+                    {/* Featured Badge */}
+                    {artwork.badge && (
                         <span className="inline-block px-3 py-1 rounded-full text-[9px] font-bold tracking-[0.1em] uppercase bg-[#2C7A74] text-white">
                             {artwork.badge}
                         </span>
-                    </div>
-                )}
+                    )}
+                </div>
 
                 {/* Wishlist button */}
                 <button
@@ -85,7 +189,7 @@ export default function ArtworkCard({ artwork }) {
                         e.preventDefault()
                         toggleFavorite(artwork.id)
                     }}
-                    className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white"
+                    className="absolute top-3 left-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white"
                 >
                     <svg
                         className={`w-3.5 h-3.5 ${isFavorited(artwork.id) ? 'fill-[#C25E36] stroke-[#C25E36]' : 'fill-none stroke-gray-900'}`}
@@ -115,30 +219,46 @@ export default function ArtworkCard({ artwork }) {
                     }
                 </p>
 
-                <div className="flex items-center justify-between">
-                    <span className="font-sans text-[17px] font-semibold text-gray-900">
-                        ${(artwork.price || 0).toLocaleString()}
-                    </span>
+                <div className="flex items-center justify-between gap-3">
+                    <div>
+                        <span className="font-sans text-[17px] font-semibold text-gray-900 block">
+                            ${(artwork.price || 0).toLocaleString()}
+                        </span>
+                        {/* Stock Info (Phase 2) */}
+                        {hasInventory && isAvailable && (
+                            <span className="text-[10px] text-gray-500">
+                                {artwork.stock_available} available
+                            </span>
+                        )}
+                    </div>
 
-                    {/* Updated Add to Cart Button */}
+                    {/* Add to Cart Button */}
                     <button
                         onClick={handleAddToCart}
-                        disabled={cartState !== 'idle'}
-                        className={`flex items-center justify-center min-w-[105px] h-[34px] px-4 text-[11px] font-medium rounded-full transition-all duration-300 ${cartState === 'added'
-                            ? 'bg-green-700 text-white'
-                            : 'bg-[#1A1A1A] text-white hover:bg-gray-800'
-                            } ${cartState === 'loading' ? 'opacity-80 cursor-not-allowed' : ''}`}
+                        disabled={buttonConfig.disabled || cartState !== 'idle'}
+                        className={`flex items-center justify-center min-w-[105px] h-[34px] px-4 text-[11px] font-medium rounded-full transition-all duration-300 ${buttonConfig.disabled
+                                ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                                : cartState === 'added'
+                                    ? 'bg-green-700 text-white'
+                                    : 'bg-[#1A1A1A] text-white hover:bg-gray-800'
+                            }`}
                     >
-                        {cartState === 'idle' && '+ Add to Cart'}
-
-                        {cartState === 'loading' && (
+                        {cartState === 'loading' ? (
                             <svg className="animate-spin h-3.5 w-3.5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
+                        ) : cartState === 'added' ? (
+                            <>
+                                <span className="mr-1">{buttonConfig.icon}</span>
+                                <span>Added</span>
+                            </>
+                        ) : (
+                            <>
+                                <span className="mr-1">{buttonConfig.icon}</span>
+                                <span>{buttonConfig.text}</span>
+                            </>
                         )}
-
-                        {cartState === 'added' && '✓ Added'}
                     </button>
                 </div>
             </Link>
