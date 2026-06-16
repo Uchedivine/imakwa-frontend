@@ -7,7 +7,7 @@ import Spinner from '../../components/ui/Spinner'
 export default function Login() {
     const navigate = useNavigate()
     const location = useLocation()
-    const { login, isLoading } = useAuth()
+    const { login, isLoggingIn } = useAuth()
 
     const [formData, setFormData] = useState({
         email: '',
@@ -115,10 +115,10 @@ export default function Login() {
 
                     <button
                         type="submit"
-                        disabled={isLoading}
+                        disabled={isLoggingIn}
                         className="w-full py-3.5 bg-terracotta text-white rounded-full font-medium hover:bg-terra-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                     >
-                        {isLoading ? (
+                        {isLoggingIn ? (
                             <>
                                 <Spinner size="sm" className="mr-2" />
                                 Signing in...

@@ -7,7 +7,7 @@ import Spinner from '../../components/ui/Spinner'
 export default function Register() {
     const navigate = useNavigate()
     const location = useLocation()
-    const { register, isLoading } = useAuth()
+    const { register, isRegistering } = useAuth()
 
     const [formData, setFormData] = useState({
         name: '',
@@ -174,10 +174,10 @@ export default function Register() {
 
                     <button
                         type="submit"
-                        disabled={isLoading}
+                        disabled={isRegistering}
                         className="w-full py-3.5 bg-terracotta text-white rounded-full font-medium hover:bg-terra-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                     >
-                        {isLoading ? (
+                        {isRegistering ? (
                             <>
                                 <Spinner size="sm" className="mr-2" />
                                 Creating account...
