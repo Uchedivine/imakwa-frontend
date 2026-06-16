@@ -50,7 +50,9 @@ function App() {
 
   // Initialize auth from localStorage on app mount
   useEffect(() => {
+    console.log('🚀 [APP] App mounted, calling initAuth()...')
     initAuth()
+    console.log('✅ [APP] initAuth() completed')
   }, [initAuth])
 
   return (

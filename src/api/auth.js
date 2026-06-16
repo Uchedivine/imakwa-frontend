@@ -1,8 +1,27 @@
 import client from './client'
 
 export const login = async ({ email, password }) => {
-  const response = await client.post('/auth/login', { email, password })
-  return response.data
+  console.log('🔐 [AUTH API] Login request starting...', { email })
+  
+  try {
+    const response = await client.post('/auth/login', { email, password })
+    console.log('✅ [AUTH API] Login response received:', {
+      hasUser: !!response.data.user,
+      hasToken: !!response.data.token,
+      tokenLength: response.data.token?.length,
+      userId: response.data.user?.id,
+      userEmail: response.data.user?.email
+    })
+    
+    return response.data
+  } catch (error) {
+    console.error('❌ [AUTH API] Login failed:', {
+      status: error.response?.status,
+      message: error.response?.data?.message,
+      errors: error.response?.data?.errors
+    })
+    throw error
+  }
 }
 
 export const register = async ({ name, email, password, password_confirmation, role }) => {

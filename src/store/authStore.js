@@ -7,22 +7,66 @@ export const useAuthStore = create((set) => ({
 
   // Initialize from localStorage on app start
   initAuth: () => {
+    console.log('🔄 [AUTH STORE] initAuth() called - loading from localStorage...')
+    
     const token = localStorage.getItem('authToken')
     const user = localStorage.getItem('authUser')
+    
+    console.log('📦 [AUTH STORE] Retrieved from localStorage:', {
+      hasToken: !!token,
+      hasUser: !!user,
+      tokenLength: token?.length,
+      userPreview: user?.substring(0, 50)
+    })
+    
     if (token && user) {
-      set({
-        token,
-        user: JSON.parse(user),
-        isAuthenticated: true,
-      })
+      try {
+        const parsedUser = JSON.parse(user)
+        set({
+          token,
+          user: parsedUser,
+          isAuthenticated: true,
+        })
+        console.log('✅ [AUTH STORE] Auth restored:', {
+          userId: parsedUser.id,
+          userEmail: parsedUser.email,
+          isAuthenticated: true
+        })
+      } catch (error) {
+        console.error('❌ [AUTH STORE] Failed to parse user from localStorage:', error)
+      }
+    } else {
+      console.log('ℹ️ [AUTH STORE] No auth data found in localStorage')
     }
   },
 
   // Save to localStorage AND state
   login: (user, token) => {
-    localStorage.setItem('authToken', token)
-    localStorage.setItem('authUser', JSON.stringify(user))
-    set({ user, token, isAuthenticated: true })
+    console.log('💾 [AUTH STORE] login() called with:', {
+      hasUser: !!user,
+      hasToken: !!token,
+      tokenLength: token?.length,
+      userId: user?.id,
+      userEmail: user?.email
+    })
+    
+    try {
+      localStorage.setItem('authToken', token)
+      localStorage.setItem('authUser', JSON.stringify(user))
+      
+      console.log('✅ [AUTH STORE] Saved to localStorage:', {
+        savedToken: localStorage.getItem('authToken'),
+        savedUser: localStorage.getItem('authUser'),
+        tokenMatches: localStorage.getItem('authToken') === token
+      })
+      
+      set({ user, token, isAuthenticated: true })
+      
+      console.log('✅ [AUTH STORE] State updated, isAuthenticated: true')
+    } catch (error) {
+      console.error('❌ [AUTH STORE] Failed to save to localStorage:', error)
+      throw error
+    }
   },
 
   // Clear localStorage AND state

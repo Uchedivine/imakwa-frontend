@@ -21,17 +21,36 @@ export function useAuth() {
   const loginMutation = useMutation({
     mutationFn: loginApi,
     onSuccess: (data) => {
+      console.log('🎉 [USE AUTH] Login mutation succeeded:', {
+        hasUser: !!data.user,
+        hasToken: !!data.token,
+        tokenLength: data.token?.length,
+        localCartItemsCount: localCartItems.length
+      })
+      
+      console.log('📞 [USE AUTH] Calling storeLogin...')
       storeLogin(data.user, data.token)
+      console.log('✅ [USE AUTH] storeLogin completed')
 
       // Merge guest cart into server cart on login
       if (localCartItems.length > 0) {
+        console.log('🛒 [USE AUTH] Merging cart with', localCartItems.length, 'items')
         mergeCart(localCartItems)
       }
 
+      console.log('♻️ [USE AUTH] Invalidating queries...')
       queryClient.invalidateQueries({ queryKey: ['me'] })
       queryClient.invalidateQueries({ queryKey: ['cart'] })
       queryClient.invalidateQueries({ queryKey: ['favorites'] })
+      console.log('✅ [USE AUTH] Login flow complete')
     },
+    onError: (error) => {
+      console.error('❌ [USE AUTH] Login mutation failed:', {
+        status: error.response?.status,
+        message: error.response?.data?.message,
+        errors: error.response?.data?.errors
+      })
+    }
   })
 
   const registerMutation = useMutation({

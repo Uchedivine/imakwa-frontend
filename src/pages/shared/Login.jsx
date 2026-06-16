@@ -21,10 +21,19 @@ export default function Login() {
         e.preventDefault()
         setError('')
 
+        console.log('🚀 [LOGIN PAGE] Form submitted:', {
+            email: formData.email,
+            hasPassword: !!formData.password
+        })
+
         try {
+            console.log('⏳ [LOGIN PAGE] Calling login...')
             await login(formData)
+            console.log('✅ [LOGIN PAGE] Login successful, navigating to:', from)
             navigate(from, { replace: true })
         } catch (err) {
+            console.error('❌ [LOGIN PAGE] Login error caught:', err)
+
             // Handle Laravel validation errors (422)
             let errorMessage = 'Invalid email or password'
 
@@ -38,6 +47,7 @@ export default function Login() {
                 errorMessage = err.response.data.message
             }
 
+            console.log('⚠️ [LOGIN PAGE] Showing error to user:', errorMessage)
             setError(errorMessage)
         }
     }
