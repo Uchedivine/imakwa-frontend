@@ -29,7 +29,7 @@ export default function GalleryHero() {
 
   return (
     <section className="relative bg-[#FCFBF8] overflow-hidden min-h-[calc(100vh-72px)] flex items-center w-full">
-      <div className="max-w-[1600px] mx-auto w-full flex flex-col lg:flex-row relative">
+      <div className="max-w-[1600px] mx-auto w-full flex flex-col lg:flex-row relative overflow-hidden">
 
         {/* --- LEFT COLUMN: Content --- */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center px-4 sm:px-6 lg:px-10 pt-12 sm:pt-16 lg:py-20 relative z-20">
